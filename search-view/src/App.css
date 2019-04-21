@@ -1,0 +1,23 @@
+.search {
+  -moz-transform: scale(0.7,0.6);
+  -webkit-transform: scale(0.7,0.6);
+  -o-transform: scale(0.7,0.6);
+  -ms-transform: scale(0.7,0.6);
+  width: 1000px;
+  height: 700px;
+  position: absolute;
+  top: -18%;
+  left: 38%;
+}
+
+.wiki {
+  -moz-transform: scale(0.7,0.6);
+  -webkit-transform: scale(0.7,0.6);
+  -o-transform: scale(0.7,0.6);
+  -ms-transform: scale(0.7,0.6);
+  width: 1000px;
+  height: 700px;
+  position: absolute;
+  top: 49%;
+  left: 38%;
+}
