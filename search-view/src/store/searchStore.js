@@ -1,8 +1,10 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 import searchReducer from '../reducers/searchReducer';
 
 const searchStore = createStore(
-  searchReducer
+  searchReducer,
+  applyMiddleware(thunk)
 );
 
 export default searchStore;

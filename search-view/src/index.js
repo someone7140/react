@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import SearchApp from './containers/SearchApp';
 import React from 'react';
 import searchStore from './store/searchStore';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
 
 render( 
