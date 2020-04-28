@@ -7,6 +7,7 @@ const initialState = {
   storeList: [],
   displayStoreList: [],
   choiceType: ["deliverly", "takeout"],
+  geocoder: undefined,
 };
 
 const MapStore = React.createContext();

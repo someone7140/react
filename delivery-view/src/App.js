@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
 import { MapProvider } from "./store/MapStore";
-import MapComponent from "./components/map/MapComponent";
+import DeliverlyComponent from "./components/DeliverlyComponent";
 
 function App() {
   return (
     <div>
       <MapProvider>
-        <MapComponent />
+        <DeliverlyComponent />
       </MapProvider>
     </div>
   );

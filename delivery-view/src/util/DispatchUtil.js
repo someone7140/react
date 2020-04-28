@@ -29,3 +29,10 @@ export function changeChoiceTypeDispatch(
     choiceType: choiceType,
   });
 }
+
+export function setGeocoderDispatch(dispatch, geocoder) {
+  dispatch({
+    type: "SET_GEOCODER",
+    geocoder: geocoder,
+  });
+}

@@ -14,6 +14,11 @@ const MapReducer = (state = {}, action) => {
         displayStoreList: action.displayStoreList,
         choiceType: action.choiceType,
       };
+    case "SET_GEOCODER":
+      return {
+        ...state,
+        geocoder: action.geocoder,
+      };
     default:
       return state;
   }
