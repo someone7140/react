@@ -36,3 +36,17 @@ export function setGeocoderDispatch(dispatch, geocoder) {
     geocoder: geocoder,
   });
 }
+
+export function setCategoryLDispatch(dispatch, categoryLList) {
+  dispatch({
+    type: "SET_CATEGORY_L_LIST",
+    categoryLList: categoryLList,
+  });
+}
+
+export function setSelectedCategoryDispatch(dispatch, categoryList) {
+  dispatch({
+    type: "SET_SELECT_CATEGORY",
+    selectedCategory: categoryList,
+  });
+}

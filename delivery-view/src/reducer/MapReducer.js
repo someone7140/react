@@ -19,6 +19,16 @@ const MapReducer = (state = {}, action) => {
         ...state,
         geocoder: action.geocoder,
       };
+    case "SET_CATEGORY_L_LIST":
+      return {
+        ...state,
+        categoryLList: action.categoryLList,
+      };
+    case "SET_SELECT_CATEGORY":
+      return {
+        ...state,
+        selectedCategory: action.selectedCategory,
+      };
     default:
       return state;
   }

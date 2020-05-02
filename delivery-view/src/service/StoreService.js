@@ -2,7 +2,7 @@ import axios from "axios";
 import {
   changeLocationDispatch,
   changeChoiceTypeDispatch,
-} from "..//util/DispatchUtil";
+} from "../util/DispatchUtil";
 
 export function updateStore(
   dispatch,

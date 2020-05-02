@@ -1,5 +1,5 @@
 import { updateStore } from "./StoreService";
-import { setGeocoderDispatch } from "..//util/DispatchUtil";
+import { setGeocoderDispatch } from "../util/DispatchUtil";
 
 export function setCurrentLocation(state, dispatch) {
   navigator.geolocation.getCurrentPosition(
