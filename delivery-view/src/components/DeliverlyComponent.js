@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
+import StoreListComponent from "./list/StoreListComponent";
 import ChoiceTypeComponent from "./map/ChoiceTypeComponent";
 import GoogleMapComponent from "./map/GoogleMapComponent";
 import SearchComponent from "./search/SearchComponent";
@@ -18,6 +19,7 @@ export default function MapComponent() {
     <div>
       {state.geocoder && <SearchComponent />}
       <ChoiceTypeComponent />
+      {state.displayStoreList.length > 0 && <StoreListComponent />}
       {state.currentLocation && <GoogleMapComponent />}
     </div>
   );
