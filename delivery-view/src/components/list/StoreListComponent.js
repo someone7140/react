@@ -42,7 +42,7 @@ const StoreStyle = styled.li`
     opacity: 0.5;
   }
   :after {
-    content: "〉〉";
+    content: "ぐるなびへ〉";
     position: absolute;
     color: #d8d8d8;
     right: 5px;

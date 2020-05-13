@@ -6,7 +6,7 @@ import { updateStore } from "../../service/StoreService";
 
 const mapStyle = {
   width: "100%",
-  height: "85%",
+  height: "80%",
 };
 
 export const GoogleMapComponent = ({ google }) => {

@@ -30,7 +30,7 @@ export default function ChoiceTypeComponent() {
 
   return (
     <div>
-      デリバリー
+      【提供方式】 &nbsp;&nbsp; デリバリー
       <input
         type="checkbox"
         name="deliverly"

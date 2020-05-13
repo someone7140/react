@@ -4,13 +4,20 @@ import { setCategoryLList } from "../../service/CategoryService";
 import { searchPlace } from "../../service/GeolocationService";
 import { MapStore } from "../../store/MapStore";
 
+const searchTextStyle = {
+  width: "200px",
+  height: "18px",
+};
+
+const searchButtonStyle = {
+  color: "#ffffff",
+  backgroundColor: "#0000ff",
+  fontSize: "1em",
+};
+
 export default function SearchComponent() {
   const { state, dispatch } = useContext(MapStore);
   const [place, setPlace] = useState("");
-  const searchTextStyle = {
-    width: "200px",
-    height: "18px",
-  };
 
   const mounted = useRef(false);
   useEffect(() => {
@@ -45,8 +52,15 @@ export default function SearchComponent() {
               />
             </td>
             <td>{state.categoryLList.length > 0 && <CategoryComponent />}</td>
-            <td>
-              <input type="button" value="検索する" onClick={handleSearch} />
+          </tr>
+          <tr>
+            <td colSpan="3">
+              <input
+                style={searchButtonStyle}
+                type="button"
+                value="検索する"
+                onClick={handleSearch}
+              />
             </td>
           </tr>
         </tbody>
