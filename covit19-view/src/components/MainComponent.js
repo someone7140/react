@@ -33,11 +33,15 @@ export default function MainComponent() {
         setSearchConditionState,
         setSearchConditionSelectState
       );
-      setDisplayGraph(false);
-      setDisplayGraph(true);
+      if (searchCondition.selectRange) {
+        setDisplayGraph(false);
+        setDisplayGraph(true);
+      }
     } else {
-      setDisplayGraph(false);
-      setDisplayGraph(true);
+      if (searchCondition.selectRange) {
+        setDisplayGraph(false);
+        setDisplayGraph(true);
+      }
     }
     mounted.current = true;
   }, [
@@ -67,7 +71,7 @@ export default function MainComponent() {
         </div>
       )}
       {searchConditionSelect.length === 0 && <SearchInputComponent />}
-      {searchCondition && (
+      {searchCondition && searchCondition.selectRange && (
         <div>
           <br />
           <GraphTabsComponent displayGraph={displayGraph} />

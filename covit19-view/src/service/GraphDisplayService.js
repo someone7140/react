@@ -107,5 +107,7 @@ export function getDisplayPopulation(population) {
 // パーセンテージを取得
 export function getPercentage(numerator, denominator) {
   // 小数点第1位まで残す
-  return Math.floor((numerator / denominator) * 1000) / 10;
+  return denominator === 0
+    ? 0
+    : Math.floor((numerator / denominator) * 1000) / 10;
 }
