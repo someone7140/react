@@ -50,8 +50,8 @@ export default function CaseGraphComponent(inputProps) {
             stroke="gray" // 線の色
             unit="人" //単位
           />
-          <Line // 退院者数のデータを表示
-            name="退院者数"
+          <Line // 治療済者数のデータを表示
+            name="治療済者数"
             dataKey="discharge" // キー
             stroke="black" // 線の色
             unit="人" //単位

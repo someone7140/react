@@ -38,8 +38,8 @@ export default function TreatmentGraphComponent(inputProps) {
           />
           <Tooltip // ツールチップの表示
           />
-          <Line // 入院中のデータを表示
-            name="入院中"
+          <Line // 治療中のデータを表示
+            name="治療中"
             dataKey="hospitalize" // キー
             stroke="black" // 線の色
             unit="人" //単位
