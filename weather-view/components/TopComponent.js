@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { AuthContext } from "./auth/AuthProvider";
 import LoadingComponent from "./common/LoadingComponent";
 import LoginComponent from "./auth/LoginComponent";
-import RegisteredPoinstsWeatherComponent from "./weather/RegisteredPoinstsWeatherComponent";
+import GeographicPointsWeatherComponent from "./weather/GeographicPointsWeatherComponent";
 import { getUserInfoFromLocalStorageToken } from "../grpc/api/AuthenticationUserApi";
 
 export default function TopComponent() {
@@ -22,7 +22,7 @@ export default function TopComponent() {
   return (
     <>
       {!authInfo && <LoginComponent />}
-      {authInfo && <RegisteredPoinstsWeatherComponent />}
+      {authInfo && <GeographicPointsWeatherComponent />}
     </>
   );
 }

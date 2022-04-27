@@ -1,3 +1,4 @@
+// GoogleAPIのクライアントスクリプトをロード
 export const loadGoogleScript = () => {
   //loads the Google JavaScript Library
   (function () {

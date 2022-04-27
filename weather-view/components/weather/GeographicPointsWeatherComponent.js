@@ -3,11 +3,13 @@ import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 
 import RegisterPointComponent from "./register/RegisterPointComponent";
+import WeatherOfRegisteredPointsComponent from "./show/WeatherOfRegisteredPointsComponent";
 
-export default function RegisteredPoinstsWeatherComponent() {
+export default function GeographicPointsWeatherComponent() {
   const [openModal, setOpenModal] = useState(false);
   const [initialGeographicPoint, setInitialGeographicPoint] =
     useState(undefined);
+  const [refetchTime, setRefetchTime] = useState(0);
 
   function onCLoseModal() {
     setOpenModal(false);
@@ -15,6 +17,8 @@ export default function RegisteredPoinstsWeatherComponent() {
   function onUpdateData() {
     setOpenModal(false);
     toast("地点のデータを更新しました");
+    const nowDate = new Date();
+    setRefetchTime(nowDate.getTime());
   }
 
   useEffect(() => {
@@ -54,7 +58,8 @@ export default function RegisteredPoinstsWeatherComponent() {
           initialGeographicPoint={initialGeographicPoint}
         />
       )}
-      天気の一覧
+      <br />
+      <WeatherOfRegisteredPointsComponent />
     </>
   );
 }

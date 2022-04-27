@@ -20,30 +20,46 @@ export default function RegisterPointComponent(prop) {
     longitude: prop?.initialGeographicPoint?.longitude,
   });
   const [pointName, setPointName] = useState(prop.pointName);
-  const [regsiterError, setRegsiterError] = useState(false);
+  const [displayOrder, setDisplayOrder] = useState(prop.displayOrder);
+  const [registerError, setRegisterError] = useState(false);
 
   const handlePointNameChange = (event) => {
     setPointName(event.target.value);
   };
 
-  async function onClickRegsiterButton() {
+  const handleDisplayOrderChange = (event) => {
+    setDisplayOrder(parseInt(event.target.value));
+  };
+
+  async function onClickRegisterButton() {
     const result = await mutate(
       "/GeographicPointService/AddGeographicPoint",
-      addGeographicPoint(pointName, markerPin.latitude, markerPin.longitude)
+      addGeographicPoint(
+        pointName,
+        markerPin.latitude,
+        markerPin.longitude,
+        displayOrder
+      )
     );
     if (result.success) {
       setPointName("");
-      setRegsiterError(false);
+      setDisplayOrder(undefined);
+      setRegisterError(false);
       prop.onUpdateData();
     } else {
-      setRegsiterError(true);
+      setRegisterError(true);
     }
   }
 
   function onCancel() {
     setPointName("");
-    setRegsiterError(false);
+    setDisplayOrder(undefined);
+    setRegisterError(false);
     prop.onCLoseModal();
+  }
+
+  function checkEnableRegister() {
+    return pointName && markerPin && displayOrder && displayOrder > 0;
   }
 
   const boxStyle = {
@@ -52,7 +68,7 @@ export default function RegisterPointComponent(prop) {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "80%",
-    height: 570,
+    height: 600,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
@@ -98,15 +114,26 @@ export default function RegisterPointComponent(prop) {
               onChange={handlePointNameChange}
             />
           </Box>
+          <Box sx={{ m: "auto", mt: 2 }}>
+            <TextField
+              required
+              id="outlined-required"
+              label="表示順"
+              placeholder="1以上の数字を入力"
+              type="number"
+              defaultValue={displayOrder}
+              onChange={handleDisplayOrderChange}
+            />
+          </Box>
           <Box textAlign="center" sx={{ mt: 4 }}>
             <Button
               variant="contained"
-              disabled={!pointName || !markerPin}
-              onClick={onClickRegsiterButton}
+              disabled={!checkEnableRegister()}
+              onClick={onClickRegisterButton}
             >
               登録する
             </Button>
-            {regsiterError && (
+            {registerError && (
               <Box sx={{ mt: 2, color: "error.main" }}>
                 登録時にエラーが発生しました
               </Box>
