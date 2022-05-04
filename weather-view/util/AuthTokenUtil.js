@@ -1,11 +1,11 @@
-const AUTH_STOLEN_TORAGE_KEY = "authToken";
+const AUTH_STORAGE_TOKEN_KEY = "authToken";
 
 export const setAuthTokenLocalStorage = (authToken) => {
-  localStorage.setItem(AUTH_STOLEN_TORAGE_KEY, authToken);
+  localStorage.setItem(AUTH_STORAGE_TOKEN_KEY, authToken);
 };
 
 export const getAuthTokenFromLocalStorage = () => {
-  return localStorage.getItem(AUTH_STOLEN_TORAGE_KEY);
+  return localStorage.getItem(AUTH_STORAGE_TOKEN_KEY);
 };
 
 export const getAuthTokenMetaData = (authToken) => {

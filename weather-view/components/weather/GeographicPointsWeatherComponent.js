@@ -11,7 +11,7 @@ export default function GeographicPointsWeatherComponent() {
     useState(undefined);
   const [refetchTime, setRefetchTime] = useState(0);
 
-  function onCLoseModal() {
+  function onCloseModal() {
     setOpenModal(false);
   }
   function onUpdateData() {
@@ -53,13 +53,14 @@ export default function GeographicPointsWeatherComponent() {
       {initialGeographicPoint && (
         <RegisterPointComponent
           openModal={openModal}
-          onCLoseModal={onCLoseModal}
+          onCloseModal={onCloseModal}
           onUpdateData={onUpdateData}
           initialGeographicPoint={initialGeographicPoint}
         />
       )}
       <br />
-      <WeatherOfRegisteredPointsComponent />
+      <br />
+      <WeatherOfRegisteredPointsComponent onUpdateData={onUpdateData} />
     </>
   );
 }

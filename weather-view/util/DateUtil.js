@@ -8,10 +8,7 @@ export function getDateDisplayFromUnixTime(unixTime) {
     "/" +
     dt.getDate() +
     " " +
-    zeroFill(dt.getHours()) +
-    ":" +
-    zeroFill(dt.getMinutes()) +
-    ":" +
-    zeroFill(dt.getSeconds())
+    dt.getHours() +
+    "時"
   );
 }

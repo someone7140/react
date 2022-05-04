@@ -9,7 +9,10 @@ import Button from "@mui/material/Button";
 import { IconButton, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { addGeographicPoint } from "../../../grpc/api/GeographicPointApi";
+import {
+  addGeographicPoint,
+  updateGeographicPoint,
+} from "../../../grpc/api/GeographicPointApi";
 import MapboxComponent from "./MapboxComponent";
 
 export default function RegisterPointComponent(prop) {
@@ -22,6 +25,7 @@ export default function RegisterPointComponent(prop) {
   const [pointName, setPointName] = useState(prop.pointName);
   const [displayOrder, setDisplayOrder] = useState(prop.displayOrder);
   const [registerError, setRegisterError] = useState(false);
+  const [displayDeleteModal, setDisplayDeleteModal] = useState(false);
 
   const handlePointNameChange = (event) => {
     setPointName(event.target.value);
@@ -32,18 +36,35 @@ export default function RegisterPointComponent(prop) {
   };
 
   async function onClickRegisterButton() {
-    const result = await mutate(
-      "/GeographicPointService/AddGeographicPoint",
-      addGeographicPoint(
-        pointName,
-        markerPin.latitude,
-        markerPin.longitude,
-        displayOrder
-      )
-    );
-    if (result.success) {
-      setPointName("");
-      setDisplayOrder(undefined);
+    let result = undefined;
+    if (!prop.pointId) {
+      result = await mutate(
+        "/GeographicPointService/AddGeographicPoint",
+        addGeographicPoint(
+          pointName,
+          markerPin.latitude,
+          markerPin.longitude,
+          displayOrder
+        )
+      );
+    } else {
+      result = await mutate(
+        "/GeographicPointService/UpdateGeographicPoint",
+        updateGeographicPoint(
+          prop.pointId,
+          pointName,
+          markerPin.latitude,
+          markerPin.longitude,
+          displayOrder
+        )
+      );
+    }
+
+    if (result?.success) {
+      if (!prop.pointId) {
+        setPointName("");
+        setDisplayOrder(undefined);
+      }
       setRegisterError(false);
       prop.onUpdateData();
     } else {
@@ -51,11 +72,24 @@ export default function RegisterPointComponent(prop) {
     }
   }
 
+  function onClickDeleteButton() {
+    setDisplayDeleteModal(true);
+  }
+
+  function closeDelete() {
+    setDisplayDeleteModal(false);
+  }
+
+  function commitDelete() {
+    setDisplayDeleteModal(false);
+    prop.onUpdateData();
+  }
+
   function onCancel() {
-    setPointName("");
-    setDisplayOrder(undefined);
+    setPointName(prop.pointName);
+    setDisplayOrder(prop.displayOrder);
     setRegisterError(false);
-    prop.onCLoseModal();
+    prop.onCloseModal();
   }
 
   function checkEnableRegister() {
@@ -94,7 +128,7 @@ export default function RegisterPointComponent(prop) {
               <Grid sx={{ mt: 1 }}>地点登録</Grid>
               <Grid>
                 <IconButton>
-                  <CloseIcon onClick={prop.onCLoseModal} />
+                  <CloseIcon onClick={prop.onCloseModal} />
                 </IconButton>
               </Grid>
             </Grid>
@@ -126,13 +160,37 @@ export default function RegisterPointComponent(prop) {
             />
           </Box>
           <Box textAlign="center" sx={{ mt: 4 }}>
-            <Button
-              variant="contained"
-              disabled={!checkEnableRegister()}
-              onClick={onClickRegisterButton}
-            >
-              登録する
-            </Button>
+            {!prop.pointId && (
+              <Button
+                variant="contained"
+                disabled={!checkEnableRegister()}
+                onClick={onClickRegisterButton}
+              >
+                登録する
+              </Button>
+            )}
+            {prop.pointId && (
+              <Grid container direction="row" textAlign="center">
+                <Grid>
+                  <Button
+                    variant="contained"
+                    disabled={!checkEnableRegister()}
+                    onClick={onClickRegisterButton}
+                  >
+                    更新する
+                  </Button>
+                </Grid>
+                <Grid sx={{ ml: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    onClick={onClickDeleteButton}
+                  >
+                    削除する
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
             {registerError && (
               <Box sx={{ mt: 2, color: "error.main" }}>
                 登録時にエラーが発生しました

@@ -7,6 +7,9 @@ const nextConfig = {
     GCP_AUTH_CLIENT_ID: process.env.GCP_AUTH_CLIENT_ID,
     MAPBOX_TOKEN: process.env.MAPBOX_TOKEN,
   },
+  images: {
+    domains: ["openweathermap.org"],
+  },
 };
 
 module.exports = nextConfig;
