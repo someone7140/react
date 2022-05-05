@@ -15,6 +15,8 @@ import {
 } from "../../../grpc/api/GeographicPointApi";
 import MapboxComponent from "./MapboxComponent";
 
+import DeletePointComponent from "./DeletePointComponent";
+
 export default function RegisterPointComponent(prop) {
   const { mutate } = useSWRConfig();
 
@@ -76,10 +78,6 @@ export default function RegisterPointComponent(prop) {
     setDisplayDeleteModal(true);
   }
 
-  function closeDelete() {
-    setDisplayDeleteModal(false);
-  }
-
   function commitDelete() {
     setDisplayDeleteModal(false);
     prop.onUpdateData();
@@ -128,7 +126,7 @@ export default function RegisterPointComponent(prop) {
               <Grid sx={{ mt: 1 }}>地点登録</Grid>
               <Grid>
                 <IconButton>
-                  <CloseIcon onClick={prop.onCloseModal} />
+                  <CloseIcon onClick={onCancel} />
                 </IconButton>
               </Grid>
             </Grid>
@@ -199,6 +197,14 @@ export default function RegisterPointComponent(prop) {
           </Box>
         </Box>
       </Modal>
+      {prop.pointId && (
+        <DeletePointComponent
+          pointId={prop.pointId}
+          displayDeleteModal={displayDeleteModal}
+          setDisplayDeleteModal={setDisplayDeleteModal}
+          commitDelete={commitDelete}
+        />
+      )}
     </>
   );
 }

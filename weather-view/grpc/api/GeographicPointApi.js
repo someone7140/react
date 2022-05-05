@@ -2,6 +2,8 @@ import { GeographicPointServiceClient } from "../pb/geographicPoint_grpc_web_pb"
 import {
   AddGeographicPointRequest,
   GetWeatherListByGeographicPointRequest,
+  DeleteGeographicPointRequest,
+  UpdateGeographicPointRequest,
 } from "../pb/geographicPoint_pb";
 import {
   getAuthTokenFromLocalStorage,
@@ -54,14 +56,15 @@ export async function addGeographicPoint(name, lat, lon, displayOrder) {
 
 // 地点の更新
 export async function updateGeographicPoint(id, name, lat, lon, displayOrder) {
-  const request = new AddGeographicPointRequest();
+  const request = new UpdateGeographicPointRequest();
+  request.setId(id);
   request.setName(name);
   request.setLat(lat);
   request.setLon(lon);
   request.setDisplayorder(displayOrder);
 
   try {
-    const addGeographicPointPromise = new Promise((resolve, reject) => {
+    const updateGeographicPointPromise = new Promise((resolve, reject) => {
       const authToken = getAuthTokenFromLocalStorage();
       // LocalStorageにトークンが無ければfalseで返す
       if (!authToken) {
@@ -69,7 +72,7 @@ export async function updateGeographicPoint(id, name, lat, lon, displayOrder) {
           success: false,
         });
       } else {
-        geographicPointService.addGeographicPoint(
+        geographicPointService.updateGeographicPoint(
           request,
           getAuthTokenMetaData(authToken),
           (err, response) => {
@@ -86,7 +89,44 @@ export async function updateGeographicPoint(id, name, lat, lon, displayOrder) {
         );
       }
     });
-    return await addGeographicPointPromise;
+    return await updateGeographicPointPromise;
+  } catch (_) {
+    return { success: false };
+  }
+}
+
+// 地点の削除
+export async function deleteGeographicPoint(id) {
+  const request = new DeleteGeographicPointRequest();
+  request.setId(id);
+
+  try {
+    const deleteGeographicPointPromise = new Promise((resolve, reject) => {
+      const authToken = getAuthTokenFromLocalStorage();
+      // LocalStorageにトークンが無ければfalseで返す
+      if (!authToken) {
+        resolve({
+          success: false,
+        });
+      } else {
+        geographicPointService.deleteGeographicPoint(
+          request,
+          getAuthTokenMetaData(authToken),
+          (err, response) => {
+            if (err) {
+              reject({
+                success: false,
+              });
+            } else {
+              resolve({
+                success: true,
+              });
+            }
+          }
+        );
+      }
+    });
+    return await deleteGeographicPointPromise;
   } catch (_) {
     return { success: false };
   }

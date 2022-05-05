@@ -60,7 +60,10 @@ export default function GeographicPointsWeatherComponent() {
       )}
       <br />
       <br />
-      <WeatherOfRegisteredPointsComponent onUpdateData={onUpdateData} />
+      <WeatherOfRegisteredPointsComponent
+        onUpdateData={onUpdateData}
+        refetchTime={refetchTime}
+      />
     </>
   );
 }

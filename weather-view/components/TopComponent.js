@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { AuthContext } from "./auth/AuthProvider";
 import LoadingComponent from "./common/LoadingComponent";
 import LoginComponent from "./auth/LoginComponent";
+import HeaderComponent from "./common/HeaderComponent";
 import GeographicPointsWeatherComponent from "./weather/GeographicPointsWeatherComponent";
 import { getUserInfoFromLocalStorageToken } from "../grpc/api/AuthenticationUserApi";
 
@@ -21,6 +22,7 @@ export default function TopComponent() {
 
   return (
     <>
+      <HeaderComponent />
       {!authInfo && <LoginComponent />}
       {authInfo && <GeographicPointsWeatherComponent />}
     </>

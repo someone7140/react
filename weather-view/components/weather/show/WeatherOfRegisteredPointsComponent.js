@@ -1,4 +1,5 @@
-import useSWR from "swr";
+import { useEffect } from "react";
+import useSWR, { useSWRConfig } from "swr";
 import Image from "next/image";
 
 import Table from "@mui/material/Table";
@@ -25,12 +26,19 @@ function getStickyCellStyle(width, zIndex, left) {
 }
 
 export default function WeatherOfRegisteredPointsComponent(prop) {
+  const { mutate } = useSWRConfig();
   const { data, error } = useSWR(
     "/grpc/getWeatherListByGeographicPoint",
     async () => {
       return await getWeatherGeographicPoints();
     }
   );
+
+  useEffect(() => {
+    if (prop.refetchTime) {
+      mutate("/grpc/getWeatherListByGeographicPoint");
+    }
+  }, [mutate, prop.refetchTime]);
 
   function renderWeatherInfo(weatherInfo) {
     return (
