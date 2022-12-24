@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:tailwindcss/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "ignorePatterns": [
+    "*.config.js"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+  }
+}
