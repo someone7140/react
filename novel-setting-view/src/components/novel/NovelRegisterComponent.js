@@ -18,11 +18,7 @@ export default function NovelRegisterComponent(prop) {
 
   const { mutate, isLoading, isError } = useMutation(async () => {
     if (prop.novel) {
-      await updateNovelTitle(
-        authStore.userAccount.token,
-        prop.novel._id,
-        title
-      );
+      await updateNovelTitle(authStore.userAccount.token, prop.novel.id, title);
       toast.current.show({
         severity: "info",
         summary: "Info",

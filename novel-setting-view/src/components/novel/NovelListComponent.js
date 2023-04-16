@@ -34,7 +34,7 @@ export default function NovelListComponent(prop) {
         <>
           {data.map((novel) => (
             <div
-              key={novel._id}
+              key={novel.id}
               style={{
                 display: "flex",
                 gap: 10,
