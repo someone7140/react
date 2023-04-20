@@ -14,7 +14,7 @@ export async function getNovelSettingList(token, novelId) {
 }
 
 // 小説設定のレコードを作成
-export async function createNovelSetting(novelId, name, order) {
+export async function createNovelSetting(token, novelId, name, order) {
   await axios.post(
     `${process.env.NEXT_PUBLIC_API_DOMAIN}/novel/setting/create_novel`,
     {
