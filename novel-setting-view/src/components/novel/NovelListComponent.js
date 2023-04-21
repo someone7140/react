@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 import NovelRegisterComponent from "components/novel/NovelRegisterComponent";
@@ -7,6 +9,7 @@ import { useAuthStore } from "hooks/store/useAuthStore";
 import { getNovelList } from "services/api/ApiNovelService";
 
 export default function NovelListComponent(prop) {
+  const router = useRouter();
   const authStore = useAuthStore();
   const { data, isLoading, isError, refetch } = useQuery(
     ["novelList"],
@@ -49,6 +52,17 @@ export default function NovelListComponent(prop) {
                   setListUpdateTime={prop.setListUpdateTime}
                   novel={novel}
                 />
+              </div>
+              <div>
+                <Button
+                  rounded
+                  severity="success"
+                  onClick={() => {
+                    router.push(`/novel/setting/top?novelId=${novel.id}`);
+                  }}
+                >
+                  物語設定
+                </Button>
               </div>
             </div>
           ))}

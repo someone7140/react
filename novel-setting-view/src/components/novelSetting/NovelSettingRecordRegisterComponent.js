@@ -18,7 +18,12 @@ export default function NovelSettingRecordRegisterComponent(prop) {
   const toast = useRef(null);
 
   const { mutate, isLoading, isError } = useMutation(async () => {
-    await createNovelSetting(authStore.userAccount.token, title);
+    await createNovelSetting(
+      authStore.userAccount.token,
+      prop.novelId,
+      name,
+      nextOrder
+    );
     toast.current.show({
       severity: "info",
       summary: "Info",
@@ -38,14 +43,14 @@ export default function NovelSettingRecordRegisterComponent(prop) {
         maxOrder = setting.order;
       }
     });
-    prop.settingList.setNextOrder(maxOrder + 1);
+    setNextOrder(maxOrder + 1);
   }, [prop.settingList]);
 
   return (
     <>
       <Toast ref={toast} />
       <Dialog
-        header={prop.novel ? "タイトル変更" : "小説登録"}
+        header={"設定登録"}
         visible={showDialog}
         closable={!isLoading}
         onHide={() => setShowDialog(false)}
@@ -53,10 +58,10 @@ export default function NovelSettingRecordRegisterComponent(prop) {
         <div style={{ width: 350 }}>
           <InputText
             type="text"
-            placeholder="小説名を入力"
+            placeholder="設定名を入力"
             value={title}
             onChange={(e) => {
-              setTitle(e.target.value);
+              setName(e.target.value);
             }}
             style={{ width: 300 }}
           />
@@ -79,28 +84,15 @@ export default function NovelSettingRecordRegisterComponent(prop) {
           )}
         </div>
       </Dialog>
-      {!prop.novel && (
-        <Button
-          rounded
-          onClick={() => {
-            setTitle("");
-            setShowDialog(true);
-          }}
-        >
-          小説登録
-        </Button>
-      )}
-      {prop.novel && (
-        <Button
-          severity="warning"
-          onClick={() => {
-            setTitle(prop.novel.title);
-            setShowDialog(true);
-          }}
-        >
-          タイトル変更
-        </Button>
-      )}
+      <Button
+        rounded
+        onClick={() => {
+          setName("");
+          setShowDialog(true);
+        }}
+      >
+        設定登録
+      </Button>
     </>
   );
 }

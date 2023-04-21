@@ -1,5 +1,3 @@
-import NovelRegisterComponent from "components/novel/NovelRegisterComponent";
-
 export default function NovelListComponent(prop) {
   return (
     <>
