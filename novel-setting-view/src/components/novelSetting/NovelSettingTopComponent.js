@@ -49,7 +49,7 @@ export default function NovelSettingTopComponent(prop) {
               alignItems: "center",
             }}
           >
-            <div style={{ marginLeft: 150 }}>
+            <div style={{ marginLeft: "5%" }}>
               <Button
                 onClick={() => {
                   router.push("/novel/top");
@@ -63,17 +63,25 @@ export default function NovelSettingTopComponent(prop) {
                 ← 小説一覧へ戻る
               </Button>
             </div>
-            <div style={{ fontSize: 20, marginRight: 450 }}>
-              「{data.novelTitle}」の設定
+            <div style={{ fontSize: 20, marginRight: "25%" }}>
+              「{data.novelTitle}」の設定一覧
             </div>
             <div></div>
           </div>
-          <div style={{ marginRight: 150 }}>
-            <NovelSettingListComponent
-              setListUpdateTime={setListUpdateTime}
-              novelId={prop.novelId}
-              data={data.settingList}
-            />
+          <div style={{ marginRight: "10%" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <NovelSettingListComponent
+                setListUpdateTime={setListUpdateTime}
+                novelId={prop.novelId}
+                data={data.settingList}
+              />
+            </div>
             <NovelSettingRecordRegisterComponent
               setListUpdateTime={setListUpdateTime}
               novelId={prop.novelId}

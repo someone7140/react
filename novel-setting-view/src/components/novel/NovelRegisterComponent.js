@@ -84,7 +84,7 @@ export default function NovelRegisterComponent(prop) {
             setShowDialog(true);
           }}
         >
-          小説登録
+          小説追加
         </Button>
       )}
       {prop.novel && (

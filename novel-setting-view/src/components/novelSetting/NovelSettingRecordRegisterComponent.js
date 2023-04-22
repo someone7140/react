@@ -8,7 +8,10 @@ import { Toast } from "primereact/toast";
 import { useMutation } from "@tanstack/react-query";
 
 import { useAuthStore } from "hooks/store/useAuthStore";
-import { createNovelSetting } from "services/api/ApiNovelSettingService";
+import {
+  createNovelSetting,
+  updateNovelSettingName,
+} from "services/api/ApiNovelSettingService";
 
 export default function NovelSettingRecordRegisterComponent(prop) {
   const authStore = useAuthStore();
@@ -18,18 +21,32 @@ export default function NovelSettingRecordRegisterComponent(prop) {
   const toast = useRef(null);
 
   const { mutate, isLoading, isError } = useMutation(async () => {
-    await createNovelSetting(
-      authStore.userAccount.token,
-      prop.novelId,
-      name,
-      nextOrder
-    );
-    toast.current.show({
-      severity: "info",
-      summary: "Info",
-      detail: "設定を登録しました",
-      life: 3000,
-    });
+    if (prop.setting) {
+      await updateNovelSettingName(
+        authStore.userAccount.token,
+        prop.setting.id,
+        name
+      );
+      toast.current.show({
+        severity: "info",
+        summary: "Info",
+        detail: "設定名称を更新しました",
+        life: 3000,
+      });
+    } else {
+      await createNovelSetting(
+        authStore.userAccount.token,
+        prop.novelId,
+        name,
+        nextOrder
+      );
+      toast.current.show({
+        severity: "info",
+        summary: "Info",
+        detail: "設定を登録しました",
+        life: 3000,
+      });
+    }
 
     prop.setListUpdateTime(Date.now());
     setShowDialog(false);
@@ -84,14 +101,28 @@ export default function NovelSettingRecordRegisterComponent(prop) {
           )}
         </div>
       </Dialog>
-      <Button
-        onClick={() => {
-          setName("");
-          setShowDialog(true);
-        }}
-      >
-        設定登録
-      </Button>
+      {!prop.setting && (
+        <Button
+          onClick={() => {
+            setName("");
+            setShowDialog(true);
+          }}
+        >
+          設定追加
+        </Button>
+      )}
+      {prop.setting && (
+        <Button
+          rounded
+          severity="warning"
+          onClick={() => {
+            setName(prop.setting.name);
+            setShowDialog(true);
+          }}
+        >
+          設定名変更
+        </Button>
+      )}
     </>
   );
 }
