@@ -79,7 +79,6 @@ export default function NovelRegisterComponent(prop) {
       </Dialog>
       {!prop.novel && (
         <Button
-          rounded
           onClick={() => {
             setTitle("");
             setShowDialog(true);
@@ -90,6 +89,7 @@ export default function NovelRegisterComponent(prop) {
       )}
       {prop.novel && (
         <Button
+          rounded
           severity="warning"
           onClick={() => {
             setTitle(prop.novel.title);

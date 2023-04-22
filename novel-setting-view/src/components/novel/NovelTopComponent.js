@@ -12,7 +12,7 @@ export default function NovelTopComponent() {
         listUpdateTime={listUpdateTime}
         setListUpdateTime={setListUpdateTime}
       />
-      <div style={{ marginTop: 10 }}>
+      <div style={{ marginTop: 5 }}>
         <NovelRegisterComponent setListUpdateTime={setListUpdateTime} />
       </div>
     </div>

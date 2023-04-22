@@ -1,18 +1,19 @@
 "use client";
 
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 
 import NovelSettingTopComponent from "components/novelSetting/NovelSettingTopComponent";
 import { useAuthStore } from "hooks/store/useAuthStore";
 
 export default function NovelSettingTopPage() {
-  const router = useRouter();
   const authStore = useAuthStore();
+  const searchParams = useSearchParams();
+  const novelId = searchParams.get("novelId");
 
   return (
     <>
-      {authStore?.userAccount && router.query.novelId && (
-        <NovelSettingTopComponent novelId={router.query.novelId} />
+      {authStore?.userAccount && novelId && (
+        <NovelSettingTopComponent novelId={novelId} />
       )}
     </>
   );

@@ -3,7 +3,7 @@ import axios from "axios";
 // 小説設定のリストを取得
 export async function getNovelSettingList(token, novelId) {
   const result = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_DOMAIN}/novel/novel_list?novelId=${novelId}`,
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/novel/setting/setting_list?novelId=${novelId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

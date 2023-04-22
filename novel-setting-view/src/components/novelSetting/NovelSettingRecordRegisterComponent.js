@@ -38,7 +38,7 @@ export default function NovelSettingRecordRegisterComponent(prop) {
   useEffect(() => {
     // maxのorderを取得
     let maxOrder = 0;
-    prop.settingList.foreach((setting) => {
+    prop.settingList.forEach((setting) => {
       if (setting.order > maxOrder) {
         maxOrder = setting.order;
       }
@@ -59,7 +59,7 @@ export default function NovelSettingRecordRegisterComponent(prop) {
           <InputText
             type="text"
             placeholder="設定名を入力"
-            value={title}
+            value={name}
             onChange={(e) => {
               setName(e.target.value);
             }}
@@ -71,7 +71,7 @@ export default function NovelSettingRecordRegisterComponent(prop) {
               onClick={() => {
                 mutate();
               }}
-              disabled={!title}
+              disabled={!name}
               loading={isLoading}
             >
               登録
@@ -85,7 +85,6 @@ export default function NovelSettingRecordRegisterComponent(prop) {
         </div>
       </Dialog>
       <Button
-        rounded
         onClick={() => {
           setName("");
           setShowDialog(true);

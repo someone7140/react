@@ -34,39 +34,41 @@ export default function NovelListComponent(prop) {
         <div style={{ color: "red" }}>一覧取得時にエラーが発生しました</div>
       )}
       {!isLoading && !isError && (
-        <>
-          {data.map((novel) => (
-            <div
-              key={novel.id}
-              style={{
-                display: "flex",
-                gap: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 15,
-              }}
-            >
-              <div>{novel.title}</div>
-              <div>
-                <NovelRegisterComponent
-                  setListUpdateTime={prop.setListUpdateTime}
-                  novel={novel}
-                />
-              </div>
-              <div>
-                <Button
-                  rounded
-                  severity="success"
-                  onClick={() => {
-                    router.push(`/novel/setting/top?novelId=${novel.id}`);
-                  }}
-                >
-                  物語設定
-                </Button>
-              </div>
-            </div>
-          ))}
-        </>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {data.length > 0 && (
+            <table style={{ borderCollapse: "separate", borderSpacing: 20 }}>
+              {data.map((novel) => (
+                <tr key={novel.id}>
+                  <td>{novel.title}</td>
+                  <td>
+                    <NovelRegisterComponent
+                      setListUpdateTime={prop.setListUpdateTime}
+                      novel={novel}
+                    />
+                  </td>
+                  <td>
+                    <Button
+                      rounded
+                      severity="success"
+                      onClick={() => {
+                        router.push(`/novel/setting/top?novelId=${novel.id}`);
+                      }}
+                    >
+                      物語設定
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </table>
+          )}
+          {data.length === 0 && <>小説を登録してください</>}
+        </div>
       )}
     </>
   );
