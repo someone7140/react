@@ -1,20 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
 import { v4 as uuidv4 } from "uuid";
 
 import NovelSettingDetailRootInputComponent from "components/novelSetting/detail/input/NovelSettingDetailRootInputComponent";
-import NovelSettingDetailRegisterComponent from "components/novelSetting/detail/NovelSettingDetailRegisterComponent";
 import { useAuthStore } from "hooks/store/useAuthStore";
-import { getNovelSettingById } from "services/api/ApiNovelSettingService";
+import {
+  getNovelSettingById,
+  updateNovelSettings,
+} from "services/api/ApiNovelSettingService";
 
 export default function NovelSettingDetailComponent(prop) {
+  const toast = useRef(null);
   const router = useRouter();
   const authStore = useAuthStore();
   const [settings, setSettings] = useState([]);
+
   const { data, isLoading, isError, refetch } = useQuery(
     ["novelSetting"],
     async () => {
@@ -26,6 +31,30 @@ export default function NovelSettingDetailComponent(prop) {
     },
     {
       enabled: true,
+    }
+  );
+
+  const { mutate, isLoading: isMutationLoading } = useMutation(
+    async () => {
+      await updateNovelSettings(authStore.userAccount.token, prop.id, settings);
+    },
+    {
+      onSuccess: (response) => {
+        toast.current.show({
+          severity: "info",
+          summary: "Info",
+          detail: "保存しました",
+          life: 3000,
+        });
+      },
+      onError: (error) => {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "保存時にエラーが発生しました",
+          life: 3000,
+        });
+      },
     }
   );
 
@@ -42,6 +71,7 @@ export default function NovelSettingDetailComponent(prop) {
 
   return (
     <div style={{ textAlign: "center" }}>
+      <Toast ref={toast} />
       {isLoading && <ProgressSpinner />}
       {isError && (
         <div style={{ color: "red" }}>設定情報取得時にエラーが発生しました</div>
@@ -80,7 +110,12 @@ export default function NovelSettingDetailComponent(prop) {
             </div>
             <div></div>
           </div>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             {settings.length == 0 && <>まずは設定行を追加してください</>}
             {settings.length > 0 && (
               <div
@@ -114,19 +149,31 @@ export default function NovelSettingDetailComponent(prop) {
               onClick={() => {
                 setSettings([...settings, { id: uuidv4() }]);
               }}
+              disabled={isMutationLoading || isLoading}
             >
               設定行を追加
             </Button>
-            <NovelSettingDetailRegisterComponent
-              id={prop.id}
-              novelId={prop.novelId}
-              settings={settings}
-            />
+            <Button
+              onClick={() => {
+                mutate();
+              }}
+              disabled={isLoading}
+              loading={isMutationLoading}
+            >
+              保存
+            </Button>
             <Button
               severity="secondary"
-              onClick={() => {
-                refetch();
+              onClick={async () => {
+                await refetch();
+                toast.current.show({
+                  severity: "info",
+                  summary: "Info",
+                  detail: "戻しました",
+                  life: 3000,
+                });
               }}
+              disabled={isMutationLoading || isLoading}
             >
               保存前に戻す
             </Button>

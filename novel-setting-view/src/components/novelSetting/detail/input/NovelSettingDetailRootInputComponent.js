@@ -9,7 +9,7 @@ export default function NovelSettingDetailRootInputComponent(prop) {
       if (s.id != prop.setting.id) {
         return s;
       } else {
-        return { ...setting, value: updatedValue };
+        return { ...prop.setting, value: updatedValue };
       }
     });
     prop.setSettings(updatedSettings);

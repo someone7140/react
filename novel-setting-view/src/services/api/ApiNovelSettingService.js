@@ -46,6 +46,22 @@ export async function updateNovelSettingName(token, id, name) {
   );
 }
 
+// 設定の内容を更新
+export async function updateNovelSettings(token, id, settings) {
+  await axios.post(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/novel/setting/update_settings`,
+    {
+      id,
+      settings,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
+
 // ID指定で設定情報を編集
 export async function getNovelSettingById(token, id, novelId) {
   const result = await axios.get(
