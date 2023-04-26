@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -30,6 +30,14 @@ export default function NovelSettingDetailComponent(prop) {
       );
     },
     {
+      onSuccess: (response) => {
+        const settingsFromApi = response?.setting?.settings;
+        if (settingsFromApi?.length > 0) {
+          setSettings(settingsFromApi);
+        } else {
+          setSettings([]);
+        }
+      },
       enabled: true,
     }
   );
@@ -57,17 +65,6 @@ export default function NovelSettingDetailComponent(prop) {
       },
     }
   );
-
-  useEffect(() => {
-    if (data?.settings) {
-      const settingsFromApi = JSON.parse(data.settings);
-      if (settingsFromApi?.length > 0) {
-        setSettings(settingsFromApi);
-      }
-    } else {
-      setSettings([]);
-    }
-  }, [data]);
 
   return (
     <div style={{ textAlign: "center" }}>
@@ -127,7 +124,7 @@ export default function NovelSettingDetailComponent(prop) {
               >
                 {settings.map((setting) => (
                   <NovelSettingDetailRootInputComponent
-                    key={setting.id}
+                    key={setting._id}
                     setSettings={setSettings}
                     setting={setting}
                     settings={settings}
@@ -147,33 +144,35 @@ export default function NovelSettingDetailComponent(prop) {
             <Button
               severity="success"
               onClick={() => {
-                setSettings([...settings, { id: uuidv4() }]);
+                if (!isMutationLoading && !isLoading) {
+                  setSettings([...settings, { _id: uuidv4(), children: [] }]);
+                }
               }}
-              disabled={isMutationLoading || isLoading}
             >
               設定行を追加
             </Button>
             <Button
               onClick={() => {
-                mutate();
+                if (!isMutationLoading && !isLoading) {
+                  mutate();
+                }
               }}
-              disabled={isLoading}
-              loading={isMutationLoading}
             >
               保存
             </Button>
             <Button
               severity="secondary"
               onClick={async () => {
-                await refetch();
-                toast.current.show({
-                  severity: "info",
-                  summary: "Info",
-                  detail: "戻しました",
-                  life: 3000,
-                });
+                if (!isMutationLoading && !isLoading) {
+                  await refetch();
+                  toast.current.show({
+                    severity: "info",
+                    summary: "Info",
+                    detail: "戻しました",
+                    life: 3000,
+                  });
+                }
               }}
-              disabled={isMutationLoading || isLoading}
             >
               保存前に戻す
             </Button>
