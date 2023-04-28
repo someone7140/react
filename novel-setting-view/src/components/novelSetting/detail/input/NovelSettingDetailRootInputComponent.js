@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 
@@ -7,6 +9,7 @@ import NovelSettingDetailChildComponent from "components/novelSetting/detail/inp
 
 export default function NovelSettingDetailRootInputComponent(prop) {
   const [settingValue, setSettingValue] = useState(prop.setting.value);
+
   useEffect(() => {
     setSettingValue(prop.setting.value);
   }, [prop.setting.value]);
@@ -41,7 +44,6 @@ export default function NovelSettingDetailRootInputComponent(prop) {
       }
     });
     prop.setSettings(updatedSettings);
-    setSettingValue(updatedValue);
   };
 
   const deleteSetting = () => {
@@ -66,6 +68,7 @@ export default function NovelSettingDetailRootInputComponent(prop) {
         }}
       >
         <InputText
+          key={`${prop.setting._id}rootInput`}
           type="text"
           placeholder="設定値を入力"
           value={settingValue}
@@ -98,13 +101,14 @@ export default function NovelSettingDetailRootInputComponent(prop) {
           <div
             key={child._id}
             style={{
-              marginLeft: 10,
+              marginLeft: 40,
               display: "flex",
               flexDirection: "column",
               gap: 10,
             }}
           >
             <NovelSettingDetailChildComponent
+              key={`${child._id}component`}
               setSettings={prop.setSettings}
               setting={child}
               settings={prop.settings}

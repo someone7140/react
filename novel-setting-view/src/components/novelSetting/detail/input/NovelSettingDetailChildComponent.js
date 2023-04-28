@@ -12,21 +12,17 @@ export default function NovelSettingDetailChildComponent(prop) {
     setSettingValue(prop.setting.value);
   }, [prop.setting]);
 
-  const loopChildUpdate = (children, name, value) => {
+  const loopChildrenUpdate = (children, name, value) => {
     if (children && children.length > 0) {
-      const updatedChildren = prop.settings.map((s) => {
+      const updatedChildren = children.map((s) => {
         if (s._id != prop.setting._id) {
           return {
-            ...s.setting,
-            children: loopChildUpdate(
-              s.setting?.children,
-              updatedValue,
-              prop.setting.value
-            ),
+            ...s,
+            children: loopChildrenUpdate(s.children, name, value),
           };
         } else {
           return {
-            ...s.setting,
+            ...s,
             name: name,
             value: value,
           };
@@ -44,8 +40,8 @@ export default function NovelSettingDetailChildComponent(prop) {
         return s;
       } else {
         return {
-          ...s.setting,
-          children: loopChildUpdate(s.setting?.children, name, value),
+          ...s,
+          children: loopChildrenUpdate(s.children, name, value),
         };
       }
     });
@@ -56,11 +52,11 @@ export default function NovelSettingDetailChildComponent(prop) {
 
   const deleteChild = (children) => {
     if (children && children.length > 0) {
-      const deletedChildren = prop.settings.flatMap((s) => {
+      const deletedChildren = children.flatMap((s) => {
         if (s._id != prop.setting._id) {
           return {
-            ...s.setting,
-            children: loopChildUpdate(s.setting?.children),
+            ...s,
+            children: deleteChild(s.children),
           };
         } else {
           return [];
@@ -78,8 +74,8 @@ export default function NovelSettingDetailChildComponent(prop) {
         return s;
       } else {
         return {
-          ...s.setting,
-          children: deleteChild(s.setting?.children),
+          ...s,
+          children: deleteChild(s.children),
         };
       }
     });
@@ -94,20 +90,22 @@ export default function NovelSettingDetailChildComponent(prop) {
       }}
     >
       <InputText
+        key={`${prop.setting._id}childName`}
         type="text"
         placeholder="設定名を入力"
         value={settingName}
         onChange={(e) => {
-          changeNameAndValue(e.target.value, prop.setting.value);
+          changeNameAndValue(e.target.value, settingValue);
         }}
         style={{ width: 300 }}
       />
       <InputText
+        key={`${prop.setting._id}childValue`}
         type="text"
         placeholder="設定値を入力"
         value={settingValue}
         onChange={(e) => {
-          changeNameAndValue(e.target.value, prop.setting.value);
+          changeNameAndValue(settingName, e.target.value);
         }}
         style={{ width: 300 }}
       />
