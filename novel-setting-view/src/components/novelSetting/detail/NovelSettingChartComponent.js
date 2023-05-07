@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { OrganizationChart } from "primereact/organizationchart";
 
 export default function NovelSettingChartComponent(prop) {
+  /*
   const [chartData] = useState([
     {
       label: "登場人物",
@@ -50,6 +51,42 @@ export default function NovelSettingChartComponent(prop) {
       ],
     },
   ]);
+  */
+
+  const [chartData, setChartData] = useState(undefined);
+
+  useEffect(() => {
+    const setting = prop.setting;
+    const makeChildrenChart = (level, children) => {
+      if (!children) {
+        return [];
+      }
+      return children.map((child) => {
+        if (level == 1) {
+          return {
+            label: child.value,
+            expanded: true,
+            children: makeChildrenChart(level + 1, child.children),
+          };
+        }
+        return {
+          label: child.name,
+          value: child.value,
+          expanded: false,
+          children: makeChildrenChart(level + 1, child.children),
+        };
+      });
+    };
+
+    const updateChartData = [
+      {
+        label: setting.name,
+        expanded: true,
+        children: makeChildrenChart(1, setting.settings),
+      },
+    ];
+    setChartData(updateChartData);
+  }, [prop.setting]);
 
   const nodeTemplate = (node) => {
     return (
@@ -58,6 +95,7 @@ export default function NovelSettingChartComponent(prop) {
           display: "flex",
           flexDirection: "column",
           gap: 10,
+          minWidth: 70,
         }}
       >
         <div
@@ -72,5 +110,11 @@ export default function NovelSettingChartComponent(prop) {
     );
   };
 
-  return <OrganizationChart value={chartData} nodeTemplate={nodeTemplate} />;
+  return (
+    <>
+      {chartData && (
+        <OrganizationChart value={chartData} nodeTemplate={nodeTemplate} />
+      )}
+    </>
+  );
 }

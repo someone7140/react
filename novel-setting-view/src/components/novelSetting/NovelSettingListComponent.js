@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 
+import NovelSettingChartComponent from "components/novelSetting/detail/NovelSettingChartComponent";
 import NovelSettingRecordRegisterComponent from "components/novelSetting/NovelSettingRecordRegisterComponent";
 
 export default function NovelSettingListComponent(prop) {
@@ -49,7 +50,9 @@ export default function NovelSettingListComponent(prop) {
           toggleable
           collapsed={true}
         >
-          aaaaaaa
+          <div style={{ overflowX: "scroll" }}>
+            <NovelSettingChartComponent setting={setting} />
+          </div>
         </Panel>
       ))}
     </div>
