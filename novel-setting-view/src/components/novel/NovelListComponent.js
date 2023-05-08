@@ -63,6 +63,17 @@ export default function NovelListComponent(prop) {
                       物語設定
                     </Button>
                   </td>
+                  <td>
+                    <Button
+                      rounded
+                      severity="info"
+                      onClick={() => {
+                        router.push(`/novel/contents?novelId=${novel.id}`);
+                      }}
+                    >
+                      文章作成
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </table>
