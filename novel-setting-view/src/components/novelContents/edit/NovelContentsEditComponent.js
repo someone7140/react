@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { createEditor, Editor, Element as SlateElement } from "slate";
+import { Toast } from "primereact/toast";
+import {
+  createEditor,
+  Editor,
+  Element as SlateElement,
+  Transforms,
+} from "slate";
 import { Slate, Editable, withReact } from "slate-react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function NovelContentsEditComponent(prop) {
-  const initialValue = [
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ];
-
+  const toast = useRef(null);
   const [editor] = useState(() => withReact(createEditor()));
 
+  // 現在位置の見出しのキーを取得
   const getBlockKey = (selection, format, blockType = "type") => {
     if (!selection) return undefined;
 
@@ -30,11 +32,52 @@ export default function NovelContentsEditComponent(prop) {
     return match?.length ? match[0].key : undefined;
   };
 
-  useEffect(() => {
+  const onChange = () => {
     const key = getBlockKey(editor.selection, "headline");
-    console.log(key);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor.selection]);
+  };
+
+  const headlineSetting = () => {
+    const selection = editor.selection;
+    if (!selection) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Warning",
+        detail: "見出しの範囲を選択してください",
+        life: 3000,
+      });
+    } else {
+      Transforms.setNodes(editor, {
+        key: uuidv4(),
+        type: "headline",
+      });
+    }
+  };
+
+  const headlineLift = () => {
+    const selection = editor.selection;
+    if (!selection) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Warning",
+        detail: "見出しの範囲を選択してください",
+        life: 3000,
+      });
+    } else {
+      const isBlockActive = !!getBlockKey(editor.selection, "headline");
+      if (isBlockActive) {
+        Transforms.setNodes(editor, {
+          type: "paragraph",
+        });
+      }
+    }
+  };
+
+  const initialValue = [
+    {
+      type: "paragraph",
+      children: [{ text: "" }],
+    },
+  ];
 
   return (
     <div
@@ -44,6 +87,7 @@ export default function NovelContentsEditComponent(prop) {
         gap: 30,
       }}
     >
+      <Toast ref={toast} />
       <Card
         title="見出し"
         style={{
@@ -72,8 +116,23 @@ export default function NovelContentsEditComponent(prop) {
                 height: 15,
                 width: 140,
               }}
+              onClick={() => {
+                headlineSetting();
+              }}
             >
               見出しの設定
+            </Button>
+            <Button
+              severity="warning"
+              style={{
+                height: 15,
+                width: 140,
+              }}
+              onClick={() => {
+                headlineLift();
+              }}
+            >
+              見出しの解除
             </Button>
           </div>
         }
@@ -85,7 +144,13 @@ export default function NovelContentsEditComponent(prop) {
           overflowY: "scroll",
         }}
       >
-        <Slate editor={editor} value={initialValue}>
+        <Slate
+          editor={editor}
+          value={initialValue}
+          onChange={(currTextContent) => {
+            onChange();
+          }}
+        >
           <Editable
             placeholder="ここに本文を入力"
             style={{
