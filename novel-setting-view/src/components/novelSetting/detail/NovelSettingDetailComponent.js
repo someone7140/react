@@ -94,8 +94,8 @@ export default function NovelSettingDetailComponent(prop) {
                   router.push(`/novel/setting/top?novelId=${prop.novelId}`);
                 }}
                 style={{
-                  backgroundColor: "gainsboro",
-                  borderColor: "gainsboro",
+                  backgroundColor: "cornsilk",
+                  borderColor: "cornsilk",
                   color: "gray",
                 }}
               >

@@ -43,8 +43,8 @@ export default function NovelContentsComponent(prop) {
                   router.push("/novel/top");
                 }}
                 style={{
-                  backgroundColor: "gainsboro",
-                  borderColor: "gainsboro",
+                  backgroundColor: "cornsilk",
+                  borderColor: "cornsilk",
                   color: "gray",
                 }}
               >

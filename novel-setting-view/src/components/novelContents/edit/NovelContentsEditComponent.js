@@ -12,9 +12,14 @@ import {
 import { Slate, Editable, withReact } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
 
+import NovelContentsHeadingSetDialogComponent from "components/novelContents/edit/NovelContentsHeadingSetDialogComponent";
+
 export default function NovelContentsEditComponent(prop) {
   const toast = useRef(null);
   const [editor] = useState(() => withReact(createEditor()));
+  const [headlineList, setHeadlineList] = useState([]);
+  const [headlineMap, setHeadlineMap] = useState(new Map()); // 見出しのキーと名前の管理用map
+  const [showHeadlineSetDialog, setShowHeadlineSetDialog] = useState(false);
 
   // 現在位置の見出しのキーを取得
   const getBlockKey = (selection, format, blockType = "type") => {
@@ -32,6 +37,36 @@ export default function NovelContentsEditComponent(prop) {
     return match?.length ? match[0].key : undefined;
   };
 
+  // 見出しリストの更新
+  const updateHeadLineList = () => {
+    const listRegisteredMap = new Map(); // リストに追加したキーを管理するmap
+    const newHeadlineList = [];
+    editor.children.filter(type === "headline").forEach((child) => {
+      const key = child.key;
+      if (key && !listRegisteredMap.get(key)) {
+        const name = headlineMap.get(key);
+        newHeadlineList.push({
+          key: key,
+          name: name,
+        });
+        listRegisteredMap.set(key, name);
+      }
+    });
+
+    setHeadlineMap(listRegisteredMap); // 追加したものだけstateのmapに再セット
+    setHeadlineList(newHeadlineList);
+  };
+
+  // 見出しの追加
+  const addHeadline = (addName) => {
+    const addKey = uuidv4();
+    setHeadlineMap(new Map(headlineMap.set(addKey, addName)));
+    Transforms.setNodes(editor, {
+      key: addKey,
+      type: "headline",
+    });
+  };
+
   const onChange = () => {
     const key = getBlockKey(editor.selection, "headline");
   };
@@ -46,10 +81,8 @@ export default function NovelContentsEditComponent(prop) {
         life: 3000,
       });
     } else {
-      Transforms.setNodes(editor, {
-        key: uuidv4(),
-        type: "headline",
-      });
+      // 見出しの名前設定用ダイアログを開く
+      setShowHeadlineSetDialog(true);
     }
   };
 
@@ -67,6 +100,7 @@ export default function NovelContentsEditComponent(prop) {
       if (isBlockActive) {
         Transforms.setNodes(editor, {
           type: "paragraph",
+          key: undefined,
         });
       }
     }
@@ -88,6 +122,11 @@ export default function NovelContentsEditComponent(prop) {
       }}
     >
       <Toast ref={toast} />
+      <NovelContentsHeadingSetDialogComponent
+        addHeadline={addHeadline}
+        showDialog={showHeadlineSetDialog}
+        setShowDialog={setShowHeadlineSetDialog}
+      />
       <Card
         title="見出し"
         style={{
@@ -147,7 +186,11 @@ export default function NovelContentsEditComponent(prop) {
         <Slate
           editor={editor}
           value={initialValue}
-          onChange={(currTextContent) => {
+          onChange={() => {
+            // 見出しのブロックが変更されたらリストもアップデート
+            if (editor.operations.some((op) => op.type === "set_node")) {
+              updateHeadLineList();
+            }
             onChange();
           }}
         >
