@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -13,6 +13,7 @@ import { Slate, Editable, withReact } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
 
 import NovelContentsHeadingSetDialogComponent from "components/novelContents/edit/NovelContentsHeadingSetDialogComponent";
+import NovelContentsHeadLineListComponent from "components/novelContents/edit/NovelContentsHeadLineListComponent";
 
 export default function NovelContentsEditComponent(prop) {
   const toast = useRef(null);
@@ -41,17 +42,19 @@ export default function NovelContentsEditComponent(prop) {
   const updateHeadLineList = () => {
     const listRegisteredMap = new Map(); // リストに追加したキーを管理するmap
     const newHeadlineList = [];
-    editor.children.filter(type === "headline").forEach((child) => {
-      const key = child.key;
-      if (key && !listRegisteredMap.get(key)) {
-        const name = headlineMap.get(key);
-        newHeadlineList.push({
-          key: key,
-          name: name,
-        });
-        listRegisteredMap.set(key, name);
-      }
-    });
+    editor.children
+      .filter((child) => child.type === "headline")
+      .forEach((child) => {
+        const key = child.key;
+        if (key && !listRegisteredMap.get(key)) {
+          const name = headlineMap.get(key);
+          newHeadlineList.push({
+            key: key,
+            name: name,
+          });
+          listRegisteredMap.set(key, name);
+        }
+      });
 
     setHeadlineMap(listRegisteredMap); // 追加したものだけstateのmapに再セット
     setHeadlineList(newHeadlineList);
@@ -137,7 +140,10 @@ export default function NovelContentsEditComponent(prop) {
           overflowY: "scroll",
         }}
       >
-        <div style={{ wordWrap: "break-word" }}>aaaa</div>
+        {headlineList.length > 0 && (
+          <NovelContentsHeadLineListComponent headlineList={headlineList} />
+        )}
+        {headlineList.length == 0 && <div>見出しの設定はありません</div>}
       </Card>
       <Card
         title={
