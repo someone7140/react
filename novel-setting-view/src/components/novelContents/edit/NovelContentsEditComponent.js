@@ -9,7 +9,7 @@ import {
   Element as SlateElement,
   Transforms,
 } from "slate";
-import { Slate, Editable, withReact } from "slate-react";
+import { Slate, Editable, ReactEditor, withReact } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
 
 import NovelContentsHeadingSetDialogComponent from "components/novelContents/edit/NovelContentsHeadingSetDialogComponent";
@@ -21,6 +21,7 @@ export default function NovelContentsEditComponent(prop) {
   const [headlineList, setHeadlineList] = useState([]);
   const [headlineMap, setHeadlineMap] = useState(new Map()); // 見出しのキーと名前の管理用map
   const [showHeadlineSetDialog, setShowHeadlineSetDialog] = useState(false);
+  const [focusHeadlineKey, setFocusHeadlineKey] = useState(undefined);
 
   // 現在位置の見出しのキーを取得
   const getBlockKey = (selection, format, blockType = "type") => {
@@ -60,21 +61,13 @@ export default function NovelContentsEditComponent(prop) {
     setHeadlineList(newHeadlineList);
   };
 
-  // 見出しの追加
-  const addHeadline = (addName) => {
-    const addKey = uuidv4();
-    setHeadlineMap(new Map(headlineMap.set(addKey, addName)));
-    Transforms.setNodes(editor, {
-      key: addKey,
-      type: "headline",
-    });
-  };
-
   const onChange = () => {
+    // 見出しの選択位置の変更を反映
     const key = getBlockKey(editor.selection, "headline");
+    setFocusHeadlineKey(key);
   };
 
-  const headlineSetting = () => {
+  const openHeadlineSetting = () => {
     const selection = editor.selection;
     if (!selection) {
       toast.current.show({
@@ -89,6 +82,17 @@ export default function NovelContentsEditComponent(prop) {
     }
   };
 
+  // 見出しの追加
+  const addHeadline = (addName) => {
+    const addKey = uuidv4();
+    setHeadlineMap(new Map(headlineMap.set(addKey, addName)));
+    Transforms.setNodes(editor, {
+      key: addKey,
+      type: "headline",
+    });
+  };
+
+  // 見出しの削除
   const headlineLift = () => {
     const selection = editor.selection;
     if (!selection) {
@@ -106,6 +110,20 @@ export default function NovelContentsEditComponent(prop) {
           key: undefined,
         });
       }
+    }
+  };
+
+  // 見出しの選択
+  const selectHeadline = (key) => {
+    const selectedIndex = editor.children.findIndex(
+      (child) => child.key == key
+    );
+    if (selectedIndex > -1) {
+      const selectPath = { path: [selectedIndex, 0], offset: 0 };
+      const selectLocation = { anchor: selectPath, focus: selectPath };
+      Transforms.select(editor, selectLocation);
+      ReactEditor.focus(editor);
+      setFocusHeadlineKey(key);
     }
   };
 
@@ -141,7 +159,11 @@ export default function NovelContentsEditComponent(prop) {
         }}
       >
         {headlineList.length > 0 && (
-          <NovelContentsHeadLineListComponent headlineList={headlineList} />
+          <NovelContentsHeadLineListComponent
+            headlineList={headlineList}
+            focusHeadlineKey={focusHeadlineKey}
+            selectHeadline={selectHeadline}
+          />
         )}
         {headlineList.length == 0 && <div>見出しの設定はありません</div>}
       </Card>
@@ -162,7 +184,7 @@ export default function NovelContentsEditComponent(prop) {
                 width: 140,
               }}
               onClick={() => {
-                headlineSetting();
+                openHeadlineSetting();
               }}
             >
               見出しの設定
