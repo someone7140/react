@@ -71,7 +71,6 @@ export default function NovelContentsEditComponent(prop) {
           listRegisteredMap.set(key, name);
         }
       });
-
     setHeadlineMap(listRegisteredMap); // 追加したものだけstateのmapに再セット
     setHeadlineList(newHeadlineList);
   };
@@ -120,7 +119,6 @@ export default function NovelContentsEditComponent(prop) {
     } else {
       const blockKey = getBlockKey(editor.selection, "headline");
       if (blockKey) {
-        setHeadlineMap(new Map(headlineMap.delete(blockKey)));
         Transforms.setNodes(editor, {
           type: "paragraph",
           key: undefined,
