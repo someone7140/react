@@ -12,7 +12,9 @@ export default function NovelContentsHeadLineListComponent(prop) {
   return (
     <ListBox
       onChange={(e) => {
-        prop.selectHeadline(e.value.code);
+        if (e?.value?.code) {
+          prop.selectHeadline(e.value.code);
+        }
       }}
       options={options}
       optionLabel="name"

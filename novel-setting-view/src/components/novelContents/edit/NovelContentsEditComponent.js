@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -22,6 +22,21 @@ export default function NovelContentsEditComponent(prop) {
   const [headlineMap, setHeadlineMap] = useState(new Map()); // 見出しのキーと名前の管理用map
   const [showHeadlineSetDialog, setShowHeadlineSetDialog] = useState(false);
   const [focusHeadlineKey, setFocusHeadlineKey] = useState(undefined);
+
+  const renderElement = useCallback(
+    ({ attributes, children, element }) => {
+      // 現在選択している見出しの場合はフォントを太字にする
+      if (element.type === "headline" && element.key === focusHeadlineKey) {
+        return (
+          <div {...attributes} style={{ fontWeight: 700 }}>
+            {children}
+          </div>
+        );
+      }
+      return <div {...attributes}>{children}</div>;
+    },
+    [focusHeadlineKey]
+  );
 
   // 現在位置の見出しのキーを取得
   const getBlockKey = (selection, format, blockType = "type") => {
@@ -103,8 +118,9 @@ export default function NovelContentsEditComponent(prop) {
         life: 3000,
       });
     } else {
-      const isBlockActive = !!getBlockKey(editor.selection, "headline");
-      if (isBlockActive) {
+      const blockKey = getBlockKey(editor.selection, "headline");
+      if (blockKey) {
+        setHeadlineMap(new Map(headlineMap.delete(blockKey)));
         Transforms.setNodes(editor, {
           type: "paragraph",
           key: undefined,
@@ -229,6 +245,7 @@ export default function NovelContentsEditComponent(prop) {
               minHeight: 420,
               overflowY: "scroll",
             }}
+            renderElement={renderElement}
           />
         </Slate>
       </Card>
