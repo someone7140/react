@@ -123,6 +123,9 @@ export default function NovelContentsEditComponent(prop) {
           type: "paragraph",
           key: undefined,
         });
+      } else {
+        // ブロックのキーが存在紙な状態でも、一度見出しのリストを再更新する
+        updateHeadLineList();
       }
     }
   };
