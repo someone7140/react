@@ -7,14 +7,15 @@ import { ProgressSpinner } from "primereact/progressspinner";
 
 import NovelContentsEditComponent from "components/novelContents/edit/NovelContentsEditComponent";
 import { useAuthStore } from "hooks/store/useAuthStore";
+import { getNovelContents } from "services/api/ApiNovelContentsService";
 
 export default function NovelContentsComponent(prop) {
   const router = useRouter();
   const authStore = useAuthStore();
-  const { data, isLoading, isError, refetch } = useQuery(
+  const { data, isLoading, isError } = useQuery(
     ["novelContents"],
     async () => {
-      return true;
+      return await getNovelContents(authStore.userAccount.token, prop.novelId);
     },
     {
       refetchOnWindowFocus: false,
@@ -52,11 +53,17 @@ export default function NovelContentsComponent(prop) {
               </Button>
             </div>
             <div style={{ fontSize: 20, marginRight: "25%" }}>
-              「{data.novelTitle}」の文章
+              「{data.title}」の文章
             </div>
             <div></div>
           </div>
-          <NovelContentsEditComponent />
+          {data && (
+            <NovelContentsEditComponent
+              novelId={prop.novelId}
+              initialContents={data.contentRecords}
+              initialHeadlines={data.contentHeadlines}
+            />
+          )}
         </>
       )}
     </div>

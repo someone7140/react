@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import NovelContentsHeadingSetDialogComponent from "components/novelContents/edit/NovelContentsHeadingSetDialogComponent";
 import NovelContentsHeadLineListComponent from "components/novelContents/edit/NovelContentsHeadLineListComponent";
+import NovelContentsRegisterComponent from "components/novelContents/edit/NovelContentsRegisterComponent";
 
 export default function NovelContentsEditComponent(prop) {
   const toast = useRef(null);
@@ -218,6 +219,7 @@ export default function NovelContentsEditComponent(prop) {
             >
               見出しの解除
             </Button>
+            <NovelContentsRegisterComponent />
           </div>
         }
         style={{

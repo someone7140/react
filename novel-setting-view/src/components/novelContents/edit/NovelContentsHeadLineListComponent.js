@@ -1,4 +1,3 @@
-import { Menu } from "primereact/menu";
 import { ListBox } from "primereact/listbox";
 
 export default function NovelContentsHeadLineListComponent(prop) {
