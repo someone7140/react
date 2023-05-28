@@ -19,10 +19,33 @@ import NovelContentsRegisterComponent from "components/novelContents/edit/NovelC
 export default function NovelContentsEditComponent(prop) {
   const toast = useRef(null);
   const [editor] = useState(() => withReact(createEditor()));
-  const [headlineList, setHeadlineList] = useState([]);
-  const [headlineMap, setHeadlineMap] = useState(new Map()); // 見出しのキーと名前の管理用map
   const [showHeadlineSetDialog, setShowHeadlineSetDialog] = useState(false);
   const [focusHeadlineKey, setFocusHeadlineKey] = useState(undefined);
+
+  const getHeadlineMapFromList = (inputList) => {
+    const returnMap = new Map();
+    if (inputList && inputList.length > 0) {
+      inputList.forEach((headline) => {
+        returnMap.set(headline.key, headline.name);
+      });
+    }
+    return returnMap;
+  };
+
+  const [headlineList, setHeadlineList] = useState(prop.initialHeadlines ?? []);
+  const [headlineMap, setHeadlineMap] = useState(
+    getHeadlineMapFromList(prop.initialHeadlines)
+  ); // 見出しのキーと名前の管理用map
+
+  const initialValue =
+    prop.initialContents && prop.initialContents.length > 0
+      ? prop.initialContents
+      : [
+          {
+            type: "paragraph",
+            children: [{ text: "" }],
+          },
+        ];
 
   const renderElement = useCallback(
     ({ attributes, children, element }) => {
@@ -145,13 +168,6 @@ export default function NovelContentsEditComponent(prop) {
     }
   };
 
-  const initialValue = [
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ];
-
   return (
     <div
       style={{
@@ -172,7 +188,8 @@ export default function NovelContentsEditComponent(prop) {
           width: 300,
           textAlign: "start",
           border: "solid blue 1px",
-          height: 520,
+          height: 600,
+          minWidth: 250,
           overflowY: "scroll",
         }}
       >
@@ -219,14 +236,25 @@ export default function NovelContentsEditComponent(prop) {
             >
               見出しの解除
             </Button>
-            <NovelContentsRegisterComponent />
+            <div
+              style={{
+                marginLeft: 20,
+              }}
+            >
+              <NovelContentsRegisterComponent
+                contentId={prop.contentId}
+                contents={editor.children}
+                headlines={headlineList}
+              />
+            </div>
           </div>
         }
         style={{
           width: 1000,
           textAlign: "start",
           border: "solid orange 1px",
-          height: 520,
+          height: 600,
+          minWidth: 650,
           overflowY: "scroll",
         }}
       >
@@ -245,7 +273,7 @@ export default function NovelContentsEditComponent(prop) {
             placeholder="ここに本文を入力"
             style={{
               border: "solid darkslategray",
-              minHeight: 420,
+              minHeight: 460,
               overflowY: "scroll",
             }}
             renderElement={renderElement}

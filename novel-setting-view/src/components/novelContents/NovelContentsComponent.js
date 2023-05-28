@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
@@ -60,6 +58,7 @@ export default function NovelContentsComponent(prop) {
           {data && (
             <NovelContentsEditComponent
               novelId={prop.novelId}
+              contentId={data.id}
               initialContents={data.contentRecords}
               initialHeadlines={data.contentHeadlines}
             />
