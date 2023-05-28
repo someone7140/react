@@ -5,17 +5,19 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-import NovelContentsEditComponent from "components/novelContents/edit/NovelContentsEditComponent";
 import { useAuthStore } from "hooks/store/useAuthStore";
-import { getNovelContents } from "services/api/ApiNovelContentsService";
+import { getNovelSettingList } from "services/api/ApiNovelSettingService";
 
-export default function NovelContentsComponent(prop) {
+export default function NovelPromptComponent(prop) {
   const router = useRouter();
   const authStore = useAuthStore();
   const { data, isLoading, isError } = useQuery(
-    ["novelContents"],
+    ["novelSettingList"],
     async () => {
-      return await getNovelContents(authStore.userAccount.token, prop.novelId);
+      return await getNovelSettingList(
+        authStore.userAccount.token,
+        prop.novelId
+      );
     },
     {
       refetchOnWindowFocus: false,
@@ -26,7 +28,7 @@ export default function NovelContentsComponent(prop) {
     <div style={{ textAlign: "center" }}>
       {isLoading && <ProgressSpinner />}
       {isError && (
-        <div style={{ color: "red" }}>文章情報取得時にエラーが発生しました</div>
+        <div style={{ color: "red" }}>設定取得時にエラーが発生しました</div>
       )}
       {!isLoading && !isError && (
         <>
@@ -52,10 +54,12 @@ export default function NovelContentsComponent(prop) {
                 ← 小説一覧へ戻る
               </Button>
             </div>
-            <div style={{ fontSize: 20 }}>「{data.title}」の文章</div>
+            <div style={{ fontSize: 20 }}>
+              「{data.novelTitle}」の設定でプロンプト作成
+            </div>
             <div>
               <Link
-                href={`/novel/prompt?novelId=${prop.novelId}`}
+                href={`/novel/contents?novelId=${prop.novelId}`}
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -64,23 +68,15 @@ export default function NovelContentsComponent(prop) {
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
-                    marginRight: 30,
+                    marginRight: 40,
                   }}
                 >
                   <i class="pi pi-external-link" />
-                  <div>プロンプト作成</div>
+                  <div>小説内容</div>
                 </div>
               </Link>
             </div>
           </div>
-          {data && (
-            <NovelContentsEditComponent
-              novelId={prop.novelId}
-              contentId={data.id}
-              initialContents={data.contentRecords}
-              initialHeadlines={data.contentHeadlines}
-            />
-          )}
         </>
       )}
     </div>
