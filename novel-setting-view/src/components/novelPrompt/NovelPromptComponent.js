@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -5,12 +7,16 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
+import NovelPromptTextAreaComponent from "components/novelPrompt/input/NovelPromptTextAreaComponent";
 import { useAuthStore } from "hooks/store/useAuthStore";
 import { getNovelSettingList } from "services/api/ApiNovelSettingService";
 
 export default function NovelPromptComponent(prop) {
   const router = useRouter();
   const authStore = useAuthStore();
+  const [promptInput, setPromptInput] = useState(undefined);
+  const [inputSettingList, setInputSettingList] = useState(undefined);
+
   const { data, isLoading, isError } = useQuery(
     ["novelSettingList"],
     async () => {
@@ -31,13 +37,20 @@ export default function NovelPromptComponent(prop) {
         <div style={{ color: "red" }}>設定取得時にエラーが発生しました</div>
       )}
       {!isLoading && !isError && (
-        <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <div
             style={{
               paddingBottom: 15,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              width: 1200,
             }}
           >
             <div style={{ marginLeft: "5%" }}>
@@ -77,7 +90,20 @@ export default function NovelPromptComponent(prop) {
               </Link>
             </div>
           </div>
-        </>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
+            <div>クリップボードにコピー</div>
+            <NovelPromptTextAreaComponent
+              value={promptInput}
+              setValue={setPromptInput}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
