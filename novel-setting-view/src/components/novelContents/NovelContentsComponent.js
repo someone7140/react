@@ -67,7 +67,7 @@ export default function NovelContentsComponent(prop) {
                     marginRight: 30,
                   }}
                 >
-                  <i class="pi pi-external-link" />
+                  <i className="pi pi-external-link" />
                   <div>プロンプト作成</div>
                 </div>
               </Link>

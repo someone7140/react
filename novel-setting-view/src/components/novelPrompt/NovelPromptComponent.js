@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -6,16 +6,19 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
 
+import NovelPromptSettingSelectComponent from "components/novelPrompt/input/NovelPromptSettingSelectComponent";
 import NovelPromptTextAreaComponent from "components/novelPrompt/input/NovelPromptTextAreaComponent";
 import { useAuthStore } from "hooks/store/useAuthStore";
 import { getNovelSettingList } from "services/api/ApiNovelSettingService";
 
 export default function NovelPromptComponent(prop) {
   const router = useRouter();
+  const toast = useRef(null);
   const authStore = useAuthStore();
   const [promptInput, setPromptInput] = useState(undefined);
-  const [inputSettingList, setInputSettingList] = useState(undefined);
+  const [inputSetting, setInputSetting] = useState("");
 
   const { data, isLoading, isError } = useQuery(
     ["novelSettingList"],
@@ -32,6 +35,7 @@ export default function NovelPromptComponent(prop) {
 
   return (
     <div style={{ textAlign: "center" }}>
+      <Toast ref={toast} />
       {isLoading && <ProgressSpinner />}
       {isError && (
         <div style={{ color: "red" }}>設定取得時にエラーが発生しました</div>
@@ -84,7 +88,7 @@ export default function NovelPromptComponent(prop) {
                     marginRight: 40,
                   }}
                 >
-                  <i class="pi pi-external-link" />
+                  <i className="pi pi-external-link" />
                   <div>小説内容</div>
                 </div>
               </Link>
@@ -97,10 +101,33 @@ export default function NovelPromptComponent(prop) {
               alignItems: "start",
             }}
           >
-            <div>クリップボードにコピー</div>
+            <Button
+              rounded
+              severity="success"
+              onClick={() => {
+                navigator.clipboard.writeText(promptInput);
+                toast.current.show({
+                  severity: "info",
+                  summary: "Info",
+                  detail: "クリップボードに内容をコピーしました",
+                  life: 3000,
+                });
+              }}
+              style={{ marginBottom: 15 }}
+            >
+              クリップボードにコピー
+            </Button>
             <NovelPromptTextAreaComponent
               value={promptInput}
               setValue={setPromptInput}
+              inputSetting={inputSetting}
+              setInputSetting={setInputSetting}
+            />
+            <NovelPromptSettingSelectComponent
+              novelId={prop.novelId}
+              settingList={data.settingList}
+              promptValue={promptInput}
+              setPromptValue={setPromptInput}
             />
           </div>
         </div>

@@ -97,7 +97,7 @@ export default function HeaderComponent() {
         <div style={{ marginLeft: 15 }}>
           <Menu model={menuItems} popup ref={menu} />
           <i
-            class="pi pi-bars"
+            className="pi pi-bars"
             style={{ fontSize: "2rem", cursor: "pointer" }}
             onClick={(e) => menu.current.toggle(e)}
           />
