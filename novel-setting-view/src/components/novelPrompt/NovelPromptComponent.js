@@ -102,7 +102,6 @@ export default function NovelPromptComponent(prop) {
             }}
           >
             <Button
-              rounded
               severity="success"
               onClick={() => {
                 navigator.clipboard.writeText(promptInput);

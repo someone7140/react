@@ -35,6 +35,14 @@ export default function NovelPromptSettingSelectComponent(prop) {
     }
   };
 
+  const onAllCheck = () => {
+    setSelectedChildSettings(childList);
+  };
+
+  const onAllCheckDelete = () => {
+    setSelectedChildSettings([]);
+  };
+
   const addPromptInput = () => {
     const parent = prop.settingList.find(
       (setting) => setting.id === selectParentSetting.code
@@ -64,7 +72,7 @@ export default function NovelPromptSettingSelectComponent(prop) {
         });
       });
 
-      prop.setPromptValue(prop.promptValue + addPrompt);
+      prop.setPromptValue((prop.promptValue ?? "") + addPrompt);
     }
   };
 
@@ -136,6 +144,29 @@ export default function NovelPromptSettingSelectComponent(prop) {
                       </div>
                     );
                   })}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 15,
+                    }}
+                  >
+                    <Button rounded severity="info" onClick={onAllCheck}>
+                      全てチェック
+                    </Button>
+                    <Button
+                      rounded
+                      style={{
+                        backgroundColor: "lightGray",
+                        borderColor: "cornsilk",
+                        color: "black",
+                        width: 110,
+                      }}
+                      onClick={onAllCheckDelete}
+                    >
+                      全て外す
+                    </Button>
+                  </div>
                 </div>
               )}
             </>
@@ -144,6 +175,9 @@ export default function NovelPromptSettingSelectComponent(prop) {
             severity="primary"
             onClick={addPromptInput}
             disabled={!(selectedChildSettings.length > 0)}
+            style={{
+              height: 50,
+            }}
           >
             プロンプトに追記
           </Button>

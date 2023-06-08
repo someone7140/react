@@ -43,3 +43,18 @@ export async function updateNovelTitle(token, id, title) {
     }
   );
 }
+
+// 小説を削除
+export async function deleteNovel(token, id) {
+  await axios.post(
+    `${process.env.NEXT_PUBLIC_API_DOMAIN}/novel/delete_novel`,
+    {
+      id,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
