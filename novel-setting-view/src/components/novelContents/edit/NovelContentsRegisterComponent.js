@@ -16,7 +16,7 @@ export default function NovelContentsRegisterComponent(prop) {
     await updateNovelContents(
       authStore.userAccount.token,
       prop.contentId,
-      prop.contents,
+      prop.editor.children,
       prop.headlines
     );
     toast.current.show({

@@ -243,7 +243,7 @@ export default function NovelContentsEditComponent(prop) {
             >
               <NovelContentsRegisterComponent
                 contentId={prop.contentId}
-                contents={editor.children}
+                editor={editor}
                 headlines={headlineList}
               />
             </div>
