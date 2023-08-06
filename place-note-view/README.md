@@ -1,0 +1,1 @@
+- ` npx buf generate ./proto`で TypeScript のソースコードを生成

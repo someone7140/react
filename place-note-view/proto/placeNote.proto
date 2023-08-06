@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package placeNote;
+
+service UserService {
+    rpc AuthGoogleCode(AuthGoogleCodeRequest) returns (AuthGoogleCodeResponse) {}
+}
+
+message AuthGoogleCodeRequest {
+    string authCode = 1;
+}
+
+message AuthGoogleCodeResponse {
+    string authGoogleToken = 1;
+}
