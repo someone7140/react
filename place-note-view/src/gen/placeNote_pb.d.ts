@@ -7,50 +7,100 @@ import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialM
 import { Message, proto3 } from "@bufbuild/protobuf";
 
 /**
- * @generated from message placeNote.AuthGoogleCodeRequest
+ * @generated from enum placeNote.AuthMethod
  */
-export declare class AuthGoogleCodeRequest extends Message<AuthGoogleCodeRequest> {
+export declare enum AuthMethod {
   /**
-   * @generated from field: string authCode = 1;
+   * @generated from enum value: UNKNOWN = 0;
    */
-  authCode: string;
+  UNKNOWN = 0,
 
-  constructor(data?: PartialMessage<AuthGoogleCodeRequest>);
+  /**
+   * @generated from enum value: GOOGLE = 1;
+   */
+  GOOGLE = 1,
 
-  static readonly runtime: typeof proto3;
-  static readonly typeName = "placeNote.AuthGoogleCodeRequest";
-  static readonly fields: FieldList;
-
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AuthGoogleCodeRequest;
-
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AuthGoogleCodeRequest;
-
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AuthGoogleCodeRequest;
-
-  static equals(a: AuthGoogleCodeRequest | PlainMessage<AuthGoogleCodeRequest> | undefined, b: AuthGoogleCodeRequest | PlainMessage<AuthGoogleCodeRequest> | undefined): boolean;
+  /**
+   * @generated from enum value: EMAIL = 2;
+   */
+  EMAIL = 2,
 }
 
 /**
- * @generated from message placeNote.AuthGoogleCodeResponse
+ * @generated from message placeNote.RegsiterUserRequest
  */
-export declare class AuthGoogleCodeResponse extends Message<AuthGoogleCodeResponse> {
+export declare class RegsiterUserRequest extends Message<RegsiterUserRequest> {
   /**
-   * @generated from field: string authGoogleToken = 1;
+   * @generated from field: string authToken = 1;
    */
-  authGoogleToken: string;
+  authToken: string;
 
-  constructor(data?: PartialMessage<AuthGoogleCodeResponse>);
+  /**
+   * @generated from field: placeNote.AuthMethod authMethod = 2;
+   */
+  authMethod: AuthMethod;
+
+  /**
+   * @generated from field: string userSettingId = 3;
+   */
+  userSettingId: string;
+
+  /**
+   * @generated from field: string name = 4;
+   */
+  name: string;
+
+  constructor(data?: PartialMessage<RegsiterUserRequest>);
 
   static readonly runtime: typeof proto3;
-  static readonly typeName = "placeNote.AuthGoogleCodeResponse";
+  static readonly typeName = "placeNote.RegsiterUserRequest";
   static readonly fields: FieldList;
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AuthGoogleCodeResponse;
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegsiterUserRequest;
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AuthGoogleCodeResponse;
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegsiterUserRequest;
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AuthGoogleCodeResponse;
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegsiterUserRequest;
 
-  static equals(a: AuthGoogleCodeResponse | PlainMessage<AuthGoogleCodeResponse> | undefined, b: AuthGoogleCodeResponse | PlainMessage<AuthGoogleCodeResponse> | undefined): boolean;
+  static equals(a: RegsiterUserRequest | PlainMessage<RegsiterUserRequest> | undefined, b: RegsiterUserRequest | PlainMessage<RegsiterUserRequest> | undefined): boolean;
+}
+
+/**
+ * @generated from message placeNote.UserResponse
+ */
+export declare class UserResponse extends Message<UserResponse> {
+  /**
+   * @generated from field: string token = 1;
+   */
+  token: string;
+
+  /**
+   * @generated from field: placeNote.AuthMethod authMethod = 2;
+   */
+  authMethod: AuthMethod;
+
+  /**
+   * @generated from field: string userSettingId = 3;
+   */
+  userSettingId: string;
+
+  /**
+   * @generated from field: string name = 4;
+   */
+  name: string;
+
+  constructor(data?: PartialMessage<UserResponse>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "placeNote.UserResponse";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UserResponse;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UserResponse;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UserResponse;
+
+  static equals(a: UserResponse | PlainMessage<UserResponse> | undefined, b: UserResponse | PlainMessage<UserResponse> | undefined): boolean;
 }
 

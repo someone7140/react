@@ -5,23 +5,23 @@
 
 import { createQueryService } from "@bufbuild/connect-query";
 import { MethodKind } from "@bufbuild/protobuf";
-import { AuthGoogleCodeRequest, AuthGoogleCodeResponse } from "./placeNote_pb.js";
+import { RegsiterUserRequest, UserResponse } from "./placeNote_pb.js";
 
 export const typeName = "placeNote.UserService";
 
 /**
- * @generated from rpc placeNote.UserService.AuthGoogleCode
+ * @generated from rpc placeNote.UserService.RegisterUser
  */
-export const authGoogleCode = createQueryService({
+export const registerUser = createQueryService({
   service: {
     methods: {
-      authGoogleCode: {
-        name: "AuthGoogleCode",
+      registerUser: {
+        name: "RegisterUser",
         kind: MethodKind.Unary,
-        I: AuthGoogleCodeRequest,
-        O: AuthGoogleCodeResponse,
+        I: RegsiterUserRequest,
+        O: UserResponse,
       },
     },
     typeName: "placeNote.UserService",
   },
-}).authGoogleCode;
+}).registerUser;

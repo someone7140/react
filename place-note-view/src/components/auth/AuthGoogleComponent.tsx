@@ -1,26 +1,35 @@
 "use client";
 
-import { authGoogleCode } from "@/gen/placeNote-UserService_connectquery";
-import { useMutation } from "@tanstack/react-query";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { Button } from "flowbite-react";
 import React, { FC } from "react";
 
-export const AuthGoogleComponent: FC = () => {
-  const { mutationFn: authMutationFn } = authGoogleCode.useMutation();
-  const { mutate: authMutate, isLoading: authLoading } = useMutation(
-    async (authCode: string) => {
-      const aaaa = await authMutationFn({ authCode });
-      console.log(aaaa);
-    }
-  );
+type Props = {
+  onAuthGoogle: (authCode: string) => void;
+};
 
-  const onAuthClick = () => {
-    authMutate("aaaa");
-  };
+const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle }) => {
+  const login = useGoogleLogin({
+    onSuccess: async (codeResponse) => {
+      onAuthGoogle(codeResponse.code);
+    },
+    flow: "auth-code",
+    scope: "email profile openid", // scopeはスペース区切り
+  });
 
   return (
-    <Button color="purple" pill onClick={onAuthClick}>
+    <Button color="purple" pill onClick={login}>
       <p>Google認証</p>
     </Button>
+  );
+};
+
+export const AuthGoogleComponent: FC<Props> = ({ onAuthGoogle }) => {
+  return (
+    <GoogleOAuthProvider
+      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""}
+    >
+      <GoogleLoginComponent onAuthGoogle={onAuthGoogle} />
+    </GoogleOAuthProvider>
   );
 };

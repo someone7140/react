@@ -4,6 +4,6 @@
 // @ts-nocheck
 
 import { UnaryHooks } from "@bufbuild/connect-query";
-import { AuthGoogleCodeRequest, AuthGoogleCodeResponse } from "./placeNote_pb.js";
+import { RegsiterUserRequest, UserResponse } from "./placeNote_pb.js";
 
-export const authGoogleCode: UnaryHooks<AuthGoogleCodeRequest, AuthGoogleCodeResponse>;
+export const registerUser: UnaryHooks<RegsiterUserRequest, UserResponse>;
