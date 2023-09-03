@@ -1,14 +1,11 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 
 import { Button, Label, TextInput } from "flowbite-react";
 import { Field, Form } from "houseform";
 import { z } from "zod";
-import { MutationFunction, useMutation } from "@tanstack/react-query";
 
-import { registerUser } from "@/gen/placeNote-UserService_connectquery";
-import { AuthState } from "@/type/AuthType";
 import {
   formBlockStyle,
   inputLabelStyle,
@@ -16,59 +13,27 @@ import {
 } from "@/style/FormStyle";
 import { errorMessageStyle } from "@/style/MessageStyle";
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
-import { Code, ConnectError } from "@bufbuild/connect";
-import { UserResponse } from "@/gen/placeNote_pb";
 
-type Props = {
-  authState: AuthState;
-};
-
-type UserRegisterForm = {
+export type UserAccountRegisterForm = {
   userId: string;
   name: string;
 };
 
-export const UserRegisterComponent: FC<Props> = ({ authState }) => {
-  const [registerErrorMsg, setRegisterErrorMsg] = useState<string | undefined>(
-    undefined
-  );
+type Props = {
+  submitFunc: (form: UserAccountRegisterForm) => void;
+  disabled?: boolean;
+  errMsg?: string;
+};
 
-  const {
-    mutationFn: registerUserMutationFn,
-    onError: registerUserMutationOnError,
-  } = registerUser.useMutation({
-    onError: (err) => {
-      if (err.code === Code.AlreadyExists) {
-        setRegisterErrorMsg("すでに登録済みのユーザIDが入力されています");
-      } else {
-        setRegisterErrorMsg("登録時にエラーが発生しました");
-      }
-    },
-  });
-  const { mutate: registerUserMutate, isLoading: registerUserLoading } =
-    useMutation<void, ConnectError, UserRegisterForm, unknown>(
-      async (formValues: UserRegisterForm) => {
-        const response = await registerUserMutationFn({
-          authToken: authState.token,
-          authMethod: authState.authMethod,
-          userSettingId: formValues.userId,
-          name: formValues.name,
-        });
-        console.log(response);
-      },
-      {
-        onError: (err) => {
-          if (registerUserMutationOnError) {
-            registerUserMutationOnError(err);
-          }
-        },
-      }
-    );
-
+export const UserAccountInputComponent: FC<Props> = ({
+  submitFunc,
+  disabled,
+  errMsg,
+}) => {
   return (
-    <Form<UserRegisterForm>
+    <Form<UserAccountRegisterForm>
       onSubmit={(values) => {
-        registerUserMutate(values);
+        submitFunc(values);
       }}
     >
       {({ submit }) => (
@@ -123,9 +88,9 @@ export const UserRegisterComponent: FC<Props> = ({ authState }) => {
               </div>
             )}
           </Field>
-          {registerErrorMsg && (
+          {errMsg && (
             <div className={`${formBlockStyle()} ${errorMessageStyle()}`}>
-              {registerErrorMsg}
+              {errMsg}
             </div>
           )}
           <div className={`${centerHorizonContainerStyle()} mt-4`}>
@@ -133,10 +98,9 @@ export const UserRegisterComponent: FC<Props> = ({ authState }) => {
               color="success"
               pill
               onClick={() => {
-                setRegisterErrorMsg(undefined);
                 submit();
               }}
-              disabled={registerUserLoading}
+              disabled={disabled}
             >
               <p>登録</p>
             </Button>

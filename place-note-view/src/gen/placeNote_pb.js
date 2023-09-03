@@ -18,10 +18,30 @@ export const AuthMethod = proto3.makeEnum(
 );
 
 /**
- * @generated from message placeNote.RegsiterUserRequest
+ * @generated from message placeNote.AuthGoogleAccountRequest
  */
-export const RegsiterUserRequest = proto3.makeMessageType(
-  "placeNote.RegsiterUserRequest",
+export const AuthGoogleAccountRequest = proto3.makeMessageType(
+  "placeNote.AuthGoogleAccountRequest",
+  () => [
+    { no: 1, name: "authCode", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ],
+);
+
+/**
+ * @generated from message placeNote.AuthGoogleAccountResponse
+ */
+export const AuthGoogleAccountResponse = proto3.makeMessageType(
+  "placeNote.AuthGoogleAccountResponse",
+  () => [
+    { no: 1, name: "token", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ],
+);
+
+/**
+ * @generated from message placeNote.RegisterUserAccountRequest
+ */
+export const RegisterUserAccountRequest = proto3.makeMessageType(
+  "placeNote.RegisterUserAccountRequest",
   () => [
     { no: 1, name: "authToken", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "authMethod", kind: "enum", T: proto3.getEnumType(AuthMethod) },
@@ -31,10 +51,10 @@ export const RegsiterUserRequest = proto3.makeMessageType(
 );
 
 /**
- * @generated from message placeNote.UserResponse
+ * @generated from message placeNote.UserAccountResponse
  */
-export const UserResponse = proto3.makeMessageType(
-  "placeNote.UserResponse",
+export const UserAccountResponse = proto3.makeMessageType(
+  "placeNote.UserAccountResponse",
   () => [
     { no: 1, name: "token", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "authMethod", kind: "enum", T: proto3.getEnumType(AuthMethod) },

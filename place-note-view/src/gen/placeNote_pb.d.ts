@@ -27,9 +27,57 @@ export declare enum AuthMethod {
 }
 
 /**
- * @generated from message placeNote.RegsiterUserRequest
+ * @generated from message placeNote.AuthGoogleAccountRequest
  */
-export declare class RegsiterUserRequest extends Message<RegsiterUserRequest> {
+export declare class AuthGoogleAccountRequest extends Message<AuthGoogleAccountRequest> {
+  /**
+   * @generated from field: string authCode = 1;
+   */
+  authCode: string;
+
+  constructor(data?: PartialMessage<AuthGoogleAccountRequest>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "placeNote.AuthGoogleAccountRequest";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AuthGoogleAccountRequest;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AuthGoogleAccountRequest;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AuthGoogleAccountRequest;
+
+  static equals(a: AuthGoogleAccountRequest | PlainMessage<AuthGoogleAccountRequest> | undefined, b: AuthGoogleAccountRequest | PlainMessage<AuthGoogleAccountRequest> | undefined): boolean;
+}
+
+/**
+ * @generated from message placeNote.AuthGoogleAccountResponse
+ */
+export declare class AuthGoogleAccountResponse extends Message<AuthGoogleAccountResponse> {
+  /**
+   * @generated from field: string token = 1;
+   */
+  token: string;
+
+  constructor(data?: PartialMessage<AuthGoogleAccountResponse>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "placeNote.AuthGoogleAccountResponse";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AuthGoogleAccountResponse;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AuthGoogleAccountResponse;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AuthGoogleAccountResponse;
+
+  static equals(a: AuthGoogleAccountResponse | PlainMessage<AuthGoogleAccountResponse> | undefined, b: AuthGoogleAccountResponse | PlainMessage<AuthGoogleAccountResponse> | undefined): boolean;
+}
+
+/**
+ * @generated from message placeNote.RegisterUserAccountRequest
+ */
+export declare class RegisterUserAccountRequest extends Message<RegisterUserAccountRequest> {
   /**
    * @generated from field: string authToken = 1;
    */
@@ -50,25 +98,25 @@ export declare class RegsiterUserRequest extends Message<RegsiterUserRequest> {
    */
   name: string;
 
-  constructor(data?: PartialMessage<RegsiterUserRequest>);
+  constructor(data?: PartialMessage<RegisterUserAccountRequest>);
 
   static readonly runtime: typeof proto3;
-  static readonly typeName = "placeNote.RegsiterUserRequest";
+  static readonly typeName = "placeNote.RegisterUserAccountRequest";
   static readonly fields: FieldList;
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegsiterUserRequest;
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegisterUserAccountRequest;
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegsiterUserRequest;
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegisterUserAccountRequest;
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegsiterUserRequest;
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegisterUserAccountRequest;
 
-  static equals(a: RegsiterUserRequest | PlainMessage<RegsiterUserRequest> | undefined, b: RegsiterUserRequest | PlainMessage<RegsiterUserRequest> | undefined): boolean;
+  static equals(a: RegisterUserAccountRequest | PlainMessage<RegisterUserAccountRequest> | undefined, b: RegisterUserAccountRequest | PlainMessage<RegisterUserAccountRequest> | undefined): boolean;
 }
 
 /**
- * @generated from message placeNote.UserResponse
+ * @generated from message placeNote.UserAccountResponse
  */
-export declare class UserResponse extends Message<UserResponse> {
+export declare class UserAccountResponse extends Message<UserAccountResponse> {
   /**
    * @generated from field: string token = 1;
    */
@@ -89,18 +137,18 @@ export declare class UserResponse extends Message<UserResponse> {
    */
   name: string;
 
-  constructor(data?: PartialMessage<UserResponse>);
+  constructor(data?: PartialMessage<UserAccountResponse>);
 
   static readonly runtime: typeof proto3;
-  static readonly typeName = "placeNote.UserResponse";
+  static readonly typeName = "placeNote.UserAccountResponse";
   static readonly fields: FieldList;
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UserResponse;
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UserAccountResponse;
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UserResponse;
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UserAccountResponse;
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UserResponse;
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UserAccountResponse;
 
-  static equals(a: UserResponse | PlainMessage<UserResponse> | undefined, b: UserResponse | PlainMessage<UserResponse> | undefined): boolean;
+  static equals(a: UserAccountResponse | PlainMessage<UserAccountResponse> | undefined, b: UserAccountResponse | PlainMessage<UserAccountResponse> | undefined): boolean;
 }
 
