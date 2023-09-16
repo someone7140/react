@@ -2,7 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { ApiProviderComponent } from "@/components/common/ApiProviderComponent";
+import { ApiProviderComponent } from "@/components/common/provider/ApiProviderComponent";
+import { AuthProviderComponent } from "@/components/common/provider/AuthProviderComponent";
+import { HeaderComponent } from "@/components/common/HeaderComponent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ApiProviderComponent>{children}</ApiProviderComponent>
+        <ApiProviderComponent>
+          <AuthProviderComponent>
+            <HeaderComponent>{children}</HeaderComponent>
+          </AuthProviderComponent>
+        </ApiProviderComponent>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import { createQueryService } from "@bufbuild/connect-query";
-import { MethodKind } from "@bufbuild/protobuf";
+import { Empty, MethodKind } from "@bufbuild/protobuf";
 import { AuthGoogleAccountRequest, AuthGoogleAccountResponse, RegisterUserAccountRequest, UserAccountResponse } from "./placeNote_pb.js";
 
 export const typeName = "placeNote.UserAccountService";
@@ -42,3 +42,37 @@ export const registerUserAccount = createQueryService({
     typeName: "placeNote.UserAccountService",
   },
 }).registerUserAccount;
+
+/**
+ * @generated from rpc placeNote.UserAccountService.GetUserAccountFromAuthToken
+ */
+export const getUserAccountFromAuthToken = createQueryService({
+  service: {
+    methods: {
+      getUserAccountFromAuthToken: {
+        name: "GetUserAccountFromAuthToken",
+        kind: MethodKind.Unary,
+        I: Empty,
+        O: UserAccountResponse,
+      },
+    },
+    typeName: "placeNote.UserAccountService",
+  },
+}).getUserAccountFromAuthToken;
+
+/**
+ * @generated from rpc placeNote.UserAccountService.LoginByGoogle
+ */
+export const loginByGoogle = createQueryService({
+  service: {
+    methods: {
+      loginByGoogle: {
+        name: "LoginByGoogle",
+        kind: MethodKind.Unary,
+        I: AuthGoogleAccountRequest,
+        O: UserAccountResponse,
+      },
+    },
+    typeName: "placeNote.UserAccountService",
+  },
+}).loginByGoogle;

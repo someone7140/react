@@ -6,7 +6,6 @@ import { Code, ConnectError } from "@bufbuild/connect";
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { authGoogleAccount } from "@/gen/placeNote-UserAccountService_connectquery";
 import { AuthState } from "@/type/AuthType";
-import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 import { errorMessageStyle } from "@/style/MessageStyle";
 import { useMutation } from "@tanstack/react-query";
 import { AuthMethod } from "@/gen/placeNote_pb";
@@ -32,6 +31,7 @@ export const AuthUserAccountComponent: FC<Props> = ({ setAuthState }) => {
       }
     },
   });
+
   const { mutate: authGoogleUserMutate, isLoading: authGoogleUserLoading } =
     useMutation<void, ConnectError, string, unknown>(
       async (authCode: string) => {

@@ -3,6 +3,7 @@
 import React, { FC, useState } from "react";
 
 import { Code, ConnectError } from "@bufbuild/connect";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 
 import {
@@ -10,6 +11,8 @@ import {
   UserAccountRegisterForm,
 } from "@/components/user/UserAccountInputComponent";
 import { registerUserAccount } from "@/gen/placeNote-UserAccountService_connectquery";
+import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
+import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 import { AuthState } from "@/type/AuthType";
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 
@@ -18,6 +21,9 @@ type Props = {
 };
 
 export const UserAccountCreateComponent: FC<Props> = ({ authState }) => {
+  const router = useRouter();
+  const { updateAuthToken } = useAuthTokenLocalStorage();
+  const authStore = useAuthStore();
   const [registerErrorMsg, setRegisterErrorMsg] = useState<string | undefined>(
     undefined
   );
@@ -49,7 +55,10 @@ export const UserAccountCreateComponent: FC<Props> = ({ authState }) => {
           userSettingId: formValues.userId,
           name: formValues.name,
         });
-        console.log(response);
+        // ユーザ情報を保存
+        updateAuthToken(response.token);
+        authStore.setUserAccount(response);
+        router.push("/");
       },
       {
         onError: (err) => {

@@ -5,6 +5,9 @@
 
 import { UnaryHooks } from "@bufbuild/connect-query";
 import { AuthGoogleAccountRequest, AuthGoogleAccountResponse, RegisterUserAccountRequest, UserAccountResponse } from "./placeNote_pb.js";
+import { Empty } from "@bufbuild/protobuf";
 
 export const authGoogleAccount: UnaryHooks<AuthGoogleAccountRequest, AuthGoogleAccountResponse>;
 export const registerUserAccount: UnaryHooks<RegisterUserAccountRequest, UserAccountResponse>;
+export const getUserAccountFromAuthToken: UnaryHooks<Empty, UserAccountResponse>;
+export const loginByGoogle: UnaryHooks<AuthGoogleAccountRequest, UserAccountResponse>;
