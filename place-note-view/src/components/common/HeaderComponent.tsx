@@ -3,16 +3,21 @@
 import React, { FC, ReactNode } from "react";
 
 import { FlowbiteNavbarRootTheme, Navbar } from "flowbite-react";
+import { FlowbiteNavbarLinkTheme } from "flowbite-react/lib/esm/components/Navbar/NavbarLink";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
-import { FlowbiteNavbarLinkTheme } from "flowbite-react/lib/esm/components/Navbar/NavbarLink";
+import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 
 type Props = {
   children: ReactNode;
 };
 
 export const HeaderComponent: FC<Props> = ({ children }) => {
+  const router = useRouter();
   const authStore = useAuthStore();
+  const { removeAuthToken } = useAuthTokenLocalStorage();
 
   const customNavRootTheme: FlowbiteNavbarRootTheme = {
     base: "fixed bg-cyan-100 px-2 py-2.5 dark:border-gray-700 dark:bg-gray-800 sm:px-4 w-full z-50",
@@ -56,7 +61,18 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
     </Navbar.Link>
   );
   const userAccountLogoutMenu = (
-    <Navbar.Link active href="/userAccountLogout" theme={customLinkTheme}>
+    <Navbar.Link
+      active
+      href="#"
+      onClick={() => {
+        // ログイン情報を削除
+        removeAuthToken();
+        authStore.removeUserAccount();
+        toast("ログアウトしました");
+        router.push("/");
+      }}
+      theme={customLinkTheme}
+    >
       <p>ログアウト</p>
     </Navbar.Link>
   );

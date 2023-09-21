@@ -1,6 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { ApiProviderComponent } from "@/components/common/provider/ApiProviderComponent";
 import { AuthProviderComponent } from "@/components/common/provider/AuthProviderComponent";
@@ -24,6 +26,18 @@ export default function RootLayout({
         <ApiProviderComponent>
           <AuthProviderComponent>
             <HeaderComponent>{children}</HeaderComponent>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </AuthProviderComponent>
         </ApiProviderComponent>
       </body>

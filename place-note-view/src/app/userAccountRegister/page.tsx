@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { AuthUserAccountComponent } from "@/components/auth/AuthUserAccountComponent";
+import { AuthUserAccountForRegisterComponent } from "@/components/auth/AuthUserAccountForRegisterComponent";
 import { UserAccountCreateComponent } from "@/components/user/UserAccountCreateComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { componentContainerStyle } from "@/style/CommonStyle";
@@ -21,7 +21,9 @@ export default function Home() {
 
   return (
     <div className={componentContainerStyle()}>
-      {!authState && <AuthUserAccountComponent setAuthState={setAuthState} />}
+      {!authState && (
+        <AuthUserAccountForRegisterComponent setAuthState={setAuthState} />
+      )}
       {authState && <UserAccountCreateComponent authState={authState} />}
     </div>
   );

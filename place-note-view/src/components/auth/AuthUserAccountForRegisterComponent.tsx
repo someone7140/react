@@ -14,7 +14,9 @@ type Props = {
   setAuthState: (authCode: AuthState) => void;
 };
 
-export const AuthUserAccountComponent: FC<Props> = ({ setAuthState }) => {
+export const AuthUserAccountForRegisterComponent: FC<Props> = ({
+  setAuthState,
+}) => {
   const [authGoogleErrorMsg, setAuthGoogleErrorMsg] = useState<
     string | undefined
   >(undefined);
@@ -50,7 +52,7 @@ export const AuthUserAccountComponent: FC<Props> = ({ setAuthState }) => {
     );
 
   return (
-    <div className={`mr-20`}>
+    <div>
       <div className={`mb-2`}>ユーザ登録用の認証</div>
       <div className={`ml-2`}>
         <AuthGoogleComponent

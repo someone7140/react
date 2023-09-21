@@ -4,6 +4,7 @@ import React, { FC, ReactNode, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { ConnectError } from "@bufbuild/connect";
+import { UserAccountResponse } from "@/gen/placeNote_pb";
 import { getUserAccountFromAuthToken } from "@/gen/placeNote-UserAccountService_connectquery";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
@@ -20,13 +21,12 @@ export const AuthProviderComponent: FC<Props> = ({ children }) => {
     getUserAccountFromAuthToken.useQuery({});
 
   const { refetch: getUserAccountFromAuthTokenRefetch, isError } = useQuery<
-    void,
+    UserAccountResponse,
     ConnectError
   >(
     ["authByToken"],
     async () => {
-      const result = await getUserAccountFromAuthTokenFn();
-      authStore.setUserAccount(result);
+      return await getUserAccountFromAuthTokenFn();
     },
     {
       refetchOnWindowFocus: false,
@@ -36,13 +36,18 @@ export const AuthProviderComponent: FC<Props> = ({ children }) => {
   );
 
   useEffect(() => {
-    if (!displayFlag) {
-      // localStorageにtokenがあってグローバルstoreにユーザアカウントの情報がない場合
-      if (authToken && !authStore.userAccount) {
-        getUserAccountFromAuthTokenRefetch();
+    (async () => {
+      if (!displayFlag) {
+        // localStorageにtokenがあってグローバルstoreにユーザアカウントの情報がない場合
+        if (authToken && !authStore.userAccount) {
+          const result = await getUserAccountFromAuthTokenRefetch();
+          if (result.data) {
+            authStore.setUserAccount(result.data);
+          }
+        }
+        setDisplayFlag(true);
       }
-      setDisplayFlag(true);
-    }
+    })();
   }, [authStore, authToken, displayFlag, getUserAccountFromAuthTokenRefetch]);
 
   useEffect(() => {
