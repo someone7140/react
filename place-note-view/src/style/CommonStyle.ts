@@ -9,3 +9,7 @@ export const componentContainerStyle = tv({
 export const centerHorizonContainerStyle = tv({
   base: "flex justify-center",
 });
+
+export const componentColumnContainerStyle = tv({
+  base: "flex flex-col gap-4 justify-center",
+});

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { AuthUserAccountForRegisterComponent } from "@/components/auth/AuthUserAccountForRegisterComponent";
 import { UserAccountCreateComponent } from "@/components/user/UserAccountCreateComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { componentContainerStyle } from "@/style/CommonStyle";
 import { AuthState } from "@/type/AuthType";
-import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
