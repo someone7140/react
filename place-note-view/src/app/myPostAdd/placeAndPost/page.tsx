@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className={centerHorizonContainerStyle()}>ユーザ登録</div>
+      <div className={centerHorizonContainerStyle()}>場所の登録</div>
       <PlaceRegisterComponent />
     </div>
   );

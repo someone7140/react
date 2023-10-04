@@ -4,8 +4,8 @@ import React, { FC, ReactNode, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { ConnectError } from "@bufbuild/connect";
-import { UserAccountResponse } from "@/gen/placeNote_pb";
-import { getUserAccountFromAuthToken } from "@/gen/placeNote-UserAccountService_connectquery";
+import { getUserAccountFromAuthToken } from "@/gen/placeNoteUserAccountService-UserAccountService_connectquery";
+import { UserAccountResponse } from "@/gen/placeNoteUserAccountService_pb";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 
@@ -52,7 +52,7 @@ export const AuthProviderComponent: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (isError) {
-      // removeAuthToken();
+      removeAuthToken();
     }
   }, [isError, removeAuthToken]);
 

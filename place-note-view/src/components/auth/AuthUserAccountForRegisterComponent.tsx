@@ -4,11 +4,11 @@ import React, { FC, useState } from "react";
 import { Code, ConnectError } from "@bufbuild/connect";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
-import { authGoogleAccount } from "@/gen/placeNote-UserAccountService_connectquery";
+import { AuthMethod } from "@/gen/placeNoteUserAccountService_pb";
+import { authGoogleAccount } from "@/gen/placeNoteUserAccountService-UserAccountService_connectquery";
 import { AuthState } from "@/type/AuthType";
 import { errorMessageStyle } from "@/style/MessageStyle";
 import { useMutation } from "@tanstack/react-query";
-import { AuthMethod } from "@/gen/placeNote_pb";
 
 type Props = {
   setAuthState: (authCode: AuthState) => void;

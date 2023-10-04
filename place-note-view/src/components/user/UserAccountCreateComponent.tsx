@@ -10,7 +10,7 @@ import {
   UserAccountInputComponent,
   UserAccountRegisterForm,
 } from "@/components/user/UserAccountInputComponent";
-import { registerUserAccount } from "@/gen/placeNote-UserAccountService_connectquery";
+import { registerUserAccount } from "@/gen/placeNoteUserAccountService-UserAccountService_connectquery";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 import { AuthState } from "@/type/AuthType";

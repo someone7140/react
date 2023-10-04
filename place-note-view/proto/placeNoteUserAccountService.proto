@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-package placeNote;
+option go_package = "placeNote/src/gen/proto;placeNote";
 
 import "google/protobuf/empty.proto";
+
+package placeNote;
 
 service UserAccountService {
     rpc AuthGoogleAccount(AuthGoogleAccountRequest) returns (AuthGoogleAccountResponse) {}

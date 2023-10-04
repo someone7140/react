@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ConnectError } from "@bufbuild/connect";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
-import { loginByGoogle } from "@/gen/placeNote-UserAccountService_connectquery";
+import { loginByGoogle } from "@/gen/placeNoteUserAccountService-UserAccountService_connectquery";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { errorMessageStyle } from "@/style/MessageStyle";
