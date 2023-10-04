@@ -12,13 +12,7 @@ import {
   FormInstance,
 } from "houseform";
 import { z } from "zod";
-import { ConnectError } from "@bufbuild/connect";
-import { useMutation } from "@tanstack/react-query";
-
-import {
-  GetLatLonFromAddressResponse,
-  LatLon,
-} from "@/gen/placeNoteGeolocationService_pb";
+import { LatLon } from "@/gen/placeNoteGeolocationService_pb";
 import { getLatLonFromAddress } from "@/gen/placeNoteGeolocationService-GeolocationService_connectquery";
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 import {
@@ -45,18 +39,6 @@ export const PlaceRegisterComponent: FC = ({}) => {
   const [latLon, setLatLon] = useState<LatLon | undefined>(undefined);
   const { mutationFn: getLatLonFromAddressFn } =
     getLatLonFromAddress.useMutation({});
-
-  const { mutateAsync: getLatLonFromAddressMutate } = useMutation<
-    GetLatLonFromAddressResponse | undefined,
-    ConnectError,
-    string,
-    unknown
-  >(async (address: string) => {
-    const response = await getLatLonFromAddressFn({
-      address,
-    });
-    return response;
-  });
 
   const addUrl = () => {
     const urlListRefField = formRef.current?.getFieldValue("urlList");
@@ -85,10 +67,14 @@ export const PlaceRegisterComponent: FC = ({}) => {
       try {
         if (!latLonRes) {
           // 住所から緯度・経度を取得
-          latLonRes = (await getLatLonFromAddressMutate(formValue.address))
-            ?.latLon;
+          latLonRes = (
+            await getLatLonFromAddressFn({
+              address: formValue.address,
+            })
+          )?.latLon;
         }
         if (latLonRes) {
+          // 緯度経度から都道府県を取得
           console.log(latLonRes);
         }
       } catch (e) {
