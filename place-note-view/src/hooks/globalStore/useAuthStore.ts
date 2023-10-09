@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { UserAccountResponse } from "@/gen/placeNote_pb";
+import { UserAccountResponse } from "@/gen/placeNoteUserAccountService_pb";
 
 type StoreAccount = {
   userAccount: UserAccountResponse | undefined;

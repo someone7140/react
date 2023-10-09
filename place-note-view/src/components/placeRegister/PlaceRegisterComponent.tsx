@@ -2,7 +2,7 @@
 
 import React, { FC, useRef, useState } from "react";
 
-import { Button, Label, Radio, TextInput } from "flowbite-react";
+import { Button, Label, Radio, TextInput, Textarea } from "flowbite-react";
 import {
   Field,
   FieldArray,
@@ -21,6 +21,7 @@ import {
   inputTextStyle,
 } from "@/style/FormStyle";
 import { errorMessageStyle } from "@/style/MessageStyle";
+import { useGeolocationService } from "@/hooks/useGeolocationService";
 
 export type PlaceRegisterForm = {
   name: string;
@@ -39,6 +40,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
   const [latLon, setLatLon] = useState<LatLon | undefined>(undefined);
   const { mutationFn: getLatLonFromAddressFn } =
     getLatLonFromAddress.useMutation({});
+  const { getPrefectureCodeFromLatLon } = useGeolocationService();
 
   const addUrl = () => {
     const urlListRefField = formRef.current?.getFieldValue("urlList");
@@ -75,7 +77,8 @@ export const PlaceRegisterComponent: FC = ({}) => {
         }
         if (latLonRes) {
           // 緯度経度から都道府県を取得
-          console.log(latLonRes);
+          const prefectureCode = await getPrefectureCodeFromLatLon(latLonRes);
+          console.log(prefectureCode);
         }
       } catch (e) {
         // エラー時は何もしない
@@ -169,6 +172,26 @@ export const PlaceRegisterComponent: FC = ({}) => {
                     )}
                   </Field>
                 )}
+              </div>
+              <div className={formBlockStyle()}>
+                <Field<string> name="detail">
+                  {({ value, setValue, errors }) => (
+                    <div className={formBlockStyle()}>
+                      <Label
+                        htmlFor="detail"
+                        value="詳細"
+                        className={inputLabelStyle()}
+                      />
+                      <Textarea
+                        id="detail"
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                        className={inputTextStyle()}
+                        rows={4}
+                      />
+                    </div>
+                  )}
+                </Field>
               </div>
               <div className={formBlockStyle()}>
                 <FieldArray<{ urlInput: string }>
