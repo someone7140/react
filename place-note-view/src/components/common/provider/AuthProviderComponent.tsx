@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserAccountFromAuthToken } from "@/gen/placeNoteUserAccountService-UserAccountService_connectquery";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
-import { truncateSync } from "fs";
 
 type Props = {
   children: ReactNode;
