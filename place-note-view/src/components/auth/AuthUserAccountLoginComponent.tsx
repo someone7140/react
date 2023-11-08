@@ -31,9 +31,9 @@ export const AuthUserAccountLoginComponent: FC = () => {
     },
   });
 
-  const { mutate: loginByGoogleMutate, isLoading: loginByGoogleLoading } =
-    useMutation<void, ConnectError, string, unknown>(
-      async (authCode: string) => {
+  const { mutate: loginByGoogleMutate, isPending: loginByGoogleLoading } =
+    useMutation<void, ConnectError, string, unknown>({
+      mutationFn: async (authCode: string) => {
         const response = await loginByGoogleMutationFn({
           authCode,
         });
@@ -43,14 +43,12 @@ export const AuthUserAccountLoginComponent: FC = () => {
         toast("ログインしました");
         router.push("/");
       },
-      {
-        onError: (err) => {
-          if (loginByGoogleMutationOnError) {
-            loginByGoogleMutationOnError(err);
-          }
-        },
-      }
-    );
+      onError: (err) => {
+        if (loginByGoogleMutationOnError) {
+          loginByGoogleMutationOnError(err);
+        }
+      },
+    });
 
   return (
     <div>

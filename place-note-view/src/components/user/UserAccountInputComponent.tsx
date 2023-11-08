@@ -40,7 +40,7 @@ export const UserAccountInputComponent: FC<Props> = ({
         <div>
           <Field<string>
             name="userId"
-            onSubmitValidate={z.string().nonempty("ユーザIDの入力は必須です")}
+            onSubmitValidate={z.string().min(1, "ユーザIDの入力は必須です")}
           >
             {({ value, setValue, errors }) => (
               <div className={formBlockStyle()}>
@@ -65,7 +65,7 @@ export const UserAccountInputComponent: FC<Props> = ({
           </Field>
           <Field<string>
             name="name"
-            onSubmitValidate={z.string().nonempty("名前の入力は必須です")}
+            onSubmitValidate={z.string().min(1, "名前の入力は必須です")}
           >
             {({ value, setValue, errors }) => (
               <div className={formBlockStyle()}>

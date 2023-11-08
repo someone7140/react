@@ -45,9 +45,9 @@ export const UserAccountCreateComponent: FC<Props> = ({ authState }) => {
     },
   });
 
-  const { mutate: registerUserMutate, isLoading: registerUserLoading } =
-    useMutation<void, ConnectError, UserAccountRegisterForm, unknown>(
-      async (formValues: UserAccountRegisterForm) => {
+  const { mutate: registerUserMutate, isPending: registerUserLoading } =
+    useMutation<void, ConnectError, UserAccountRegisterForm, unknown>({
+      mutationFn: async (formValues: UserAccountRegisterForm) => {
         setRegisterErrorMsg(undefined);
         const response = await registerUserMutationFn({
           authToken: authState.token,
@@ -60,14 +60,12 @@ export const UserAccountCreateComponent: FC<Props> = ({ authState }) => {
         authStore.setUserAccount(response);
         router.push("/");
       },
-      {
-        onError: (err) => {
-          if (registerUserMutationOnError) {
-            registerUserMutationOnError(err);
-          }
-        },
-      }
-    );
+      onError: (err) => {
+        if (registerUserMutationOnError) {
+          registerUserMutationOnError(err);
+        }
+      },
+    });
 
   return (
     <div>

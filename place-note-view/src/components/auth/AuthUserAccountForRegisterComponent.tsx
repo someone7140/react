@@ -34,22 +34,20 @@ export const AuthUserAccountForRegisterComponent: FC<Props> = ({
     },
   });
 
-  const { mutate: authGoogleUserMutate, isLoading: authGoogleUserLoading } =
-    useMutation<void, ConnectError, string, unknown>(
-      async (authCode: string) => {
+  const { mutate: authGoogleUserMutate, isPending: authGoogleUserLoading } =
+    useMutation<void, ConnectError, string, unknown>({
+      mutationFn: async (authCode: string) => {
         const response = await authGoogleAccountMutationFn({
           authCode,
         });
         setAuthState({ token: response.token, authMethod: AuthMethod.GOOGLE });
       },
-      {
-        onError: (err) => {
-          if (authGoogleAccountMutationOnError) {
-            authGoogleAccountMutationOnError(err);
-          }
-        },
-      }
-    );
+      onError: (err) => {
+        if (authGoogleAccountMutationOnError) {
+          authGoogleAccountMutationOnError(err);
+        }
+      },
+    });
 
   return (
     <div>

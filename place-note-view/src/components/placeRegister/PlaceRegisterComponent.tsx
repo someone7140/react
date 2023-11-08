@@ -78,7 +78,6 @@ export const PlaceRegisterComponent: FC = ({}) => {
         if (latLonRes) {
           // 緯度経度から都道府県を取得
           const prefectureCode = await getPrefectureCodeFromLatLon(latLonRes);
-          console.log(prefectureCode);
         }
       } catch (e) {
         // エラー時は何もしない
@@ -99,7 +98,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
             <div>
               <Field<string>
                 name="name"
-                onSubmitValidate={z.string().nonempty("名前の入力は必須です")}
+                onSubmitValidate={z.string().min(1, "名前の入力は必須です")}
               >
                 {({ value, setValue, errors }) => (
                   <div className={formBlockStyle()}>
@@ -175,7 +174,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
               </div>
               <div className={formBlockStyle()}>
                 <Field<string> name="detail">
-                  {({ value, setValue, errors }) => (
+                  {({ value, setValue }) => (
                     <div className={formBlockStyle()}>
                       <Label
                         htmlFor="detail"
