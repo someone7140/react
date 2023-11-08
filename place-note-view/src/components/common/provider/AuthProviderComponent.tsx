@@ -47,7 +47,7 @@ export const AuthProviderComponent: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (isError) {
-      // removeAuthToken();
+      removeAuthToken();
       setNoLoginFlag(true);
     }
   }, [isError, removeAuthToken]);
