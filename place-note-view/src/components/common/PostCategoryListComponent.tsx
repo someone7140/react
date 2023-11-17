@@ -16,7 +16,7 @@ import {
 } from "@/style/MessageStyle";
 import { DeleteCategoryModalComponent } from "@/components/postCategoryRegister/DeleteCategoryModalComponent";
 
-export const RegisteredPostCategoryListComponent: FC = ({}) => {
+export const PostCategoryListComponent: FC = ({}) => {
   const router = useRouter();
   const [deleteCategoryId, setDeleteCategoryId] = useState<string | undefined>(
     undefined
@@ -94,72 +94,19 @@ export const RegisteredPostCategoryListComponent: FC = ({}) => {
   };
 
   return (
-    <div className={`${centerHorizonContainerStyle()} mt-2`}>
-      <div className="flex flex-col gap-4">
-        {isLoading && <Spinner />}
-        {!isLoading && (
-          <>
-            <div className={centerHorizonContainerStyle()}>
-              <Button
-                color="success"
-                pill
-                onClick={() => {
-                  router.push("/myCategory/categoryAdd");
-                }}
-              >
-                <p>新規カテゴリー追加</p>
-              </Button>
+    <ul className="list-disc mt-4">
+      {getRootCategoryList().map((c) => (
+        <li className="ml-4 mb-4" key={c.id}>
+          <div className="flex-column">
+            <div className="flex content-between items-center">
+              <div className="text-xl max-w-[50%] break-all">{c.name}</div>
+              {renderButton(c.id)}
             </div>
-            {data && (
-              <>
-                {data.categoryList.length > 0 && (
-                  <div className="flex content-start">
-                    <ul className="list-disc mt-4">
-                      {getRootCategoryList().map((c) => (
-                        <li className="ml-4 mb-4" key={c.id}>
-                          <div className="flex-column">
-                            <div className="flex content-between items-center">
-                              <div className="text-xl max-w-[50%] break-all">
-                                {c.name}
-                              </div>
-                              {renderButton(c.id)}
-                            </div>
-                            {c.memo && (
-                              <div className={memoStyle()}>{c.memo}</div>
-                            )}
-                          </div>
-                          {renderChild(c.id)}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {data.categoryList.length === 0 && (
-                  <div className={descriptionMessageStyle()}>
-                    まだカテゴリーが登録されていません
-                  </div>
-                )}
-                <DeleteCategoryModalComponent
-                  categoryId={deleteCategoryId}
-                  name={
-                    data.categoryList.find((c) => c.id === deleteCategoryId)
-                      ?.name
-                  }
-                  onClose={() => {
-                    setDeleteCategoryId(undefined);
-                  }}
-                  refetch={refetch}
-                />
-              </>
-            )}
-            {isError && (
-              <div className={errorMessageStyle()}>
-                カテゴリーが取得できませんでした
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+            {c.memo && <div className={memoStyle()}>{c.memo}</div>}
+          </div>
+          {renderChild(c.id)}
+        </li>
+      ))}
+    </ul>
   );
 };

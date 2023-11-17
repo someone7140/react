@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { Field, Form } from "houseform";
 import { z } from "zod";
 import { ConnectError } from "@bufbuild/connect";
+import { toast } from "react-toastify";
 
 export type PostCategoryRegisterForm = {
   name: string;
@@ -65,6 +66,7 @@ export const PostCategoryRegisterComponent: FC = ({}) => {
           ? formValues.displayOrder
           : undefined,
       });
+      toast("カテゴリーを登録しました");
       // 一覧へ
       router.push("/myCategory");
     },
