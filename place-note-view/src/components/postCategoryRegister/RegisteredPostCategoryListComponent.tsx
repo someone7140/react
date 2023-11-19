@@ -4,7 +4,6 @@ import React, { FC, useState } from "react";
 
 import { Button } from "flowbite-react";
 import { Spinner } from "flowbite-react";
-import { tv } from "tailwind-variants";
 
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +13,7 @@ import {
   descriptionMessageStyle,
   errorMessageStyle,
 } from "@/style/MessageStyle";
+import { PostCategoryListComponent } from "@/components/postCategory/PostCategoryListComponent";
 import { DeleteCategoryModalComponent } from "@/components/postCategoryRegister/DeleteCategoryModalComponent";
 
 export const RegisteredPostCategoryListComponent: FC = ({}) => {
@@ -27,19 +27,6 @@ export const RegisteredPostCategoryListComponent: FC = ({}) => {
     queryFn,
     retry: 3,
   });
-
-  const memoStyle = tv({
-    base: "mt-2 max-w-[80%] break-all whitespace-pre text-stone-500",
-  });
-
-  const getRootCategoryList = () => {
-    return (
-      data?.categoryList.filter(
-        (child) =>
-          !data?.categoryList.some((parent) => child.parentId === parent.id)
-      ) ?? []
-    );
-  };
 
   const renderButton = (categoryId: string) => {
     return (
@@ -66,33 +53,6 @@ export const RegisteredPostCategoryListComponent: FC = ({}) => {
     );
   };
 
-  const renderChild = (parentId: string) => {
-    const childList =
-      data?.categoryList.filter((child) => child.parentId === parentId) ?? [];
-
-    if (childList.length === 0) {
-      return undefined;
-    } else {
-      return (
-        <ul className="list-disc mt-4 ml-4">
-          {childList.map((c) => (
-            <li className="ml-2 mb-4 marker:text-lime-700" key={c.id}>
-              <div className="flex-column">
-                <div className="flex content-between items-center">
-                  <div className="text-xl max-w-[50%] break-all text-lime-700">
-                    {c.name}
-                  </div>
-                  {renderButton(c.id)}
-                </div>
-                {c.memo && <div className={memoStyle()}>{c.memo}</div>}
-              </div>
-            </li>
-          ))}
-        </ul>
-      );
-    }
-  };
-
   return (
     <div className={`${centerHorizonContainerStyle()} mt-2`}>
       <div className="flex flex-col gap-4">
@@ -114,24 +74,10 @@ export const RegisteredPostCategoryListComponent: FC = ({}) => {
               <>
                 {data.categoryList.length > 0 && (
                   <div className="flex content-start">
-                    <ul className="list-disc mt-4">
-                      {getRootCategoryList().map((c) => (
-                        <li className="ml-4 mb-4" key={c.id}>
-                          <div className="flex-column">
-                            <div className="flex content-between items-center">
-                              <div className="text-xl max-w-[50%] break-all">
-                                {c.name}
-                              </div>
-                              {renderButton(c.id)}
-                            </div>
-                            {c.memo && (
-                              <div className={memoStyle()}>{c.memo}</div>
-                            )}
-                          </div>
-                          {renderChild(c.id)}
-                        </li>
-                      ))}
-                    </ul>
+                    <PostCategoryListComponent
+                      categoryList={data.categoryList}
+                      renderCategoryAction={renderButton}
+                    />
                   </div>
                 )}
                 {data.categoryList.length === 0 && (

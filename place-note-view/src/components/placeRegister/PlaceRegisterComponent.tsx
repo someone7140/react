@@ -12,6 +12,8 @@ import {
   FormInstance,
 } from "houseform";
 import { z } from "zod";
+
+import { PostCategorySelectComponent } from "@/components/postCategory/PostCategorySelectComponent";
 import { LatLon } from "@/gen/placeNoteGeolocationService_pb";
 import { getLatLonFromAddress } from "@/gen/placeNoteGeolocationService-GeolocationService_connectquery";
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
@@ -29,6 +31,7 @@ export type PlaceRegisterForm = {
   urlList: {
     urlInput: string;
   }[];
+  categoryIds?: string[];
   detail?: string;
 };
 
@@ -171,6 +174,23 @@ export const PlaceRegisterComponent: FC = ({}) => {
                     )}
                   </Field>
                 )}
+              </div>
+              <div className={formBlockStyle()}>
+                <FieldArray<string> name="categoryIds" initialValue={[]}>
+                  {({ value, setValues }) => (
+                    <div className={formBlockStyle()}>
+                      <Label
+                        htmlFor="categoryIds"
+                        value="カテゴリー選択"
+                        className={inputLabelStyle()}
+                      />
+                      <PostCategorySelectComponent
+                        selectedIds={value}
+                        setIds={setValues}
+                      />
+                    </div>
+                  )}
+                </FieldArray>
               </div>
               <div className={formBlockStyle()}>
                 <Field<string> name="detail">
