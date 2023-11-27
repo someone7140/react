@@ -5,7 +5,7 @@
 
 import { createQueryService } from "@bufbuild/connect-query";
 import { Empty, MethodKind } from "@bufbuild/protobuf";
-import { AddPostCategoryRequest, DeletePostCategoryRequest, GetPostCategoryListResponse, UpdatePostCategoryRequest } from "./placeNotePostCategoryService_pb.js";
+import { AddPostCategoryRequest, DeletePostCategoryRequest, GetPostCategoryByIdRequest, GetPostCategoryListResponse, PostCategoryResponse, UpdatePostCategoryRequest } from "./placeNotePostCategoryService_pb.js";
 
 export const typeName = "placeNote.PostCategoryService";
 
@@ -76,3 +76,20 @@ export const getPostCategoryList = createQueryService({
     typeName: "placeNote.PostCategoryService",
   },
 }).getPostCategoryList;
+
+/**
+ * @generated from rpc placeNote.PostCategoryService.GetPostCategoryById
+ */
+export const getPostCategoryById = createQueryService({
+  service: {
+    methods: {
+      getPostCategoryById: {
+        name: "GetPostCategoryById",
+        kind: MethodKind.Unary,
+        I: GetPostCategoryByIdRequest,
+        O: PostCategoryResponse,
+      },
+    },
+    typeName: "placeNote.PostCategoryService",
+  },
+}).getPostCategoryById;

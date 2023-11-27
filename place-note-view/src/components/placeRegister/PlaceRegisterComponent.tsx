@@ -14,8 +14,9 @@ import {
 import { z } from "zod";
 
 import { PostCategorySelectComponent } from "@/components/postCategory/PostCategorySelectComponent";
-import { LatLon } from "@/gen/placeNoteGeolocationService_pb";
+import { LatLon } from "@/gen/placeNoteCommon_pb";
 import { getLatLonFromAddress } from "@/gen/placeNoteGeolocationService-GeolocationService_connectquery";
+import { useGeolocationService } from "@/hooks/useGeolocationService";
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 import {
   formBlockStyle,
@@ -23,7 +24,6 @@ import {
   inputTextStyle,
 } from "@/style/FormStyle";
 import { errorMessageStyle } from "@/style/MessageStyle";
-import { useGeolocationService } from "@/hooks/useGeolocationService";
 
 export type PlaceRegisterForm = {
   name: string;

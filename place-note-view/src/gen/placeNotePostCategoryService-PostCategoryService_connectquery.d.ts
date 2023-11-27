@@ -4,10 +4,11 @@
 // @ts-nocheck
 
 import { UnaryHooks } from "@bufbuild/connect-query";
-import { AddPostCategoryRequest, DeletePostCategoryRequest, GetPostCategoryListResponse, UpdatePostCategoryRequest } from "./placeNotePostCategoryService_pb.js";
+import { AddPostCategoryRequest, DeletePostCategoryRequest, GetPostCategoryByIdRequest, GetPostCategoryListResponse, PostCategoryResponse, UpdatePostCategoryRequest } from "./placeNotePostCategoryService_pb.js";
 import { Empty } from "@bufbuild/protobuf";
 
 export const addPostCategory: UnaryHooks<AddPostCategoryRequest, Empty>;
 export const updatePostCategory: UnaryHooks<UpdatePostCategoryRequest, Empty>;
 export const deletePostCategory: UnaryHooks<DeletePostCategoryRequest, Empty>;
 export const getPostCategoryList: UnaryHooks<Empty, GetPostCategoryListResponse>;
+export const getPostCategoryById: UnaryHooks<GetPostCategoryByIdRequest, PostCategoryResponse>;

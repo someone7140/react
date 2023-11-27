@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "placeNote/src/gen/proto;placeNote";
+
+import "google/protobuf/empty.proto";
+
+package placeNote;
+
+message LatLon {
+    double lat = 1;
+    double lon = 2;
+}

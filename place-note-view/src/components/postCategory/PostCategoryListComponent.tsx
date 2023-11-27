@@ -1,12 +1,12 @@
 "use client";
 
+import { PostCategoryResponse } from "@/gen/placeNotePostCategoryService_pb";
 import React, { FC, ReactNode } from "react";
 
 import { tv } from "tailwind-variants";
-import { PostCategory } from "@/gen/placeNotePostCategoryService_pb";
 
 type Props = {
-  categoryList: PostCategory[];
+  categoryList: PostCategoryResponse[];
   renderCategoryAction: (id: string) => ReactNode;
 };
 
