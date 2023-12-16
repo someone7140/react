@@ -2,7 +2,7 @@
 
 import React, { FC, useRef, useState } from "react";
 
-import { Button, Label, Radio, TextInput, Textarea } from "flowbite-react";
+import { Button, Label, TextInput, Textarea } from "flowbite-react";
 import {
   Field,
   FieldArray,
@@ -11,7 +11,12 @@ import {
   Form,
   FormInstance,
 } from "houseform";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { z } from "zod";
+
+import { ConnectError } from "@bufbuild/connect";
+import { useMutation } from "@tanstack/react-query";
 
 import { PostCategorySelectComponent } from "@/components/postCategory/PostCategorySelectComponent";
 import { LatLon } from "@/gen/placeNoteCommon_pb";
@@ -24,6 +29,7 @@ import {
   inputTextStyle,
 } from "@/style/FormStyle";
 import { errorMessageStyle } from "@/style/MessageStyle";
+import { addPostPlace } from "@/gen/placeNotePostPlaceService-PostPlaceService_connectquery";
 
 export type PlaceRegisterForm = {
   name: string;
@@ -36,13 +42,77 @@ export type PlaceRegisterForm = {
 };
 
 export const PlaceRegisterComponent: FC = ({}) => {
-  const formRef = useRef<FormInstance<PlaceRegisterForm>>(null);
+  const router = useRouter();
 
+  const formRef = useRef<FormInstance<PlaceRegisterForm>>(null);
   const [isUseMapInputAddress, setIsUseMapInputAddress] =
     useState<boolean>(false);
+  const [disabledSubmitButton, setDisabledSubmitButton] =
+    useState<boolean>(false);
   const [latLon, setLatLon] = useState<LatLon | undefined>(undefined);
+  const [errMsg, setErrMsg] = useState<string | undefined>(undefined);
+
   const { mutationFn: getLatLonFromAddressFn } =
     getLatLonFromAddress.useMutation({});
+  const {
+    mutationFn: addPostPlaceMutationFn,
+    onError: addPostPlaceMutationOnError,
+  } = addPostPlace.useMutation({
+    onError: (err) => {
+      setErrMsg("登録時にエラーが発生しました");
+      setDisabledSubmitButton(false);
+    },
+  });
+  const { mutate: registerPostPlaceMutate } = useMutation<
+    void,
+    ConnectError,
+    PlaceRegisterForm,
+    unknown
+  >({
+    mutationFn: async (formValue: PlaceRegisterForm) => {
+      setErrMsg(undefined);
+      setDisabledSubmitButton(true);
+      let latLonRegister = latLon;
+      let prefectureCode: string | undefined = undefined;
+      if (formValue.address) {
+        // 緯度経度と都道府県の登録
+        try {
+          if (!latLonRegister) {
+            // 住所から緯度・経度を取得
+            latLonRegister = (
+              await getLatLonFromAddressFn({
+                address: formValue.address,
+              })
+            )?.latLon;
+          }
+          if (latLonRegister) {
+            // 緯度経度から都道府県コードを取得
+            prefectureCode = await getPrefectureCodeFromLatLon(latLonRegister);
+          }
+        } catch (e) {
+          // エラー時は何もしない
+        }
+      }
+
+      // 登録API
+      await addPostPlaceMutationFn({
+        name: formValue.name,
+        address: formValue.address,
+        latLon: latLonRegister,
+        prefectureCode: prefectureCode,
+        categoryIdList: formValue.categoryIds,
+        detail: formValue.detail,
+        urlList: formValue.urlList.map((u) => u.urlInput),
+      });
+      toast("場所を登録しました");
+      router.push("/myPostAdd");
+    },
+    onError: (err) => {
+      if (addPostPlaceMutationOnError) {
+        addPostPlaceMutationOnError(err);
+      }
+    },
+  });
   const { getPrefectureCodeFromLatLon } = useGeolocationService();
 
   const addUrl = () => {
@@ -66,26 +136,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
   };
 
   const formSubmit = async (formValue: PlaceRegisterForm) => {
-    if (formValue.address) {
-      let latLonRes = latLon;
-      // 緯度経度と都道府県の登録
-      try {
-        if (!latLonRes) {
-          // 住所から緯度・経度を取得
-          latLonRes = (
-            await getLatLonFromAddressFn({
-              address: formValue.address,
-            })
-          )?.latLon;
-        }
-        if (latLonRes) {
-          // 緯度経度から都道府県を取得
-          const prefectureCode = await getPrefectureCodeFromLatLon(latLonRes);
-        }
-      } catch (e) {
-        // エラー時は何もしない
-      }
-    }
+    registerPostPlaceMutate(formValue);
   };
 
   return (
@@ -130,6 +181,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
                   value="住所"
                   className={inputLabelStyle()}
                 />
+                {/* 地図選択は後で実装を検討
                 <div className="flex items-center gap-4 mt-2 mb-2">
                   <div className="flex items-center gap-1">
                     <Radio
@@ -159,6 +211,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
                   </div>
                 </div>
                 {isUseMapInputAddress && <>地図を表示</>}
+                */}
                 {!isUseMapInputAddress && (
                   <Field<string> name="address">
                     {({ value, setValue }) => (
@@ -282,10 +335,14 @@ export const PlaceRegisterComponent: FC = ({}) => {
               </div>
             </div>
           </div>
-          <div className={`${centerHorizonContainerStyle()} mt-4`}>
+          {errMsg && (
+            <div className={`mt-2 ${errorMessageStyle()}`}>{errMsg}</div>
+          )}
+          <div className={`${centerHorizonContainerStyle()} mt-4 mb-4`}>
             <Button
               color="success"
               pill
+              disabled={disabledSubmitButton}
               onClick={() => {
                 submit();
               }}

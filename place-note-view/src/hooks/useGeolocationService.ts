@@ -1,5 +1,5 @@
 import { MUNI_LIST } from "@/constants/muni";
-import { LatLon } from "@/gen/placeNoteGeolocationService_pb";
+import { LatLon } from "@/gen/placeNoteCommon_pb";
 
 export const useGeolocationService = () => {
   // 緯度・経度を項目として持つ型を受け取る

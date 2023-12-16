@@ -111,6 +111,9 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
         <Navbar.Link active href="/myCategory" theme={customLinkThemeDropDown}>
           <p>カテゴリー管理</p>
         </Navbar.Link>
+        <Navbar.Link active href="/myPlace" theme={customLinkThemeDropDown}>
+          <p>場所管理</p>
+        </Navbar.Link>
       </Dropdown>
     </Navbar.Link>
   );
