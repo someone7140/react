@@ -169,6 +169,30 @@ export declare class GetPostPlaceByIdRequest extends Message<GetPostPlaceByIdReq
 }
 
 /**
+ * @generated from message placeNote.AddPostPlaceResponse
+ */
+export declare class AddPostPlaceResponse extends Message<AddPostPlaceResponse> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  constructor(data?: PartialMessage<AddPostPlaceResponse>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "placeNote.AddPostPlaceResponse";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddPostPlaceResponse;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddPostPlaceResponse;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddPostPlaceResponse;
+
+  static equals(a: AddPostPlaceResponse | PlainMessage<AddPostPlaceResponse> | undefined, b: AddPostPlaceResponse | PlainMessage<AddPostPlaceResponse> | undefined): boolean;
+}
+
+/**
  * @generated from message placeNote.PostPlaceResponse
  */
 export declare class PostPlaceResponse extends Message<PostPlaceResponse> {

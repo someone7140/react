@@ -4,10 +4,10 @@
 // @ts-nocheck
 
 import { UnaryHooks } from "@bufbuild/connect-query";
-import { AddPostPlaceRequest, DeletePostPlaceRequest, GetPostPlaceByIdRequest, GetPostPlaceListResponse, PostPlaceResponse, UpdatePostPlaceRequest } from "./placeNotePostPlaceService_pb.js";
+import { AddPostPlaceRequest, AddPostPlaceResponse, DeletePostPlaceRequest, GetPostPlaceByIdRequest, GetPostPlaceListResponse, PostPlaceResponse, UpdatePostPlaceRequest } from "./placeNotePostPlaceService_pb.js";
 import { Empty } from "@bufbuild/protobuf";
 
-export const addPostPlace: UnaryHooks<AddPostPlaceRequest, Empty>;
+export const addPostPlace: UnaryHooks<AddPostPlaceRequest, AddPostPlaceResponse>;
 export const updatePostPlace: UnaryHooks<UpdatePostPlaceRequest, Empty>;
 export const deletePostPlace: UnaryHooks<DeletePostPlaceRequest, Empty>;
 export const getPostPlaceList: UnaryHooks<Empty, GetPostPlaceListResponse>;

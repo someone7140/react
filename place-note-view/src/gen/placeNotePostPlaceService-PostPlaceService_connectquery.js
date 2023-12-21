@@ -5,7 +5,7 @@
 
 import { createQueryService } from "@bufbuild/connect-query";
 import { Empty, MethodKind } from "@bufbuild/protobuf";
-import { AddPostPlaceRequest, DeletePostPlaceRequest, GetPostPlaceByIdRequest, GetPostPlaceListResponse, PostPlaceResponse, UpdatePostPlaceRequest } from "./placeNotePostPlaceService_pb.js";
+import { AddPostPlaceRequest, AddPostPlaceResponse, DeletePostPlaceRequest, GetPostPlaceByIdRequest, GetPostPlaceListResponse, PostPlaceResponse, UpdatePostPlaceRequest } from "./placeNotePostPlaceService_pb.js";
 
 export const typeName = "placeNote.PostPlaceService";
 
@@ -19,7 +19,7 @@ export const addPostPlace = createQueryService({
         name: "AddPostPlace",
         kind: MethodKind.Unary,
         I: AddPostPlaceRequest,
-        O: Empty,
+        O: AddPostPlaceResponse,
       },
     },
     typeName: "placeNote.PostPlaceService",

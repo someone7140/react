@@ -46,14 +46,17 @@ export const PlaceListSelectComponent: FC<Props> = ({ placeActionRender }) => {
   >(undefined);
 
   const renderPlaceButton = (categoryId: string) => {
-    const category = categoryData?.categoryList.find(
-      (c) => c.id === categoryId
-    );
+    const categoryList = categoryData?.categoryList ?? [];
+    const category = categoryList.find((c) => c.id === categoryId);
     // 子カテゴリーが設定されている場合は親にも含める
     const targetPlaceList =
       placeData?.placeList.filter((p) =>
         p.categoryIdList.some(
-          (cId) => cId === category?.id || cId === category?.parentId
+          (cId) =>
+            cId === category?.id ||
+            categoryList.some(
+              (child) => child.id === cId && child?.parentId === category?.id
+            )
         )
       ) ?? [];
 
@@ -81,19 +84,19 @@ export const PlaceListSelectComponent: FC<Props> = ({ placeActionRender }) => {
     placeData?.placeList.filter((p) => p.categoryIdList.length === 0) ?? [];
 
   return (
-    <div className={`${centerHorizonContainerStyle()} mt-2`}>
-      {(categoryLoading || placeLoading) && <Spinner />}
-      {categoryData && placeData && (
-        <>
-          {showPlaces.length === 0 && (
-            <>
-              <PostCategoryListComponent
-                categoryList={categoryData.categoryList}
-                renderCategoryAction={renderPlaceButton}
-              />
-              {noCategoryPlaceList.length > 0 && (
-                <>
-                  <div className="flex ml-4 gap-2">
+    <>
+      <div className={`${centerHorizonContainerStyle()} mt-2`}>
+        {(categoryLoading || placeLoading) && <Spinner />}
+        {categoryData && placeData && (
+          <>
+            {showPlaces.length === 0 && (
+              <div className="flex-columngap-2">
+                <PostCategoryListComponent
+                  categoryList={categoryData.categoryList}
+                  renderCategoryAction={renderPlaceButton}
+                />
+                {noCategoryPlaceList.length > 0 && (
+                  <div>
                     <Button
                       color="purple"
                       pill
@@ -104,32 +107,34 @@ export const PlaceListSelectComponent: FC<Props> = ({ placeActionRender }) => {
                       <p>カテゴリー未指定の場所一覧を表示</p>
                     </Button>
                   </div>
-                </>
-              )}
-            </>
-          )}
-          {showPlaces.length > 0 && (
-            <div className="flex flex-col gap-4">
-              <Button
-                color="success"
-                pill
-                onClick={() => {
-                  setShowPlaces([]);
-                  setSelectCategory(undefined);
-                }}
-              >
-                <p>カテゴリー選択に戻る</p>
-              </Button>
-              {selectCategory && <div>「{selectCategory.name}」の場所一覧</div>}
-              <PlaceListComponent
-                places={showPlaces}
-                placeActionRender={placeActionRender}
-                refetch={placeRefetch}
-              />
-            </div>
-          )}
-        </>
-      )}
-    </div>
+                )}
+              </div>
+            )}
+            {showPlaces.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <Button
+                  color="dark"
+                  pill
+                  onClick={() => {
+                    setShowPlaces([]);
+                    setSelectCategory(undefined);
+                  }}
+                >
+                  <p>カテゴリー選択に戻る</p>
+                </Button>
+                {selectCategory && (
+                  <div>「{selectCategory.name}」の場所一覧</div>
+                )}
+                <PlaceListComponent
+                  places={showPlaces}
+                  placeActionRender={placeActionRender}
+                  refetch={placeRefetch}
+                />
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };

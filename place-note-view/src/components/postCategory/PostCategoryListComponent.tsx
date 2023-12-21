@@ -35,19 +35,22 @@ export const PostCategoryListComponent: FC<Props> = ({
     } else {
       return (
         <ul className="list-disc mt-4 ml-4">
-          {childList.map((c) => (
-            <li className="ml-2 mb-4 marker:text-lime-700" key={c.id}>
-              <div className="flex-column">
-                <div className="flex content-between items-center">
-                  <div className="text-xl max-w-[50%] break-all text-lime-700">
-                    {c.name}
+          {childList.map((c) => {
+            const action = renderCategoryAction(c.id);
+            return (
+              <li className="ml-2 mb-4 marker:text-lime-700" key={c.id}>
+                <div className="flex-column">
+                  <div className="flex content-between items-center">
+                    <div className={`text-xl max-w-sm break-all text-lime-700`}>
+                      {c.name}
+                    </div>
+                    {action}
                   </div>
-                  {renderCategoryAction(c.id)}
+                  {c.memo && <div className={memoStyle()}>{c.memo}</div>}
                 </div>
-                {c.memo && <div className={memoStyle()}>{c.memo}</div>}
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       );
     }
@@ -59,7 +62,7 @@ export const PostCategoryListComponent: FC<Props> = ({
         <li className="ml-4 mb-4" key={c.id}>
           <div className="flex-column">
             <div className="flex content-between items-center">
-              <div className="text-xl max-w-[50%] break-all">{c.name}</div>
+              <div className="text-xl max-w-sm break-all">{c.name}</div>
               {renderCategoryAction(c.id)}
             </div>
             {c.memo && <div className={memoStyle()}>{c.memo}</div>}

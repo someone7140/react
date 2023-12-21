@@ -2,8 +2,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { PostRegisterComponent } from "@/components/postRegister/PostRegisterComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
-import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 
 export default function Home() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className={centerHorizonContainerStyle()}>投稿</div>
+      <PostRegisterComponent placeId={placeId ?? ""} />
     </div>
   );
 }

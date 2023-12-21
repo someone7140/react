@@ -19,15 +19,13 @@ export default function Home() {
   const afterRegisterAction = (placeId: string | undefined) => {
     if (placeId) {
       toast("場所を登録しました");
-      router.push(`/myPostAdd/postRegister?place_id=${placeId}`);
-    } else {
-      router.push("/myPlace");
     }
+    router.push("/myPlace");
   };
 
   return (
     <div>
-      <div className={centerHorizonContainerStyle()}>場所の登録</div>
+      <div className={`${centerHorizonContainerStyle()} mb-2`}>場所を追加</div>
       <PlaceRegisterComponent afterRegisterAction={afterRegisterAction} />
     </div>
   );

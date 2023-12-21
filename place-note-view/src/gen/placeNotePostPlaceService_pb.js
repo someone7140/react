@@ -60,6 +60,16 @@ export const GetPostPlaceByIdRequest = proto3.makeMessageType(
 );
 
 /**
+ * @generated from message placeNote.AddPostPlaceResponse
+ */
+export const AddPostPlaceResponse = proto3.makeMessageType(
+  "placeNote.AddPostPlaceResponse",
+  () => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ],
+);
+
+/**
  * @generated from message placeNote.PostPlaceResponse
  */
 export const PostPlaceResponse = proto3.makeMessageType(

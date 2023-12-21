@@ -12,7 +12,6 @@ import {
   FormInstance,
 } from "houseform";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import { z } from "zod";
 
 import { ConnectError } from "@bufbuild/connect";
@@ -21,6 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 import { PostCategorySelectComponent } from "@/components/postCategory/PostCategorySelectComponent";
 import { LatLon } from "@/gen/placeNoteCommon_pb";
 import { getLatLonFromAddress } from "@/gen/placeNoteGeolocationService-GeolocationService_connectquery";
+import { addPostPlace } from "@/gen/placeNotePostPlaceService-PostPlaceService_connectquery";
 import { useGeolocationService } from "@/hooks/useGeolocationService";
 import { centerHorizonContainerStyle } from "@/style/CommonStyle";
 import {
@@ -29,7 +29,6 @@ import {
   inputTextStyle,
 } from "@/style/FormStyle";
 import { errorMessageStyle } from "@/style/MessageStyle";
-import { addPostPlace } from "@/gen/placeNotePostPlaceService-PostPlaceService_connectquery";
 
 export type PlaceRegisterForm = {
   name: string;
@@ -41,7 +40,11 @@ export type PlaceRegisterForm = {
   detail?: string;
 };
 
-export const PlaceRegisterComponent: FC = ({}) => {
+export type Props = {
+  afterRegisterAction: (placeId: string | undefined) => void;
+};
+
+export const PlaceRegisterComponent: FC<Props> = ({ afterRegisterAction }) => {
   const router = useRouter();
 
   const formRef = useRef<FormInstance<PlaceRegisterForm>>(null);
@@ -95,17 +98,19 @@ export const PlaceRegisterComponent: FC = ({}) => {
       }
 
       // 登録API
-      await addPostPlaceMutationFn({
+      const result = await addPostPlaceMutationFn({
         name: formValue.name,
         address: formValue.address,
         latLon: latLonRegister,
         prefectureCode: prefectureCode,
         categoryIdList: formValue.categoryIds,
         detail: formValue.detail,
-        urlList: formValue.urlList.map((u) => u.urlInput),
+        urlList: formValue.urlList
+          .filter((u) => !!u.urlInput)
+          .map((u) => u.urlInput),
       });
-      toast("場所を登録しました");
-      router.push("/myPostAdd");
+      // 事後処理
+      afterRegisterAction(result.id);
     },
     onError: (err) => {
       if (addPostPlaceMutationOnError) {
@@ -338,7 +343,7 @@ export const PlaceRegisterComponent: FC = ({}) => {
           {errMsg && (
             <div className={`mt-2 ${errorMessageStyle()}`}>{errMsg}</div>
           )}
-          <div className={`${centerHorizonContainerStyle()} mt-4 mb-4`}>
+          <div className={`${centerHorizonContainerStyle()} mt-4 mb-4 gap-4`}>
             <Button
               color="success"
               pill
@@ -348,6 +353,15 @@ export const PlaceRegisterComponent: FC = ({}) => {
               }}
             >
               <p>登録</p>
+            </Button>
+            <Button
+              color="dark"
+              pill
+              onClick={() => {
+                router.back();
+              }}
+            >
+              <p>戻る</p>
             </Button>
           </div>
         </div>
