@@ -6,14 +6,14 @@ import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import React, { FC } from "react";
 
 type Props = {
-  onAuthGoogle?: (authCode: string) => void;
+  onAuthGoogle: (authCode: string) => void;
   disabledFlag?: boolean;
 };
 
 const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle, disabledFlag }) => {
   const login = useGoogleLogin({
     onSuccess: async (codeResponse) => {
-      onAuthGoogle?.(codeResponse.code);
+      onAuthGoogle(codeResponse.code);
     },
     flow: "auth-code",
     scope: "email profile openid",
