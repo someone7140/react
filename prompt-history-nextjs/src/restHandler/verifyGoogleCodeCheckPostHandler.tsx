@@ -5,21 +5,25 @@ import { withZod } from "@/restHandler/common/withZod";
 
 import { NextRequest, NextResponse } from "next/server";
 
+const verifyGoogleCodeCheckPostSchema = z.object({
+  authCode: z.string().min(1, {
+    message: "認証コードは必須です",
+  }),
+});
+
+export type VerifyGoogleCodeCheckRequest = z.infer<
+  typeof verifyGoogleCodeCheckPostSchema
+>;
+
 export type VerifyGoogleCodeCheckResponseData = {
   authToken: string;
 };
 
 export const verifyGoogleCodeCheckPostHandler = async (req: NextRequest) => {
-  const zodSchema = z.object({
-    authCode: z.string().min(1, {
-      message: "認証コードは必須です",
-    }),
-  });
-
   return withZod(
-    zodSchema,
+    verifyGoogleCodeCheckPostSchema,
     req,
-    async (reqValue: z.infer<typeof zodSchema>) => {
+    async (reqValue: VerifyGoogleCodeCheckRequest) => {
       try {
         console.log(reqValue);
         const responseData: VerifyGoogleCodeCheckResponseData = {
