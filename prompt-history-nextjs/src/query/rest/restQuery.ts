@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const verifyGoogleCodeCheckMutation = gql`
+export const verifyGoogleCodeCheckMutationDocument = gql`
   fragment VerifyGoogleCodeCheckInput on REST {
     authCode: String
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { apolloLink } from "@/constants/ApolloLinkConstants";
+import { getApolloLink } from "@/constants/ApolloLinkConstants";
 import { ApolloLink } from "@apollo/client";
 import {
   ApolloNextAppProvider,
@@ -10,6 +10,7 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 function makeClient() {
+  const apolloLink = getApolloLink({});
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link:

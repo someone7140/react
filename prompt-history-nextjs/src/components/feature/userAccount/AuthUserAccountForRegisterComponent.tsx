@@ -10,44 +10,56 @@ import {
   UserAccountInputComponent,
   userAccountInputFormSchema,
 } from "@/components/feature/userAccount/UserAccountInputComponent";
+
 import { useToast } from "@/components/ui/use-toast";
-import { verifyGoogleCodeCheckMutation } from "@/query/rest/restQuery";
+import { verifyGoogleCodeCheckMutationDocument } from "@/query/rest/restQuery";
+import { RestRequestType } from "@/restHandler/common/restRequestType";
 import {
   VerifyGoogleCodeCheckRequest,
-  VerifyGoogleCodeCheckResponseData,
+  VerifyGoogleCodeCheckResponse,
 } from "@/restHandler/verifyGoogleCodeCheckPostHandler";
 import { toastStyle } from "@/styles/CommonStyle";
-import { RestRequestType } from "@/restHandler/common/restRequestType";
 
 export const AuthUserAccountForRegisterComponent: FC = () => {
   const { toast } = useToast();
 
   const [verifyGoogleCodeCheck, { loading }] =
-    useMutation<VerifyGoogleCodeCheckResponseData>(
-      verifyGoogleCodeCheckMutation
+    useMutation<VerifyGoogleCodeCheckResponse>(
+      verifyGoogleCodeCheckMutationDocument
     );
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
   );
 
   const onAuthGoogle = async (authCode: string) => {
-    const verifyGoogleCodeCheckRequest: RestRequestType<VerifyGoogleCodeCheckRequest> =
-      {
-        input: {
-          authCode,
-        },
-      };
-    const checkResult = await verifyGoogleCodeCheck({
-      variables: verifyGoogleCodeCheckRequest,
-    });
-    if (checkResult.errors || !checkResult.data) {
-    } else {
+    const displayErrorToast = () => {
       toast({
         className: `${toastStyle({ textColor: "amber" })}`,
         variant: "destructive",
         description:
           "認証失敗しました。登録済みのアカウントの可能性があります。",
       });
+    };
+    try {
+      const verifyGoogleCodeCheckRequest: RestRequestType<VerifyGoogleCodeCheckRequest> =
+        {
+          input: {
+            authCode,
+          },
+        };
+      const checkResult = await verifyGoogleCodeCheck({
+        variables: verifyGoogleCodeCheckRequest,
+      });
+
+      const responseAuthToken =
+        checkResult?.data?.verifyGoogleCodeCheck?.authToken;
+      if (checkResult.errors || !responseAuthToken) {
+        displayErrorToast();
+      } else {
+        console.log(responseAuthToken);
+      }
+    } catch (e) {
+      displayErrorToast();
     }
   };
 
