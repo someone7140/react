@@ -1,14 +1,11 @@
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 
-import {
-  AccountUsersByGmailDocument,
-  AccountUsersByGmailQuery,
-  AccountUsersByGmailQueryVariables,
-} from "@/query/graphqlGen/graphql";
+import { GoogleAuthDataPayload } from "@/restHandler/common/commonRestType";
 import { getErrorMessage } from "@/restHandler/common/errorHandling";
+import { makeJwtToken } from "@/restHandler/common/jwtUtil";
 import { withZod } from "@/restHandler/common/withZod";
-import { getHasuraClient } from "@/restHandler/externalApi/hasuraClient";
+import { gmailRegisteredCheck } from "@/restHandler/externalApi/hasuraApiExecute";
 
 const verifyGoogleCodeCheckPostSchema = z.object({
   authCode: z.string().min(1, {
@@ -34,16 +31,19 @@ export const verifyGoogleCodeCheckPostHandler = async (req: NextRequest) => {
     req,
     async (reqValue: VerifyGoogleCodeCheckRequest) => {
       try {
-        console.log(reqValue);
-        const isRegistered = await gmailRegisteredCheck("sample@gmail.com");
+        const gmail = "sample@gmail.com";
+
+        const isRegistered = await gmailRegisteredCheck(gmail);
         if (isRegistered) {
           return NextResponse.json(
             { error: "This Gmail user was registered" },
             { status: 403 }
           );
         }
+
+        const payload: GoogleAuthDataPayload = { gmail };
         const responseData: VerifyGoogleCodeCheckResponseData = {
-          authToken: "token",
+          authToken: makeJwtToken(payload, "1h"),
         };
         return NextResponse.json(responseData, { status: 200 });
       } catch (e) {
@@ -54,15 +54,4 @@ export const verifyGoogleCodeCheckPostHandler = async (req: NextRequest) => {
       }
     }
   );
-};
-
-const gmailRegisteredCheck = async (gmail: string) => {
-  const queryVariables: AccountUsersByGmailQueryVariables = { gmail };
-  const { data: queryData } =
-    await getHasuraClient().query<AccountUsersByGmailQuery>({
-      query: AccountUsersByGmailDocument,
-      variables: queryVariables,
-    });
-  console.log(queryData.account_users);
-  return queryData?.account_users?.length > 0 ?? false;
 };

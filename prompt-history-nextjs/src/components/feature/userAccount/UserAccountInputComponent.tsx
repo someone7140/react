@@ -3,11 +3,11 @@
 import React, { FC } from "react";
 import { z } from "zod";
 
-import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
+import AutoForm from "@/components/ui/auto-form";
+import { Button } from "@/components/ui/button";
 import { halfSizeRegex } from "@/constants/ValidationConsntants";
 import { inputTextStyle } from "@/styles/FormStyle";
 import { buttonStyle } from "@/styles/CommonStyle";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   submitFunc: (form: z.infer<typeof userAccountInputFormSchema>) => void;
@@ -55,7 +55,11 @@ export const UserAccountInputComponent: FC<Props> = ({
         },
       }}
     >
-      <Button className={buttonStyle({ color: "indigo" })} type="submit">
+      <Button
+        className={buttonStyle({ color: "indigo" })}
+        type="submit"
+        disabled={disabled}
+      >
         <p>ユーザ登録</p>
       </Button>
     </AutoForm>

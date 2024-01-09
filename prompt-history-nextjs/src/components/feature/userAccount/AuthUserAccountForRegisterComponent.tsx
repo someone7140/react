@@ -12,20 +12,31 @@ import {
 } from "@/components/feature/userAccount/UserAccountInputComponent";
 
 import { useToast } from "@/components/ui/use-toast";
-import { verifyGoogleCodeCheckMutationDocument } from "@/query/rest/restQuery";
-import { RestRequestType } from "@/restHandler/common/restRequestType";
+import {
+  addAccountUserByGmailPostMutationDocument,
+  verifyGoogleCodeCheckMutationDocument,
+} from "@/query/rest/restQuery";
+import { RestRequestType } from "@/restHandler/common/commonRestType";
 import {
   VerifyGoogleCodeCheckRequest,
   VerifyGoogleCodeCheckResponse,
 } from "@/restHandler/verifyGoogleCodeCheckPostHandler";
 import { toastStyle } from "@/styles/CommonStyle";
+import {
+  AddAccountUserByGmailPostRequest,
+  AddAccountUserByGmailPostResponse,
+} from "@/restHandler/addAccountUserByGmailPostHandler";
 
 export const AuthUserAccountForRegisterComponent: FC = () => {
   const { toast } = useToast();
 
-  const [verifyGoogleCodeCheck, { loading }] =
+  const [verifyGoogleCodeCheck, { loading: loadingVerify }] =
     useMutation<VerifyGoogleCodeCheckResponse>(
       verifyGoogleCodeCheckMutationDocument
+    );
+  const [addAccountUserByGmail, { loading: loadingRegister }] =
+    useMutation<AddAccountUserByGmailPostResponse>(
+      addAccountUserByGmailPostMutationDocument
     );
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
@@ -40,6 +51,7 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
           "認証失敗しました。登録済みのアカウントの可能性があります。",
       });
     };
+
     try {
       const verifyGoogleCodeCheckRequest: RestRequestType<VerifyGoogleCodeCheckRequest> =
         {
@@ -56,15 +68,56 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
       if (checkResult.errors || !responseAuthToken) {
         displayErrorToast();
       } else {
-        console.log(responseAuthToken);
+        setGoogleAuthToken(responseAuthToken);
       }
     } catch (e) {
       displayErrorToast();
     }
   };
 
-  const submitFunc = (data: z.infer<typeof userAccountInputFormSchema>) => {
-    console.log(data);
+  const submitFunc = async (
+    data: z.infer<typeof userAccountInputFormSchema>
+  ) => {
+    const displayErrorToast = () => {
+      toast({
+        className: `${toastStyle({ textColor: "amber" })}`,
+        variant: "destructive",
+        description: (
+          <>
+            登録失敗しました。ユーザIDが重複している可能性があります。
+            <br />
+            再度登録してエラーが発生する場合は認証からやり直しをお願いします。
+          </>
+        ),
+      });
+    };
+
+    try {
+      const addAccountUserByGmailRequest: RestRequestType<AddAccountUserByGmailPostRequest> =
+        {
+          input: {
+            authToken: googleAuthToken ?? "",
+            userSettingId: data.userSettingId,
+            name: data.userName,
+          },
+        };
+      const response = await addAccountUserByGmail({
+        variables: addAccountUserByGmailRequest,
+      });
+
+      const authResult = response?.data?.addAccountUserByGmail;
+      if (response.errors || !authResult) {
+        displayErrorToast();
+      } else {
+        toast({
+          className: `${toastStyle({ textColor: "black" })}`,
+          description: "ユーザーを登録しました。",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      displayErrorToast();
+    }
   };
 
   return (
@@ -72,10 +125,15 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
       {!googleAuthToken && (
         <AuthGoogleComponent
           onAuthGoogle={onAuthGoogle}
-          disabledFlag={loading}
+          disabledFlag={loadingVerify}
         />
       )}
-      {googleAuthToken && <UserAccountInputComponent submitFunc={submitFunc} />}
+      {googleAuthToken && (
+        <UserAccountInputComponent
+          submitFunc={submitFunc}
+          disabled={loadingRegister}
+        />
+      )}
     </div>
   );
 };

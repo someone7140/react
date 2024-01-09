@@ -12,10 +12,10 @@ export const buttonStyle = tv({
 });
 
 export const toastStyle = tv({
-  base: "'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4",
   variants: {
     textColor: {
       amber: "text-amber-100",
+      black: "text-black",
     },
   },
 });

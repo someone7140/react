@@ -12,3 +12,29 @@ export const verifyGoogleCodeCheckMutationDocument = gql`
     }
   }
 `;
+
+const AuthUserResponseFragment = gql`
+  fragment AuthUserResponse on REST {
+    authToken: String
+    userSettingId: String
+    name: String
+    imageUrl: String
+  }
+`;
+
+export const addAccountUserByGmailPostMutationDocument = gql`
+  ${AuthUserResponseFragment}
+  fragment AddAccountUserByGmailInput on REST {
+    authToken: String
+    userSettingId: String
+    name: String
+    imageUrl: String
+  }
+
+  mutation addAccountUserByGmail($input: AddAccountUserByGmailInput!) {
+    addAccountUserByGmail(input: $input)
+      @rest(type: "Post", path: "/addAccountUserByGmail", method: "POST") {
+      ...AuthUserResponse
+    }
+  }
+`;

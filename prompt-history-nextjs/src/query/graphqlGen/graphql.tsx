@@ -56,8 +56,10 @@ export type Account_Users = {
   email?: Maybe<Scalars['String']['output']>;
   gmail?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   password?: Maybe<Scalars['String']['output']>;
+  userSettingId: Scalars['String']['output'];
 };
 
 /** aggregated selection of "account_users" */
@@ -90,8 +92,10 @@ export type Account_Users_Bool_Exp = {
   email?: InputMaybe<String_Comparison_Exp>;
   gmail?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<String_Comparison_Exp>;
+  imageUrl?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   password?: InputMaybe<String_Comparison_Exp>;
+  userSettingId?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "account_users" */
@@ -101,7 +105,9 @@ export enum Account_Users_Constraint {
   /** unique or primary key constraint on columns "gmail" */
   AccountUsersGmailKey = 'account_users_gmail_key',
   /** unique or primary key constraint on columns "id" */
-  AccountUsersPkey = 'account_users_pkey'
+  AccountUsersPkey = 'account_users_pkey',
+  /** unique or primary key constraint on columns "user_setting_id" */
+  AccountUsersUserSettingIdKey = 'account_users_user_setting_id_key'
 }
 
 /** input type for inserting data into table "account_users" */
@@ -109,8 +115,10 @@ export type Account_Users_Insert_Input = {
   email?: InputMaybe<Scalars['String']['input']>;
   gmail?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
+  userSettingId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
@@ -119,8 +127,10 @@ export type Account_Users_Max_Fields = {
   email?: Maybe<Scalars['String']['output']>;
   gmail?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   password?: Maybe<Scalars['String']['output']>;
+  userSettingId?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
@@ -129,8 +139,10 @@ export type Account_Users_Min_Fields = {
   email?: Maybe<Scalars['String']['output']>;
   gmail?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   password?: Maybe<Scalars['String']['output']>;
+  userSettingId?: Maybe<Scalars['String']['output']>;
 };
 
 /** response of any mutation on the table "account_users" */
@@ -154,8 +166,10 @@ export type Account_Users_Order_By = {
   email?: InputMaybe<Order_By>;
   gmail?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  imageUrl?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   password?: InputMaybe<Order_By>;
+  userSettingId?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: account_users */
@@ -172,9 +186,13 @@ export enum Account_Users_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  ImageUrl = 'imageUrl',
+  /** column name */
   Name = 'name',
   /** column name */
-  Password = 'password'
+  Password = 'password',
+  /** column name */
+  UserSettingId = 'userSettingId'
 }
 
 /** input type for updating data in table "account_users" */
@@ -182,8 +200,10 @@ export type Account_Users_Set_Input = {
   email?: InputMaybe<Scalars['String']['input']>;
   gmail?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
+  userSettingId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Streaming cursor of the table "account_users" */
@@ -199,8 +219,10 @@ export type Account_Users_Stream_Cursor_Value_Input = {
   email?: InputMaybe<Scalars['String']['input']>;
   gmail?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
+  userSettingId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** update columns of table "account_users" */
@@ -212,9 +234,13 @@ export enum Account_Users_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  ImageUrl = 'imageUrl',
+  /** column name */
   Name = 'name',
   /** column name */
-  Password = 'password'
+  Password = 'password',
+  /** column name */
+  UserSettingId = 'userSettingId'
 }
 
 export type Account_Users_Updates = {
@@ -395,6 +421,23 @@ export type AccountUsersByGmailQueryVariables = Exact<{
 
 export type AccountUsersByGmailQuery = { __typename?: 'query_root', account_users: Array<{ __typename?: 'account_users', id: string }> };
 
+export type AccountUsersByUserSettingIdQueryVariables = Exact<{
+  userSettingId: Scalars['String']['input'];
+}>;
+
+
+export type AccountUsersByUserSettingIdQuery = { __typename?: 'query_root', account_users: Array<{ __typename?: 'account_users', id: string }> };
+
+export type AddAccountUserByGmailMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  userSettingId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  gmail: Scalars['String']['input'];
+}>;
+
+
+export type AddAccountUserByGmailMutation = { __typename?: 'mutation_root', insert_account_users_one?: { __typename?: 'account_users', id: string } | null };
+
 
 export const AccountUsersByGmailDocument = gql`
     query AccountUsersByGmail($gmail: String!) {
@@ -436,3 +479,81 @@ export type AccountUsersByGmailQueryHookResult = ReturnType<typeof useAccountUse
 export type AccountUsersByGmailLazyQueryHookResult = ReturnType<typeof useAccountUsersByGmailLazyQuery>;
 export type AccountUsersByGmailSuspenseQueryHookResult = ReturnType<typeof useAccountUsersByGmailSuspenseQuery>;
 export type AccountUsersByGmailQueryResult = Apollo.QueryResult<AccountUsersByGmailQuery, AccountUsersByGmailQueryVariables>;
+export const AccountUsersByUserSettingIdDocument = gql`
+    query AccountUsersByUserSettingId($userSettingId: String!) {
+  account_users(where: {userSettingId: {_eq: $userSettingId}}) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useAccountUsersByUserSettingIdQuery__
+ *
+ * To run a query within a React component, call `useAccountUsersByUserSettingIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountUsersByUserSettingIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountUsersByUserSettingIdQuery({
+ *   variables: {
+ *      userSettingId: // value for 'userSettingId'
+ *   },
+ * });
+ */
+export function useAccountUsersByUserSettingIdQuery(baseOptions: Apollo.QueryHookOptions<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>(AccountUsersByUserSettingIdDocument, options);
+      }
+export function useAccountUsersByUserSettingIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>(AccountUsersByUserSettingIdDocument, options);
+        }
+export function useAccountUsersByUserSettingIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>(AccountUsersByUserSettingIdDocument, options);
+        }
+export type AccountUsersByUserSettingIdQueryHookResult = ReturnType<typeof useAccountUsersByUserSettingIdQuery>;
+export type AccountUsersByUserSettingIdLazyQueryHookResult = ReturnType<typeof useAccountUsersByUserSettingIdLazyQuery>;
+export type AccountUsersByUserSettingIdSuspenseQueryHookResult = ReturnType<typeof useAccountUsersByUserSettingIdSuspenseQuery>;
+export type AccountUsersByUserSettingIdQueryResult = Apollo.QueryResult<AccountUsersByUserSettingIdQuery, AccountUsersByUserSettingIdQueryVariables>;
+export const AddAccountUserByGmailDocument = gql`
+    mutation AddAccountUserByGmail($id: String!, $userSettingId: String!, $name: String!, $gmail: String!) {
+  insert_account_users_one(
+    object: {id: $id, userSettingId: $userSettingId, name: $name, gmail: $gmail}
+  ) {
+    id
+  }
+}
+    `;
+export type AddAccountUserByGmailMutationFn = Apollo.MutationFunction<AddAccountUserByGmailMutation, AddAccountUserByGmailMutationVariables>;
+
+/**
+ * __useAddAccountUserByGmailMutation__
+ *
+ * To run a mutation, you first call `useAddAccountUserByGmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAccountUserByGmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAccountUserByGmailMutation, { data, loading, error }] = useAddAccountUserByGmailMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      userSettingId: // value for 'userSettingId'
+ *      name: // value for 'name'
+ *      gmail: // value for 'gmail'
+ *   },
+ * });
+ */
+export function useAddAccountUserByGmailMutation(baseOptions?: Apollo.MutationHookOptions<AddAccountUserByGmailMutation, AddAccountUserByGmailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddAccountUserByGmailMutation, AddAccountUserByGmailMutationVariables>(AddAccountUserByGmailDocument, options);
+      }
+export type AddAccountUserByGmailMutationHookResult = ReturnType<typeof useAddAccountUserByGmailMutation>;
+export type AddAccountUserByGmailMutationResult = Apollo.MutationResult<AddAccountUserByGmailMutation>;
+export type AddAccountUserByGmailMutationOptions = Apollo.BaseMutationOptions<AddAccountUserByGmailMutation, AddAccountUserByGmailMutationVariables>;
