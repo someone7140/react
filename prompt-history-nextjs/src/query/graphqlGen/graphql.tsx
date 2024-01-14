@@ -419,7 +419,7 @@ export type AccountUsersByGmailQueryVariables = Exact<{
 }>;
 
 
-export type AccountUsersByGmailQuery = { __typename?: 'query_root', account_users: Array<{ __typename?: 'account_users', id: string }> };
+export type AccountUsersByGmailQuery = { __typename?: 'query_root', account_users: Array<{ __typename?: 'account_users', id: string, userSettingId: string, name: string, imageUrl?: string | null }> };
 
 export type AccountUsersByUserSettingIdQueryVariables = Exact<{
   userSettingId: Scalars['String']['input'];
@@ -443,6 +443,9 @@ export const AccountUsersByGmailDocument = gql`
     query AccountUsersByGmail($gmail: String!) {
   account_users(where: {gmail: {_eq: $gmail}}) {
     id
+    userSettingId
+    name
+    imageUrl
   }
 }
     `;

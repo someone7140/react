@@ -5,7 +5,8 @@ import { GoogleAuthDataPayload } from "@/restHandler/common/commonRestType";
 import { getErrorMessage } from "@/restHandler/common/errorHandling";
 import { makeJwtToken } from "@/restHandler/common/jwtUtil";
 import { withZod } from "@/restHandler/common/withZod";
-import { gmailRegisteredCheck } from "@/restHandler/externalApi/hasuraApiExecute";
+import { googleAuthByCode } from "@/restHandler/externalApi/google/googleAuth";
+import { gmailRegisteredCheck } from "@/restHandler/externalApi/hasura/hasuraApiExecute";
 
 const verifyGoogleCodeCheckPostSchema = z.object({
   authCode: z.string().min(1, {
@@ -30,9 +31,27 @@ export const verifyGoogleCodeCheckPostHandler = async (req: NextRequest) => {
     verifyGoogleCodeCheckPostSchema,
     req,
     async (reqValue: VerifyGoogleCodeCheckRequest) => {
+      // 認証コードからgmail取得
+      let gmail = "";
       try {
-        const gmail = "sample@gmail.com";
+        const authInfo = await googleAuthByCode(reqValue.authCode);
+        if (!authInfo.email) {
+          return NextResponse.json(
+            { error: "Can not get gmail" },
+            { status: 401 }
+          );
+        } else {
+          gmail = authInfo.email;
+        }
+      } catch (e) {
+        return NextResponse.json(
+          { error: getErrorMessage(e) },
+          { status: 401 }
+        );
+      }
 
+      // 登録の重複チェック後にトークンを生成
+      try {
         const isRegistered = await gmailRegisteredCheck(gmail);
         if (isRegistered) {
           return NextResponse.json(

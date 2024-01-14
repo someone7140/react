@@ -38,3 +38,31 @@ export const addAccountUserByGmailPostMutationDocument = gql`
     }
   }
 `;
+
+export const loginByGoogleMutationDocument = gql`
+  ${AuthUserResponseFragment}
+  fragment LoginByGoogleInput on REST {
+    authCode: String
+  }
+
+  mutation loginByGoogle($input: LoginByGoogleInput!) {
+    loginByGoogle(input: $input)
+      @rest(type: "Post", path: "/loginByGoogle", method: "POST") {
+      ...AuthUserResponse
+    }
+  }
+`;
+
+export const verifyAuthTokenDocument = gql`
+  ${AuthUserResponseFragment}
+  fragment VerifyAuthTokenInput on REST {
+    authToken: String
+  }
+
+  mutation verifyAuthToken($input: VerifyAuthTokenInput!) {
+    verifyAuthToken(input: $input)
+      @rest(type: "Post", path: "/verifyAuthToken", method: "POST") {
+      ...AuthUserResponse
+    }
+  }
+`;

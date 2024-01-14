@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, useState } from "react";
-
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useMutation } from "@apollo/client";
 
@@ -12,6 +12,8 @@ import {
 } from "@/components/feature/userAccount/UserAccountInputComponent";
 
 import { useToast } from "@/components/ui/use-toast";
+import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
+import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 import {
   addAccountUserByGmailPostMutationDocument,
   verifyGoogleCodeCheckMutationDocument,
@@ -28,6 +30,7 @@ import {
 } from "@/restHandler/addAccountUserByGmailPostHandler";
 
 export const AuthUserAccountForRegisterComponent: FC = () => {
+  const router = useRouter();
   const { toast } = useToast();
 
   const [verifyGoogleCodeCheck, { loading: loadingVerify }] =
@@ -38,6 +41,8 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
     useMutation<AddAccountUserByGmailPostResponse>(
       addAccountUserByGmailPostMutationDocument
     );
+  const authGlobalStore = useAuthStore();
+  const authLocalStorage = useAuthTokenLocalStorage();
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
   );
@@ -109,10 +114,19 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
       if (response.errors || !authResult) {
         displayErrorToast();
       } else {
+        authLocalStorage.updateAuthToken(authResult.authToken);
+        authGlobalStore.setUserAccount({
+          authToken: authResult.authToken,
+          userSettingId: authResult.userSettingId,
+          name: authResult.name,
+          imageUrl: authResult.imageUrl,
+        });
         toast({
           className: `${toastStyle({ textColor: "black" })}`,
           description: "ユーザーを登録しました。",
         });
+
+        router.push("/");
       }
     } catch (e) {
       console.log(e);
@@ -122,6 +136,7 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
 
   return (
     <div>
+      <div className="mb-3">ユーザー登録</div>
       {!googleAuthToken && (
         <AuthGoogleComponent
           onAuthGoogle={onAuthGoogle}

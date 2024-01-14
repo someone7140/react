@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
+import { AuthUserResponse } from "@/restHandler/common/commonRestType";
+
 type StoreAccount = {
-  userAccount: any | undefined;
-  setUserAccount: (user: any) => void;
+  userAccount: AuthUserResponse | undefined;
+  setUserAccount: (user: AuthUserResponse) => void;
   removeUserAccount: () => void;
 };
 

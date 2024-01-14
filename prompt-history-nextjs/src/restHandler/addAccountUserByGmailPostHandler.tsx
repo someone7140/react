@@ -12,8 +12,8 @@ import {
   addAccountUserByGmail,
   gmailRegisteredCheck,
   userSettingIdRegisteredCheck,
-} from "@/restHandler/externalApi/hasuraApiExecute";
-import { makeHasuraToken } from "@/restHandler/externalApi/hasuraToken";
+} from "@/restHandler/externalApi/hasura/hasuraApiExecute";
+import { makeHasuraToken } from "@/restHandler/externalApi/hasura/hasuraToken";
 
 export const addAccountUserByGmailPostSchema = z.object({
   authToken: z.string().min(1, {

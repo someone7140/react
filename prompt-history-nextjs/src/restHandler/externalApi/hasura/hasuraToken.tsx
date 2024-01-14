@@ -2,7 +2,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 import { decodeJwtToken, makeJwtToken } from "@/restHandler/common/jwtUtil";
 
-const CLAIM_KEY = "https://hasura.io/jwt/claims";
+export const CLAIM_KEY = "https://hasura.io/jwt/claims";
 
 interface HasuraTokenPayLoad extends JwtPayload {
   [CLAIM_KEY]: {

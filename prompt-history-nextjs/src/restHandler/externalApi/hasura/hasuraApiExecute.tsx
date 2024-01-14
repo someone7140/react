@@ -9,7 +9,7 @@ import {
   AddAccountUserByGmailMutation,
   AddAccountUserByGmailMutationVariables,
 } from "@/query/graphqlGen/graphql";
-import { getHasuraClient } from "@/restHandler/externalApi/hasuraClient";
+import { getHasuraClient } from "@/restHandler/externalApi/hasura/hasuraClient";
 
 export const gmailRegisteredCheck = async (gmail: string) => {
   const queryVariables: AccountUsersByGmailQueryVariables = { gmail };

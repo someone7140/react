@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+
+import { HeaderComponent } from "@/components/feature/common/HeaderComponent";
 import { Toaster } from "@/components/ui/toaster";
 
 import { cn } from "@/lib/utils";
 import { ApiProvider } from "@/provider/ApiProvider";
+import { AuthProvider } from "@/provider/AuthProvider";
 import "@/styles/globals.css";
 
 export const fontSans = FontSans({
@@ -30,7 +33,11 @@ export default function RootLayout({
         )}
       >
         <Toaster />
-        <ApiProvider>{children}</ApiProvider>
+        <ApiProvider>
+          <AuthProvider>
+            <HeaderComponent>{children}</HeaderComponent>
+          </AuthProvider>
+        </ApiProvider>
       </body>
     </html>
   );
