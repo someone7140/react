@@ -10,23 +10,22 @@ import {
   UserAccountInputComponent,
   userAccountInputFormSchema,
 } from "@/components/feature/userAccount/UserAccountInputComponent";
-
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 import {
   addAccountUserByGmailPostMutationDocument,
   verifyGoogleCodeCheckMutationDocument,
 } from "@/query/rest/restQuery";
+import {
+  AddAccountUserByGmailPostRequest,
+  AddAccountUserByGmailPostResponse,
+} from "@/restHandler/addAccountUserByGmailPostHandler";
 import { RestRequestType } from "@/restHandler/common/commonRestType";
 import {
   VerifyGoogleCodeCheckRequest,
   VerifyGoogleCodeCheckResponse,
 } from "@/restHandler/verifyGoogleCodeCheckPostHandler";
 import { toastStyle } from "@/styles/CommonStyle";
-import {
-  AddAccountUserByGmailPostRequest,
-  AddAccountUserByGmailPostResponse,
-} from "@/restHandler/addAccountUserByGmailPostHandler";
 
 export const AuthUserAccountForRegisterComponent: FC = () => {
   const router = useRouter();

@@ -22,10 +22,9 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { toast } from "@/components/ui/use-toast";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
-import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
+import { buttonStyle } from "@/styles/CommonStyle";
 import {
   menuHeaderContainerStyle,
   menuHeaderNavigationMenuRecordStyle,

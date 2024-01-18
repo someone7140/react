@@ -7,13 +7,12 @@ import { useMutation } from "@apollo/client";
 import { AuthGoogleComponent } from "@/components/feature/auth/AuthGoogleComponent";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
-
 import {
   LoginByGoogleRequest,
   LoginByGoogleResponse,
 } from "@/restHandler/loginByGooglePostHandler";
-import { loginByGoogleMutationDocument } from "@/query/rest/restQuery";
 import { RestRequestType } from "@/restHandler/common/commonRestType";
+import { loginByGoogleMutationDocument } from "@/query/rest/restQuery";
 import { toastStyle } from "@/styles/CommonStyle";
 
 export const AuthUserAccountForLoginComponent: FC = () => {
