@@ -6,8 +6,7 @@ import { useMutation } from "@apollo/client";
 
 import { AuthGoogleComponent } from "@/components/feature/auth/AuthGoogleComponent";
 import { useToast } from "@/components/ui/use-toast";
-import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
-import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 import {
   LoginByGoogleRequest,
@@ -23,8 +22,7 @@ export const AuthUserAccountForLoginComponent: FC = () => {
 
   const [loginByGoogle, { loading: loadingGoogleAuth }] =
     useMutation<LoginByGoogleResponse>(loginByGoogleMutationDocument);
-  const authGlobalStore = useAuthStore();
-  const authLocalStorage = useAuthTokenLocalStorage();
+  const { setAuthInfo } = useAuthManagement();
 
   const onAuthGoogle = async (authCode: string) => {
     const displayErrorToast = () => {
@@ -48,19 +46,13 @@ export const AuthUserAccountForLoginComponent: FC = () => {
       if (authResult.errors || !accountData) {
         displayErrorToast();
       } else {
-        authLocalStorage.updateAuthToken(accountData.authToken);
-        authGlobalStore.setUserAccount({
+        setAuthInfo({
           authToken: accountData.authToken,
           userSettingId: accountData.userSettingId,
           name: accountData.name,
           imageUrl: accountData.imageUrl,
         });
-        toast({
-          className: `${toastStyle({ textColor: "black" })}`,
-          description: "ログインしました",
-        });
-
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (e) {
       displayErrorToast();

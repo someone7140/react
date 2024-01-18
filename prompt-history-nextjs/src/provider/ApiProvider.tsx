@@ -9,9 +9,17 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 import { getApolloLink } from "@/constants/ApolloLinkConstants";
+import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 
-function makeClient() {
-  const apolloLink = getApolloLink({});
+function makeClient(authToken?: string) {
+  let header: Record<string, string> = {};
+  if (authToken) {
+    header = {
+      Authorization: `Bearer ${authToken}`,
+    };
+  }
+
+  const apolloLink = getApolloLink(header);
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link:
@@ -27,8 +35,10 @@ function makeClient() {
 }
 
 export function ApiProvider({ children }: React.PropsWithChildren) {
+  const { authToken } = useAuthTokenLocalStorage();
+
   return (
-    <ApolloNextAppProvider makeClient={makeClient}>
+    <ApolloNextAppProvider makeClient={() => makeClient(authToken)}>
       {children}
     </ApolloNextAppProvider>
   );

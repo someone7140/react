@@ -8,19 +8,28 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { toast } from "@/components/ui/use-toast";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
-import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
-import { menuHeaderContainerStyle } from "@/styles/MenuStyle";
+import {
+  menuHeaderContainerStyle,
+  menuHeaderNavigationMenuRecordStyle,
+} from "@/styles/MenuStyle";
 
 type Props = {
   children: ReactNode;
@@ -29,16 +38,11 @@ type Props = {
 export const HeaderComponent: FC<Props> = ({ children }) => {
   const router = useRouter();
   const authStore = useAuthStore();
-  const authLocalStorage = useAuthTokenLocalStorage();
+  const { removeAuthInfo } = useAuthManagement();
 
   const executeLogout = () => {
-    authLocalStorage.removeAuthToken();
-    authStore.removeUserAccount();
-    toast({
-      className: `${toastStyle({ textColor: "black" })}`,
-      description: "ログアウトしました",
-    });
-    router.push("/");
+    removeAuthInfo();
+    window.location.href = "/";
   };
 
   const topMenuItem = (
@@ -53,34 +57,64 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
     return (
       <div className={menuHeaderContainerStyle()}>
         <NavigationMenu>
-          <NavigationMenuList className="flex gap-8">
+          <NavigationMenuList className="flex gap-6">
             {topMenuItem}
-            <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-              <Link href="/">投稿管理</Link>
-            </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className={navigationMenuTriggerStyle()}>
-                ユーザー管理
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[100px] gap-3 p-4 md:w-[300px] md:grid-cols-1 lg:w-[400px] ">
-                  <li>
-                    <div className="w-[100%] cursor-pointer">
-                      <Link href="/">ユーザ情報編集</Link>
-                    </div>
-                  </li>
-                  <li>
-                    <NavigationMenuLink asChild>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={`${navigationMenuTriggerStyle()} border-none`}
+                  >
+                    管理メニュー
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
                       <div
-                        className="w-[100%] cursor-pointer"
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/");
+                        }}
+                      >
+                        課題テーマ一覧
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/prompt/addThemeAndQuestion");
+                        }}
+                      >
+                        課題テーマ・質問作成
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/");
+                        }}
+                      >
+                        ユーザ情報編集
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
                         onClick={executeLogout}
                       >
                         ログアウト
                       </div>
-                    </NavigationMenuLink>
-                  </li>
-                </ul>
-              </NavigationMenuContent>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -93,7 +127,7 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
     return (
       <div className={menuHeaderContainerStyle()}>
         <NavigationMenu>
-          <NavigationMenuList className="flex gap-8">
+          <NavigationMenuList className="flex gap-6">
             {topMenuItem}
             <NavigationMenuItem className={navigationMenuTriggerStyle()}>
               <Link href="/userAccount/register">ユーザー登録</Link>

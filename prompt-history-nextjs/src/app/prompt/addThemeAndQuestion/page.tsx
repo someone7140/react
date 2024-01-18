@@ -2,21 +2,21 @@
 
 import { useRouter } from "next/navigation";
 
-import { AuthUserAccountForLoginComponent } from "@/components/feature/userAccount/AuthUserAccountForLoginComponent";
+import { AddThemeAndQuestionComponent } from "@/components/feature/prompt/AddThemeAndQuestionComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 
 export default function Home() {
   const router = useRouter();
   const authStore = useAuthStore();
 
-  if (authStore.userAccount) {
-    // ログイン済みであればトップへ
+  if (!authStore.userAccount) {
+    // 未ログインであればトップへ
     router.push("/");
   }
 
   return (
     <div>
-      <AuthUserAccountForLoginComponent />
+      <AddThemeAndQuestionComponent />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 import {
   VerifyAuthTokenRequest,
@@ -16,32 +17,35 @@ import { verifyAuthTokenDocument } from "@/query/rest/restQuery";
 export function AuthProvider({ children }: React.PropsWithChildren) {
   const effectRan = useRef(false);
   const authStore = useAuthStore();
-  const { authToken, removeAuthToken } = useAuthTokenLocalStorage();
+  const { authToken } = useAuthTokenLocalStorage();
   const [verifyAuthToken, { loading }] = useMutation<VerifyAuthTokenResponse>(
     verifyAuthTokenDocument
   );
+  const { setAuthInfo, removeAuthInfo } = useAuthManagement();
 
   useEffect(() => {
     const authExec = async () => {
       if (authToken) {
-        try {
-          const verifyAuthTokenRequest: RestRequestType<VerifyAuthTokenRequest> =
-            {
-              input: {
-                authToken,
-              },
-            };
-          const response = await verifyAuthToken({
-            variables: verifyAuthTokenRequest,
-          });
-          if (response.data?.verifyAuthToken) {
-            authStore.setUserAccount(response.data.verifyAuthToken);
+        if (!authStore.userAccount) {
+          try {
+            const verifyAuthTokenRequest: RestRequestType<VerifyAuthTokenRequest> =
+              {
+                input: {
+                  authToken,
+                },
+              };
+            const response = await verifyAuthToken({
+              variables: verifyAuthTokenRequest,
+            });
+            if (response.data?.verifyAuthToken) {
+              setAuthInfo(response.data.verifyAuthToken);
+            }
+          } catch (e) {
+            removeAuthInfo();
           }
-        } catch (e) {
-          removeAuthToken();
         }
       } else {
-        authStore.removeUserAccount();
+        removeAuthInfo();
       }
     };
     if (!authStore.userAccount && !effectRan.current) {
@@ -51,7 +55,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
     return () => {
       effectRan.current = true;
     };
-  }, [authToken, authStore, verifyAuthToken, removeAuthToken]);
+  }, [authToken, authStore, verifyAuthToken, removeAuthInfo, setAuthInfo]);
 
   return (
     <>

@@ -12,8 +12,7 @@ import {
 } from "@/components/feature/userAccount/UserAccountInputComponent";
 
 import { useToast } from "@/components/ui/use-toast";
-import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
-import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 import {
   addAccountUserByGmailPostMutationDocument,
   verifyGoogleCodeCheckMutationDocument,
@@ -41,11 +40,10 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
     useMutation<AddAccountUserByGmailPostResponse>(
       addAccountUserByGmailPostMutationDocument
     );
-  const authGlobalStore = useAuthStore();
-  const authLocalStorage = useAuthTokenLocalStorage();
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
   );
+  const { setAuthInfo } = useAuthManagement();
 
   const onAuthGoogle = async (authCode: string) => {
     const displayErrorToast = () => {
@@ -114,22 +112,15 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
       if (response.errors || !authResult) {
         displayErrorToast();
       } else {
-        authLocalStorage.updateAuthToken(authResult.authToken);
-        authGlobalStore.setUserAccount({
+        setAuthInfo({
           authToken: authResult.authToken,
           userSettingId: authResult.userSettingId,
           name: authResult.name,
           imageUrl: authResult.imageUrl,
         });
-        toast({
-          className: `${toastStyle({ textColor: "black" })}`,
-          description: "ユーザーを登録しました。",
-        });
-
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (e) {
-      console.log(e);
       displayErrorToast();
     }
   };
