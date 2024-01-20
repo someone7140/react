@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FC } from "react";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@apollo/client";
 
 import { AuthGoogleComponent } from "@/components/feature/auth/AuthGoogleComponent";
@@ -16,7 +15,6 @@ import { loginByGoogleMutationDocument } from "@/query/rest/restQuery";
 import { toastStyle } from "@/styles/CommonStyle";
 
 export const AuthUserAccountForLoginComponent: FC = () => {
-  const router = useRouter();
   const { toast } = useToast();
 
   const [loginByGoogle, { loading: loadingGoogleAuth }] =

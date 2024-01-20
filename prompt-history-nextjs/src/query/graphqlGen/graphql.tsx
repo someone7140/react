@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  timestamptz: { input: any; output: any; }
 };
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -73,6 +74,10 @@ export type Account_Users = {
   name: Scalars['String']['output'];
   password?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
+  problem_answers: Array<Problem_Answers>;
+  /** An aggregate relationship */
+  problem_answers_aggregate: Problem_Answers_Aggregate;
+  /** An array relationship */
   problem_questions: Array<Problem_Questions>;
   /** An aggregate relationship */
   problem_questions_aggregate: Problem_Questions_Aggregate;
@@ -81,6 +86,26 @@ export type Account_Users = {
   /** An aggregate relationship */
   problem_themes_aggregate: Problem_Themes_Aggregate;
   userSettingId: Scalars['String']['output'];
+};
+
+
+/** columns and relationships of "account_users" */
+export type Account_UsersProblem_AnswersArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+/** columns and relationships of "account_users" */
+export type Account_UsersProblem_Answers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
 };
 
 
@@ -156,6 +181,8 @@ export type Account_Users_Bool_Exp = {
   imageUrl?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   password?: InputMaybe<String_Comparison_Exp>;
+  problem_answers?: InputMaybe<Problem_Answers_Bool_Exp>;
+  problem_answers_aggregate?: InputMaybe<Problem_Answers_Aggregate_Bool_Exp>;
   problem_questions?: InputMaybe<Problem_Questions_Bool_Exp>;
   problem_questions_aggregate?: InputMaybe<Problem_Questions_Aggregate_Bool_Exp>;
   problem_themes?: InputMaybe<Problem_Themes_Bool_Exp>;
@@ -183,6 +210,7 @@ export type Account_Users_Insert_Input = {
   imageUrl?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
+  problem_answers?: InputMaybe<Problem_Answers_Arr_Rel_Insert_Input>;
   problem_questions?: InputMaybe<Problem_Questions_Arr_Rel_Insert_Input>;
   problem_themes?: InputMaybe<Problem_Themes_Arr_Rel_Insert_Input>;
   userSettingId?: InputMaybe<Scalars['String']['input']>;
@@ -243,6 +271,7 @@ export type Account_Users_Order_By = {
   imageUrl?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   password?: InputMaybe<Order_By>;
+  problem_answers_aggregate?: InputMaybe<Problem_Answers_Aggregate_Order_By>;
   problem_questions_aggregate?: InputMaybe<Problem_Questions_Aggregate_Order_By>;
   problem_themes_aggregate?: InputMaybe<Problem_Themes_Aggregate_Order_By>;
   userSettingId?: InputMaybe<Order_By>;
@@ -341,6 +370,10 @@ export type Mutation_Root = {
   delete_account_users?: Maybe<Account_Users_Mutation_Response>;
   /** delete single row from the table: "account_users" */
   delete_account_users_by_pk?: Maybe<Account_Users>;
+  /** delete data from the table: "problem_answers" */
+  delete_problem_answers?: Maybe<Problem_Answers_Mutation_Response>;
+  /** delete single row from the table: "problem_answers" */
+  delete_problem_answers_by_pk?: Maybe<Problem_Answers>;
   /** delete data from the table: "problem_questions" */
   delete_problem_questions?: Maybe<Problem_Questions_Mutation_Response>;
   /** delete single row from the table: "problem_questions" */
@@ -353,6 +386,10 @@ export type Mutation_Root = {
   insert_account_users?: Maybe<Account_Users_Mutation_Response>;
   /** insert a single row into the table: "account_users" */
   insert_account_users_one?: Maybe<Account_Users>;
+  /** insert data into the table: "problem_answers" */
+  insert_problem_answers?: Maybe<Problem_Answers_Mutation_Response>;
+  /** insert a single row into the table: "problem_answers" */
+  insert_problem_answers_one?: Maybe<Problem_Answers>;
   /** insert data into the table: "problem_questions" */
   insert_problem_questions?: Maybe<Problem_Questions_Mutation_Response>;
   /** insert a single row into the table: "problem_questions" */
@@ -367,6 +404,12 @@ export type Mutation_Root = {
   update_account_users_by_pk?: Maybe<Account_Users>;
   /** update multiples rows of table: "account_users" */
   update_account_users_many?: Maybe<Array<Maybe<Account_Users_Mutation_Response>>>;
+  /** update data of the table: "problem_answers" */
+  update_problem_answers?: Maybe<Problem_Answers_Mutation_Response>;
+  /** update single row of the table: "problem_answers" */
+  update_problem_answers_by_pk?: Maybe<Problem_Answers>;
+  /** update multiples rows of table: "problem_answers" */
+  update_problem_answers_many?: Maybe<Array<Maybe<Problem_Answers_Mutation_Response>>>;
   /** update data of the table: "problem_questions" */
   update_problem_questions?: Maybe<Problem_Questions_Mutation_Response>;
   /** update single row of the table: "problem_questions" */
@@ -390,6 +433,18 @@ export type Mutation_RootDelete_Account_UsersArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Account_Users_By_PkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Problem_AnswersArgs = {
+  where: Problem_Answers_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Problem_Answers_By_PkArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -429,6 +484,20 @@ export type Mutation_RootInsert_Account_UsersArgs = {
 export type Mutation_RootInsert_Account_Users_OneArgs = {
   object: Account_Users_Insert_Input;
   on_conflict?: InputMaybe<Account_Users_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Problem_AnswersArgs = {
+  objects: Array<Problem_Answers_Insert_Input>;
+  on_conflict?: InputMaybe<Problem_Answers_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Problem_Answers_OneArgs = {
+  object: Problem_Answers_Insert_Input;
+  on_conflict?: InputMaybe<Problem_Answers_On_Conflict>;
 };
 
 
@@ -477,6 +546,26 @@ export type Mutation_RootUpdate_Account_Users_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Account_Users_ManyArgs = {
   updates: Array<Account_Users_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Problem_AnswersArgs = {
+  _set?: InputMaybe<Problem_Answers_Set_Input>;
+  where: Problem_Answers_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Problem_Answers_By_PkArgs = {
+  _set?: InputMaybe<Problem_Answers_Set_Input>;
+  pk_columns: Problem_Answers_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Problem_Answers_ManyArgs = {
+  updates: Array<Problem_Answers_Updates>;
 };
 
 
@@ -535,6 +624,262 @@ export enum Order_By {
   DescNullsLast = 'desc_nulls_last'
 }
 
+/** columns and relationships of "problem_answers" */
+export type Problem_Answers = {
+  __typename?: 'problem_answers';
+  acccountUserId: Scalars['String']['output'];
+  /** An object relationship */
+  account_user?: Maybe<Account_Users>;
+  aiService?: Maybe<Scalars['String']['output']>;
+  answerDateTime?: Maybe<Scalars['timestamptz']['output']>;
+  contents: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** An object relationship */
+  problem_questions?: Maybe<Problem_Questions>;
+  /** An object relationship */
+  problem_themes?: Maybe<Problem_Themes>;
+  questionId: Scalars['String']['output'];
+  themeId: Scalars['String']['output'];
+};
+
+/** aggregated selection of "problem_answers" */
+export type Problem_Answers_Aggregate = {
+  __typename?: 'problem_answers_aggregate';
+  aggregate?: Maybe<Problem_Answers_Aggregate_Fields>;
+  nodes: Array<Problem_Answers>;
+};
+
+export type Problem_Answers_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Problem_Answers_Aggregate_Bool_Exp_Count>;
+};
+
+export type Problem_Answers_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Problem_Answers_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "problem_answers" */
+export type Problem_Answers_Aggregate_Fields = {
+  __typename?: 'problem_answers_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Problem_Answers_Max_Fields>;
+  min?: Maybe<Problem_Answers_Min_Fields>;
+};
+
+
+/** aggregate fields of "problem_answers" */
+export type Problem_Answers_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "problem_answers" */
+export type Problem_Answers_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Problem_Answers_Max_Order_By>;
+  min?: InputMaybe<Problem_Answers_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "problem_answers" */
+export type Problem_Answers_Arr_Rel_Insert_Input = {
+  data: Array<Problem_Answers_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Problem_Answers_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "problem_answers". All fields are combined with a logical 'AND'. */
+export type Problem_Answers_Bool_Exp = {
+  _and?: InputMaybe<Array<Problem_Answers_Bool_Exp>>;
+  _not?: InputMaybe<Problem_Answers_Bool_Exp>;
+  _or?: InputMaybe<Array<Problem_Answers_Bool_Exp>>;
+  acccountUserId?: InputMaybe<String_Comparison_Exp>;
+  account_user?: InputMaybe<Account_Users_Bool_Exp>;
+  aiService?: InputMaybe<String_Comparison_Exp>;
+  answerDateTime?: InputMaybe<Timestamptz_Comparison_Exp>;
+  contents?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<String_Comparison_Exp>;
+  problem_questions?: InputMaybe<Problem_Questions_Bool_Exp>;
+  problem_themes?: InputMaybe<Problem_Themes_Bool_Exp>;
+  questionId?: InputMaybe<String_Comparison_Exp>;
+  themeId?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "problem_answers" */
+export enum Problem_Answers_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ProblemAnswersPkey = 'problem_answers_pkey'
+}
+
+/** input type for inserting data into table "problem_answers" */
+export type Problem_Answers_Insert_Input = {
+  acccountUserId?: InputMaybe<Scalars['String']['input']>;
+  account_user?: InputMaybe<Account_Users_Obj_Rel_Insert_Input>;
+  aiService?: InputMaybe<Scalars['String']['input']>;
+  answerDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
+  contents?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  problem_questions?: InputMaybe<Problem_Questions_Obj_Rel_Insert_Input>;
+  problem_themes?: InputMaybe<Problem_Themes_Obj_Rel_Insert_Input>;
+  questionId?: InputMaybe<Scalars['String']['input']>;
+  themeId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Problem_Answers_Max_Fields = {
+  __typename?: 'problem_answers_max_fields';
+  acccountUserId?: Maybe<Scalars['String']['output']>;
+  aiService?: Maybe<Scalars['String']['output']>;
+  answerDateTime?: Maybe<Scalars['timestamptz']['output']>;
+  contents?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  questionId?: Maybe<Scalars['String']['output']>;
+  themeId?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by max() on columns of table "problem_answers" */
+export type Problem_Answers_Max_Order_By = {
+  acccountUserId?: InputMaybe<Order_By>;
+  aiService?: InputMaybe<Order_By>;
+  answerDateTime?: InputMaybe<Order_By>;
+  contents?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  questionId?: InputMaybe<Order_By>;
+  themeId?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Problem_Answers_Min_Fields = {
+  __typename?: 'problem_answers_min_fields';
+  acccountUserId?: Maybe<Scalars['String']['output']>;
+  aiService?: Maybe<Scalars['String']['output']>;
+  answerDateTime?: Maybe<Scalars['timestamptz']['output']>;
+  contents?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  questionId?: Maybe<Scalars['String']['output']>;
+  themeId?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by min() on columns of table "problem_answers" */
+export type Problem_Answers_Min_Order_By = {
+  acccountUserId?: InputMaybe<Order_By>;
+  aiService?: InputMaybe<Order_By>;
+  answerDateTime?: InputMaybe<Order_By>;
+  contents?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  questionId?: InputMaybe<Order_By>;
+  themeId?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "problem_answers" */
+export type Problem_Answers_Mutation_Response = {
+  __typename?: 'problem_answers_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Problem_Answers>;
+};
+
+/** on_conflict condition type for table "problem_answers" */
+export type Problem_Answers_On_Conflict = {
+  constraint: Problem_Answers_Constraint;
+  update_columns?: Array<Problem_Answers_Update_Column>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "problem_answers". */
+export type Problem_Answers_Order_By = {
+  acccountUserId?: InputMaybe<Order_By>;
+  account_user?: InputMaybe<Account_Users_Order_By>;
+  aiService?: InputMaybe<Order_By>;
+  answerDateTime?: InputMaybe<Order_By>;
+  contents?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  problem_questions?: InputMaybe<Problem_Questions_Order_By>;
+  problem_themes?: InputMaybe<Problem_Themes_Order_By>;
+  questionId?: InputMaybe<Order_By>;
+  themeId?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: problem_answers */
+export type Problem_Answers_Pk_Columns_Input = {
+  id: Scalars['String']['input'];
+};
+
+/** select columns of table "problem_answers" */
+export enum Problem_Answers_Select_Column {
+  /** column name */
+  AcccountUserId = 'acccountUserId',
+  /** column name */
+  AiService = 'aiService',
+  /** column name */
+  AnswerDateTime = 'answerDateTime',
+  /** column name */
+  Contents = 'contents',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  QuestionId = 'questionId',
+  /** column name */
+  ThemeId = 'themeId'
+}
+
+/** input type for updating data in table "problem_answers" */
+export type Problem_Answers_Set_Input = {
+  acccountUserId?: InputMaybe<Scalars['String']['input']>;
+  aiService?: InputMaybe<Scalars['String']['input']>;
+  answerDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
+  contents?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  questionId?: InputMaybe<Scalars['String']['input']>;
+  themeId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "problem_answers" */
+export type Problem_Answers_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Problem_Answers_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Problem_Answers_Stream_Cursor_Value_Input = {
+  acccountUserId?: InputMaybe<Scalars['String']['input']>;
+  aiService?: InputMaybe<Scalars['String']['input']>;
+  answerDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
+  contents?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  questionId?: InputMaybe<Scalars['String']['input']>;
+  themeId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "problem_answers" */
+export enum Problem_Answers_Update_Column {
+  /** column name */
+  AcccountUserId = 'acccountUserId',
+  /** column name */
+  AiService = 'aiService',
+  /** column name */
+  AnswerDateTime = 'answerDateTime',
+  /** column name */
+  Contents = 'contents',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  QuestionId = 'questionId',
+  /** column name */
+  ThemeId = 'themeId'
+}
+
+export type Problem_Answers_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Problem_Answers_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Problem_Answers_Bool_Exp;
+};
+
 /** columns and relationships of "problem_questions" */
 export type Problem_Questions = {
   __typename?: 'problem_questions';
@@ -542,10 +887,35 @@ export type Problem_Questions = {
   /** An object relationship */
   account_user: Account_Users;
   contents: Scalars['String']['output'];
+  createDateTime: Scalars['timestamptz']['output'];
   id: Scalars['String']['output'];
+  /** An array relationship */
+  problem_answers: Array<Problem_Answers>;
+  /** An aggregate relationship */
+  problem_answers_aggregate: Problem_Answers_Aggregate;
   /** An object relationship */
   problem_theme: Problem_Themes;
   themeId: Scalars['String']['output'];
+};
+
+
+/** columns and relationships of "problem_questions" */
+export type Problem_QuestionsProblem_AnswersArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+/** columns and relationships of "problem_questions" */
+export type Problem_QuestionsProblem_Answers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
 };
 
 /** aggregated selection of "problem_questions" */
@@ -603,7 +973,10 @@ export type Problem_Questions_Bool_Exp = {
   acccountUserId?: InputMaybe<String_Comparison_Exp>;
   account_user?: InputMaybe<Account_Users_Bool_Exp>;
   contents?: InputMaybe<String_Comparison_Exp>;
+  createDateTime?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<String_Comparison_Exp>;
+  problem_answers?: InputMaybe<Problem_Answers_Bool_Exp>;
+  problem_answers_aggregate?: InputMaybe<Problem_Answers_Aggregate_Bool_Exp>;
   problem_theme?: InputMaybe<Problem_Themes_Bool_Exp>;
   themeId?: InputMaybe<String_Comparison_Exp>;
 };
@@ -619,7 +992,9 @@ export type Problem_Questions_Insert_Input = {
   acccountUserId?: InputMaybe<Scalars['String']['input']>;
   account_user?: InputMaybe<Account_Users_Obj_Rel_Insert_Input>;
   contents?: InputMaybe<Scalars['String']['input']>;
+  createDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  problem_answers?: InputMaybe<Problem_Answers_Arr_Rel_Insert_Input>;
   problem_theme?: InputMaybe<Problem_Themes_Obj_Rel_Insert_Input>;
   themeId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -629,6 +1004,7 @@ export type Problem_Questions_Max_Fields = {
   __typename?: 'problem_questions_max_fields';
   acccountUserId?: Maybe<Scalars['String']['output']>;
   contents?: Maybe<Scalars['String']['output']>;
+  createDateTime?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   themeId?: Maybe<Scalars['String']['output']>;
 };
@@ -637,6 +1013,7 @@ export type Problem_Questions_Max_Fields = {
 export type Problem_Questions_Max_Order_By = {
   acccountUserId?: InputMaybe<Order_By>;
   contents?: InputMaybe<Order_By>;
+  createDateTime?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   themeId?: InputMaybe<Order_By>;
 };
@@ -646,6 +1023,7 @@ export type Problem_Questions_Min_Fields = {
   __typename?: 'problem_questions_min_fields';
   acccountUserId?: Maybe<Scalars['String']['output']>;
   contents?: Maybe<Scalars['String']['output']>;
+  createDateTime?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   themeId?: Maybe<Scalars['String']['output']>;
 };
@@ -654,6 +1032,7 @@ export type Problem_Questions_Min_Fields = {
 export type Problem_Questions_Min_Order_By = {
   acccountUserId?: InputMaybe<Order_By>;
   contents?: InputMaybe<Order_By>;
+  createDateTime?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   themeId?: InputMaybe<Order_By>;
 };
@@ -665,6 +1044,13 @@ export type Problem_Questions_Mutation_Response = {
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
   returning: Array<Problem_Questions>;
+};
+
+/** input type for inserting object relation for remote table "problem_questions" */
+export type Problem_Questions_Obj_Rel_Insert_Input = {
+  data: Problem_Questions_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Problem_Questions_On_Conflict>;
 };
 
 /** on_conflict condition type for table "problem_questions" */
@@ -679,7 +1065,9 @@ export type Problem_Questions_Order_By = {
   acccountUserId?: InputMaybe<Order_By>;
   account_user?: InputMaybe<Account_Users_Order_By>;
   contents?: InputMaybe<Order_By>;
+  createDateTime?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  problem_answers_aggregate?: InputMaybe<Problem_Answers_Aggregate_Order_By>;
   problem_theme?: InputMaybe<Problem_Themes_Order_By>;
   themeId?: InputMaybe<Order_By>;
 };
@@ -696,6 +1084,8 @@ export enum Problem_Questions_Select_Column {
   /** column name */
   Contents = 'contents',
   /** column name */
+  CreateDateTime = 'createDateTime',
+  /** column name */
   Id = 'id',
   /** column name */
   ThemeId = 'themeId'
@@ -705,6 +1095,7 @@ export enum Problem_Questions_Select_Column {
 export type Problem_Questions_Set_Input = {
   acccountUserId?: InputMaybe<Scalars['String']['input']>;
   contents?: InputMaybe<Scalars['String']['input']>;
+  createDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   themeId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -721,6 +1112,7 @@ export type Problem_Questions_Stream_Cursor_Input = {
 export type Problem_Questions_Stream_Cursor_Value_Input = {
   acccountUserId?: InputMaybe<Scalars['String']['input']>;
   contents?: InputMaybe<Scalars['String']['input']>;
+  createDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   themeId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -731,6 +1123,8 @@ export enum Problem_Questions_Update_Column {
   AcccountUserId = 'acccountUserId',
   /** column name */
   Contents = 'contents',
+  /** column name */
+  CreateDateTime = 'createDateTime',
   /** column name */
   Id = 'id',
   /** column name */
@@ -750,13 +1144,38 @@ export type Problem_Themes = {
   accountUserId: Scalars['String']['output'];
   /** An object relationship */
   account_user: Account_Users;
+  createDateTime: Scalars['timestamptz']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  /** An array relationship */
+  problem_answers: Array<Problem_Answers>;
+  /** An aggregate relationship */
+  problem_answers_aggregate: Problem_Answers_Aggregate;
   /** An array relationship */
   problem_questions: Array<Problem_Questions>;
   /** An aggregate relationship */
   problem_questions_aggregate: Problem_Questions_Aggregate;
   title: Scalars['String']['output'];
+};
+
+
+/** columns and relationships of "problem_themes" */
+export type Problem_ThemesProblem_AnswersArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+/** columns and relationships of "problem_themes" */
+export type Problem_ThemesProblem_Answers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
 };
 
 
@@ -833,8 +1252,11 @@ export type Problem_Themes_Bool_Exp = {
   _or?: InputMaybe<Array<Problem_Themes_Bool_Exp>>;
   accountUserId?: InputMaybe<String_Comparison_Exp>;
   account_user?: InputMaybe<Account_Users_Bool_Exp>;
+  createDateTime?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<String_Comparison_Exp>;
+  problem_answers?: InputMaybe<Problem_Answers_Bool_Exp>;
+  problem_answers_aggregate?: InputMaybe<Problem_Answers_Aggregate_Bool_Exp>;
   problem_questions?: InputMaybe<Problem_Questions_Bool_Exp>;
   problem_questions_aggregate?: InputMaybe<Problem_Questions_Aggregate_Bool_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
@@ -850,8 +1272,10 @@ export enum Problem_Themes_Constraint {
 export type Problem_Themes_Insert_Input = {
   accountUserId?: InputMaybe<Scalars['String']['input']>;
   account_user?: InputMaybe<Account_Users_Obj_Rel_Insert_Input>;
+  createDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
+  problem_answers?: InputMaybe<Problem_Answers_Arr_Rel_Insert_Input>;
   problem_questions?: InputMaybe<Problem_Questions_Arr_Rel_Insert_Input>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -860,6 +1284,7 @@ export type Problem_Themes_Insert_Input = {
 export type Problem_Themes_Max_Fields = {
   __typename?: 'problem_themes_max_fields';
   accountUserId?: Maybe<Scalars['String']['output']>;
+  createDateTime?: Maybe<Scalars['timestamptz']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
@@ -868,6 +1293,7 @@ export type Problem_Themes_Max_Fields = {
 /** order by max() on columns of table "problem_themes" */
 export type Problem_Themes_Max_Order_By = {
   accountUserId?: InputMaybe<Order_By>;
+  createDateTime?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
@@ -877,6 +1303,7 @@ export type Problem_Themes_Max_Order_By = {
 export type Problem_Themes_Min_Fields = {
   __typename?: 'problem_themes_min_fields';
   accountUserId?: Maybe<Scalars['String']['output']>;
+  createDateTime?: Maybe<Scalars['timestamptz']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
@@ -885,6 +1312,7 @@ export type Problem_Themes_Min_Fields = {
 /** order by min() on columns of table "problem_themes" */
 export type Problem_Themes_Min_Order_By = {
   accountUserId?: InputMaybe<Order_By>;
+  createDateTime?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
@@ -917,8 +1345,10 @@ export type Problem_Themes_On_Conflict = {
 export type Problem_Themes_Order_By = {
   accountUserId?: InputMaybe<Order_By>;
   account_user?: InputMaybe<Account_Users_Order_By>;
+  createDateTime?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  problem_answers_aggregate?: InputMaybe<Problem_Answers_Aggregate_Order_By>;
   problem_questions_aggregate?: InputMaybe<Problem_Questions_Aggregate_Order_By>;
   title?: InputMaybe<Order_By>;
 };
@@ -933,6 +1363,8 @@ export enum Problem_Themes_Select_Column {
   /** column name */
   AccountUserId = 'accountUserId',
   /** column name */
+  CreateDateTime = 'createDateTime',
+  /** column name */
   Description = 'description',
   /** column name */
   Id = 'id',
@@ -943,6 +1375,7 @@ export enum Problem_Themes_Select_Column {
 /** input type for updating data in table "problem_themes" */
 export type Problem_Themes_Set_Input = {
   accountUserId?: InputMaybe<Scalars['String']['input']>;
+  createDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -959,6 +1392,7 @@ export type Problem_Themes_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Problem_Themes_Stream_Cursor_Value_Input = {
   accountUserId?: InputMaybe<Scalars['String']['input']>;
+  createDateTime?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -968,6 +1402,8 @@ export type Problem_Themes_Stream_Cursor_Value_Input = {
 export enum Problem_Themes_Update_Column {
   /** column name */
   AccountUserId = 'accountUserId',
+  /** column name */
+  CreateDateTime = 'createDateTime',
   /** column name */
   Description = 'description',
   /** column name */
@@ -991,6 +1427,12 @@ export type Query_Root = {
   account_users_aggregate: Account_Users_Aggregate;
   /** fetch data from the table: "account_users" using primary key columns */
   account_users_by_pk?: Maybe<Account_Users>;
+  /** An array relationship */
+  problem_answers: Array<Problem_Answers>;
+  /** An aggregate relationship */
+  problem_answers_aggregate: Problem_Answers_Aggregate;
+  /** fetch data from the table: "problem_answers" using primary key columns */
+  problem_answers_by_pk?: Maybe<Problem_Answers>;
   /** An array relationship */
   problem_questions: Array<Problem_Questions>;
   /** An aggregate relationship */
@@ -1025,6 +1467,29 @@ export type Query_RootAccount_Users_AggregateArgs = {
 
 
 export type Query_RootAccount_Users_By_PkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type Query_RootProblem_AnswersArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+export type Query_RootProblem_Answers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+export type Query_RootProblem_Answers_By_PkArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -1085,6 +1550,14 @@ export type Subscription_Root = {
   /** fetch data from the table in a streaming manner: "account_users" */
   account_users_stream: Array<Account_Users>;
   /** An array relationship */
+  problem_answers: Array<Problem_Answers>;
+  /** An aggregate relationship */
+  problem_answers_aggregate: Problem_Answers_Aggregate;
+  /** fetch data from the table: "problem_answers" using primary key columns */
+  problem_answers_by_pk?: Maybe<Problem_Answers>;
+  /** fetch data from the table in a streaming manner: "problem_answers" */
+  problem_answers_stream: Array<Problem_Answers>;
+  /** An array relationship */
   problem_questions: Array<Problem_Questions>;
   /** An aggregate relationship */
   problem_questions_aggregate: Problem_Questions_Aggregate;
@@ -1130,6 +1603,36 @@ export type Subscription_RootAccount_Users_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Account_Users_Stream_Cursor_Input>>;
   where?: InputMaybe<Account_Users_Bool_Exp>;
+};
+
+
+export type Subscription_RootProblem_AnswersArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+export type Subscription_RootProblem_Answers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Problem_Answers_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Problem_Answers_Order_By>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
+};
+
+
+export type Subscription_RootProblem_Answers_By_PkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootProblem_Answers_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Problem_Answers_Stream_Cursor_Input>>;
+  where?: InputMaybe<Problem_Answers_Bool_Exp>;
 };
 
 
@@ -1192,6 +1695,19 @@ export type Subscription_RootProblem_Themes_StreamArgs = {
   where?: InputMaybe<Problem_Themes_Bool_Exp>;
 };
 
+/** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
+export type Timestamptz_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['timestamptz']['input']>;
+  _gt?: InputMaybe<Scalars['timestamptz']['input']>;
+  _gte?: InputMaybe<Scalars['timestamptz']['input']>;
+  _in?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['timestamptz']['input']>;
+  _lte?: InputMaybe<Scalars['timestamptz']['input']>;
+  _neq?: InputMaybe<Scalars['timestamptz']['input']>;
+  _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
+};
+
 export type AccountUsersByGmailQueryVariables = Exact<{
   gmail: Scalars['String']['input'];
 }>;
@@ -1232,6 +1748,13 @@ export type AddThemeMutationVariables = Exact<{
 
 
 export type AddThemeMutation = { __typename?: 'mutation_root', insert_problem_themes_one?: { __typename?: 'problem_themes', id: string } | null };
+
+export type GetThemeByIdDocumentQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetThemeByIdDocumentQuery = { __typename?: 'query_root', problem_themes: Array<{ __typename?: 'problem_themes', id: string, title: string, description?: string | null, problem_questions: Array<{ __typename?: 'problem_questions', id: string, contents: string }> }> };
 
 
 export const AccountUsersByGmailDocument = gql`
@@ -1428,3 +1951,49 @@ export function useAddThemeMutation(baseOptions?: Apollo.MutationHookOptions<Add
 export type AddThemeMutationHookResult = ReturnType<typeof useAddThemeMutation>;
 export type AddThemeMutationResult = Apollo.MutationResult<AddThemeMutation>;
 export type AddThemeMutationOptions = Apollo.BaseMutationOptions<AddThemeMutation, AddThemeMutationVariables>;
+export const GetThemeByIdDocumentDocument = gql`
+    query GetThemeByIdDocument($id: String!) {
+  problem_themes(where: {id: {_eq: $id}}) {
+    id
+    title
+    description
+    problem_questions(order_by: {createDateTime: desc}) {
+      id
+      contents
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetThemeByIdDocumentQuery__
+ *
+ * To run a query within a React component, call `useGetThemeByIdDocumentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetThemeByIdDocumentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetThemeByIdDocumentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetThemeByIdDocumentQuery(baseOptions: Apollo.QueryHookOptions<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>(GetThemeByIdDocumentDocument, options);
+      }
+export function useGetThemeByIdDocumentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>(GetThemeByIdDocumentDocument, options);
+        }
+export function useGetThemeByIdDocumentSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>(GetThemeByIdDocumentDocument, options);
+        }
+export type GetThemeByIdDocumentQueryHookResult = ReturnType<typeof useGetThemeByIdDocumentQuery>;
+export type GetThemeByIdDocumentLazyQueryHookResult = ReturnType<typeof useGetThemeByIdDocumentLazyQuery>;
+export type GetThemeByIdDocumentSuspenseQueryHookResult = ReturnType<typeof useGetThemeByIdDocumentSuspenseQuery>;
+export type GetThemeByIdDocumentQueryResult = Apollo.QueryResult<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>;

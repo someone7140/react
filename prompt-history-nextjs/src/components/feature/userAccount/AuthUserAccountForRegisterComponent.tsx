@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useMutation } from "@apollo/client";
 
@@ -28,7 +27,6 @@ import {
 import { toastStyle } from "@/styles/CommonStyle";
 
 export const AuthUserAccountForRegisterComponent: FC = () => {
-  const router = useRouter();
   const { toast } = useToast();
 
   const [verifyGoogleCodeCheck, { loading: loadingVerify }] =

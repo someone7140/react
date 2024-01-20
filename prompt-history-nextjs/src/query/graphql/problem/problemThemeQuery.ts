@@ -27,3 +27,17 @@ export const addThemeMutationDocument = gql`
     }
   }
 `;
+
+export const getThemeByIdDocument = gql`
+  query GetThemeByIdDocument($id: String!) {
+    problem_themes(where: { id: { _eq: $id } }) {
+      id
+      title
+      description
+      problem_questions(order_by: { createDateTime: desc }) {
+        id
+        contents
+      }
+    }
+  }
+`;

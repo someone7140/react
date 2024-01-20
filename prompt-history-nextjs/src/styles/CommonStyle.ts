@@ -7,6 +7,7 @@ export const buttonStyle = tv({
   variants: {
     color: {
       indigo: "bg-indigo-400 hover:bg-indigo-500",
+      gray: "bg-gray-200 hover:bg-gray-300",
     },
   },
 });

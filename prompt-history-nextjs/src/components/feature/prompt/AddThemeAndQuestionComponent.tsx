@@ -53,7 +53,7 @@ export const AddThemeAndQuestionComponent: FC = () => {
       });
     };
     let errors: readonly GraphQLError[] | undefined = undefined;
-
+    let themeId: string | null | undefined = undefined;
     // 質問の入力有無で呼ぶmutationを分ける
     try {
       if (form.question) {
@@ -65,6 +65,7 @@ export const AddThemeAndQuestionComponent: FC = () => {
           },
         });
         errors = result.errors;
+        themeId = result?.data?.insert_problem_themes_one?.id;
       } else {
         const mutationVariables: AddThemeMutationVariables = {
           themeTitle: form.themeTitle,
@@ -74,15 +75,16 @@ export const AddThemeAndQuestionComponent: FC = () => {
           variables: mutationVariables,
         });
         errors = result.errors;
+        themeId = result?.data?.insert_problem_themes_one?.id;
       }
+
       if (errors) {
         displayErrorToast();
       } else {
         displayRegisteredToast();
-        router.push("/");
+        router.push(`/prompt/theme?id=${themeId}`);
       }
     } catch (e) {
-      console.log(e);
       displayErrorToast();
     }
   };
