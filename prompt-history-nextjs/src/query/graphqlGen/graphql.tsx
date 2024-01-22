@@ -1756,6 +1756,14 @@ export type GetThemeByIdDocumentQueryVariables = Exact<{
 
 export type GetThemeByIdDocumentQuery = { __typename?: 'query_root', problem_themes: Array<{ __typename?: 'problem_themes', id: string, title: string, description?: string | null, problem_questions: Array<{ __typename?: 'problem_questions', id: string, contents: string }> }> };
 
+export type AddQuestionMutationVariables = Exact<{
+  themeId: Scalars['String']['input'];
+  question: Scalars['String']['input'];
+}>;
+
+
+export type AddQuestionMutation = { __typename?: 'mutation_root', insert_problem_questions_one?: { __typename?: 'problem_questions', id: string } | null };
+
 
 export const AccountUsersByGmailDocument = gql`
     query AccountUsersByGmail($gmail: String!) {
@@ -1997,3 +2005,37 @@ export type GetThemeByIdDocumentQueryHookResult = ReturnType<typeof useGetThemeB
 export type GetThemeByIdDocumentLazyQueryHookResult = ReturnType<typeof useGetThemeByIdDocumentLazyQuery>;
 export type GetThemeByIdDocumentSuspenseQueryHookResult = ReturnType<typeof useGetThemeByIdDocumentSuspenseQuery>;
 export type GetThemeByIdDocumentQueryResult = Apollo.QueryResult<GetThemeByIdDocumentQuery, GetThemeByIdDocumentQueryVariables>;
+export const AddQuestionDocument = gql`
+    mutation AddQuestion($themeId: String!, $question: String!) {
+  insert_problem_questions_one(object: {themeId: $themeId, contents: $question}) {
+    id
+  }
+}
+    `;
+export type AddQuestionMutationFn = Apollo.MutationFunction<AddQuestionMutation, AddQuestionMutationVariables>;
+
+/**
+ * __useAddQuestionMutation__
+ *
+ * To run a mutation, you first call `useAddQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addQuestionMutation, { data, loading, error }] = useAddQuestionMutation({
+ *   variables: {
+ *      themeId: // value for 'themeId'
+ *      question: // value for 'question'
+ *   },
+ * });
+ */
+export function useAddQuestionMutation(baseOptions?: Apollo.MutationHookOptions<AddQuestionMutation, AddQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddQuestionMutation, AddQuestionMutationVariables>(AddQuestionDocument, options);
+      }
+export type AddQuestionMutationHookResult = ReturnType<typeof useAddQuestionMutation>;
+export type AddQuestionMutationResult = Apollo.MutationResult<AddQuestionMutation>;
+export type AddQuestionMutationOptions = Apollo.BaseMutationOptions<AddQuestionMutation, AddQuestionMutationVariables>;

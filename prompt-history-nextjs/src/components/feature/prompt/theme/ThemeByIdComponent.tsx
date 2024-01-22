@@ -5,7 +5,14 @@ import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
+import { QuestionDisplayComponent } from "@/components/feature/prompt/question/QuestionDisplayComponent";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { useGetThemeByIdDocumentQuery } from "@/query/graphqlGen/graphql";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
@@ -18,6 +25,7 @@ export const ThemeByIdComponent: FC<Props> = ({ id }) => {
   const router = useRouter();
   const { data, loading, error } = useGetThemeByIdDocumentQuery({
     variables: { id },
+    fetchPolicy: "no-cache",
   });
 
   if (loading) {
@@ -32,7 +40,7 @@ export const ThemeByIdComponent: FC<Props> = ({ id }) => {
     return <></>;
   } else {
     const theme = data?.problem_themes[0];
-    console.log(theme);
+    const questions = data?.problem_themes[0]?.problem_questions ?? [];
 
     return (
       <div>
@@ -54,7 +62,26 @@ export const ThemeByIdComponent: FC<Props> = ({ id }) => {
             <p>質問追加</p>
           </Button>
         </div>
-        <div>{theme?.title}</div>
+        <div className="mb-3">
+          <Card className="w-[100%] min-w-[330px]">
+            <CardHeader>
+              <CardTitle className="break-all">{theme?.title}</CardTitle>
+              <CardDescription className="break-all">
+                {theme?.description}
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+        {questions.length == 0 && <div>質問は未登録です</div>}
+        {questions.length > 0 && (
+          <div className="flex flex-col gap-3">
+            {questions.map((q) => {
+              return (
+                <QuestionDisplayComponent key={q.id} contents={q.contents} />
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }

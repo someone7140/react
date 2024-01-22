@@ -41,3 +41,13 @@ export const getThemeByIdDocument = gql`
     }
   }
 `;
+
+export const addQuestionMutationDocument = gql`
+  mutation AddQuestion($themeId: String!, $question: String!) {
+    insert_problem_questions_one(
+      object: { themeId: $themeId, contents: $question }
+    ) {
+      id
+    }
+  }
+`;

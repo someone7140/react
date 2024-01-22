@@ -7,5 +7,5 @@ export const inputTextStyle = tv({
 });
 
 export const inputTextAreaStyle = tv({
-  base: "w-64 border-gray-400 min-h-[100px]",
+  base: "border-gray-400 min-h-[120px] w-[500px] max-w-[95%]",
 });

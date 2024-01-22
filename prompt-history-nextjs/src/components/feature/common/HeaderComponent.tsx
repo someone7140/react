@@ -147,13 +147,17 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
 
   return (
     <div>
-      <header className="sticky top-0 z-[50] mb-2 w-[100%] bg-slate-100 flex justify-center">
+      <header className="sticky top-0 z-[50] mb-4 w-[100%] bg-slate-100 flex justify-center">
         <div className="flex items-center h-14 ml-2 w-[100%] max-w-xl">
           {authStore.userAccount && <>{renderMenuLoggedIn()}</>}
           {!authStore.userAccount && <>{renderMenuNotLogIn()}</>}
         </div>
       </header>
-      {children}
+      <div className="w-[100%] flex justify-center">
+        <div className="w-[100%] max-w-xl flex justify-start ml-2 mr-2">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };

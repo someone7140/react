@@ -52,6 +52,7 @@ export const AddThemeAndQuestionComponent: FC = () => {
         description: "登録しました。",
       });
     };
+
     let errors: readonly GraphQLError[] | undefined = undefined;
     let themeId: string | null | undefined = undefined;
     // 質問の入力有無で呼ぶmutationを分ける
