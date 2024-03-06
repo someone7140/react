@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { AuthUserAccountForRegisterComponent } from "@/components/feature/userAccount/AuthUserAccountForRegisterComponent";
+import { AuthUserAccountForLoginComponent } from "@/components/feature/userAccount/AuthUserAccountForLoginComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <div>
-      <AuthUserAccountForRegisterComponent />
+      <AuthUserAccountForLoginComponent />
     </div>
   );
 }

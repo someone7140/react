@@ -9,6 +9,7 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 import { getApolloLink } from "@/constants/ApolloLinkConstants";
+import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 
 function makeClient(authToken?: string) {
   let header: Record<string, string> = {};
@@ -34,8 +35,10 @@ function makeClient(authToken?: string) {
 }
 
 export function ApiProvider({ children }: React.PropsWithChildren) {
+  const { authToken } = useAuthTokenLocalStorage();
+
   return (
-    <ApolloNextAppProvider makeClient={() => makeClient()}>
+    <ApolloNextAppProvider makeClient={() => makeClient(authToken)}>
       {children}
     </ApolloNextAppProvider>
   );

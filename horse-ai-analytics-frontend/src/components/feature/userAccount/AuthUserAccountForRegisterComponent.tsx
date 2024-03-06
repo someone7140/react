@@ -9,7 +9,11 @@ import {
   userAccountInputFormSchema,
 } from "@/components/feature/userAccount/UserAccountInputComponent";
 import { toast } from "@/components/ui/use-toast";
-import { useValidateGoogleAuthCodeMutation } from "@/query/graphqlGen/graphql";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
+import {
+  useAddAccountUserFromGoogleMutation,
+  useValidateGoogleAuthCodeMutation,
+} from "@/query/graphqlGen/graphql";
 import { toastStyle } from "@/styles/CommonStyle";
 
 export const AuthUserAccountForRegisterComponent: FC = () => {
@@ -18,6 +22,11 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
   );
   const [validateGoogleAuthCode, { loading: loadingValidateGoogleAuthCode }] =
     useValidateGoogleAuthCodeMutation();
+  const [
+    addAccountUserFromGoogle,
+    { loading: loadingAddAccountUserFromGoogle },
+  ] = useAddAccountUserFromGoogleMutation();
+  const { setAuthInfo } = useAuthManagement();
 
   const onAuthGoogle = async (authCode: string) => {
     const displayErrorToast = () => {
@@ -64,7 +73,21 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
     };
 
     try {
-      console.log("aaaa");
+      const response = await addAccountUserFromGoogle({
+        variables: {
+          authToken: googleAuthToken ?? "",
+          userSettingId: data.userSettingId,
+          name: data.userName,
+        },
+      });
+
+      const addResult = response?.data?.addAccountUserFromGoogle;
+      if (response.errors || !addResult) {
+        displayErrorToast();
+      } else {
+        setAuthInfo(addResult);
+        window.location.href = "/";
+      }
     } catch (e) {
       displayErrorToast();
     }
@@ -82,7 +105,7 @@ export const AuthUserAccountForRegisterComponent: FC = () => {
       {googleAuthToken && (
         <UserAccountInputComponent
           submitFunc={submitFunc}
-          disabledFlag={false}
+          disabledFlag={loadingAddAccountUserFromGoogle}
         />
       )}
     </div>
