@@ -18,7 +18,6 @@ import {
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
@@ -75,17 +74,17 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
                           router.push("/");
                         }}
                       >
-                        分析結果一覧
+                        登録レース一覧
                       </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <div
                         className={menuHeaderNavigationMenuRecordStyle()}
                         onClick={() => {
-                          router.push("/prompt/addThemeAndQuestion");
+                          router.push("/race/addRaceInfo");
                         }}
                       >
-                        分析用の質問・結果登録
+                        レース分析用のプロンプト・回答メモ登録
                       </div>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

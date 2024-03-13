@@ -27,6 +27,7 @@ export type AccountUserResponse = {
 
 export type GetRaceInfoResponse = {
   __typename?: 'GetRaceInfoResponse';
+  odds?: Maybe<FieldWrapper<OddsInfoResponse>>;
   prompt: FieldWrapper<Scalars['String']['output']>;
   raceDateYyyyMmDd: FieldWrapper<Scalars['String']['output']>;
   raceName: FieldWrapper<Scalars['String']['output']>;
@@ -56,10 +57,28 @@ export type MutationValidateGoogleAuthCodeArgs = {
   authCode: Scalars['String']['input'];
 };
 
+export type OddsInfo = {
+  __typename?: 'OddsInfo';
+  horseName: FieldWrapper<Scalars['String']['output']>;
+  odds: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type OddsInfoResponse = {
+  __typename?: 'OddsInfoResponse';
+  oddsList: Array<FieldWrapper<OddsInfo>>;
+  oddsUrl: FieldWrapper<Scalars['String']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  getOddsInfoFromUrl?: Maybe<FieldWrapper<OddsInfoResponse>>;
   getRaceInfoFromUrl: FieldWrapper<GetRaceInfoResponse>;
   getUserFromAuthHeader: FieldWrapper<AccountUserResponse>;
+};
+
+
+export type QueryGetOddsInfoFromUrlArgs = {
+  url: Scalars['String']['input'];
 };
 
 
@@ -99,6 +118,13 @@ export type GetUserFromAuthHeaderQueryVariables = Exact<{ [key: string]: never; 
 
 
 export type GetUserFromAuthHeaderQuery = { __typename?: 'Query', getUserFromAuthHeader: { __typename?: 'AccountUserResponse', authToken?: string | null, userSettingId: string, name: string } };
+
+export type GetRaceInfoFromUrlQueryVariables = Exact<{
+  url: Scalars['String']['input'];
+}>;
+
+
+export type GetRaceInfoFromUrlQuery = { __typename?: 'Query', getRaceInfoFromUrl: { __typename?: 'GetRaceInfoResponse', raceName: string, raceDateYyyyMmDd: string, prompt: string, odds?: { __typename?: 'OddsInfoResponse', oddsUrl: string, oddsList: Array<{ __typename?: 'OddsInfo', horseName: string, odds: string }> } | null } };
 
 
 export const LoginGoogleAuthCodeDocument = gql`
@@ -251,3 +277,52 @@ export type GetUserFromAuthHeaderQueryHookResult = ReturnType<typeof useGetUserF
 export type GetUserFromAuthHeaderLazyQueryHookResult = ReturnType<typeof useGetUserFromAuthHeaderLazyQuery>;
 export type GetUserFromAuthHeaderSuspenseQueryHookResult = ReturnType<typeof useGetUserFromAuthHeaderSuspenseQuery>;
 export type GetUserFromAuthHeaderQueryResult = Apollo.QueryResult<GetUserFromAuthHeaderQuery, GetUserFromAuthHeaderQueryVariables>;
+export const GetRaceInfoFromUrlDocument = gql`
+    query GetRaceInfoFromUrl($url: String!) {
+  getRaceInfoFromUrl(url: $url) {
+    raceName
+    raceDateYyyyMmDd
+    prompt
+    odds {
+      oddsUrl
+      oddsList {
+        horseName
+        odds
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRaceInfoFromUrlQuery__
+ *
+ * To run a query within a React component, call `useGetRaceInfoFromUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRaceInfoFromUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRaceInfoFromUrlQuery({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useGetRaceInfoFromUrlQuery(baseOptions: Apollo.QueryHookOptions<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables> & ({ variables: GetRaceInfoFromUrlQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables>(GetRaceInfoFromUrlDocument, options);
+      }
+export function useGetRaceInfoFromUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables>(GetRaceInfoFromUrlDocument, options);
+        }
+export function useGetRaceInfoFromUrlSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables>(GetRaceInfoFromUrlDocument, options);
+        }
+export type GetRaceInfoFromUrlQueryHookResult = ReturnType<typeof useGetRaceInfoFromUrlQuery>;
+export type GetRaceInfoFromUrlLazyQueryHookResult = ReturnType<typeof useGetRaceInfoFromUrlLazyQuery>;
+export type GetRaceInfoFromUrlSuspenseQueryHookResult = ReturnType<typeof useGetRaceInfoFromUrlSuspenseQuery>;
+export type GetRaceInfoFromUrlQueryResult = Apollo.QueryResult<GetRaceInfoFromUrlQuery, GetRaceInfoFromUrlQueryVariables>;

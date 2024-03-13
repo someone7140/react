@@ -1,13 +1,25 @@
 "use client";
 
 import React, { FC } from "react";
-import { z } from "zod";
 
-import AutoForm from "@/components/ui/auto-form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Button } from "@/components/ui/button";
 import { halfSizeRegex } from "@/constants/ValidationConsntants";
-import { inputTextStyle } from "@/styles/FormStyle";
+import { inputTextStyle, requiredMark } from "@/styles/FormStyle";
 import { buttonStyle } from "@/styles/CommonStyle";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   submitFunc: (form: z.infer<typeof userAccountInputFormSchema>) => void;
@@ -22,8 +34,7 @@ export const userAccountInputFormSchema = z.object({
     .min(1, {
       message: "ユーザIDは必須です",
     })
-    .regex(halfSizeRegex, "半角文字で入力してください")
-    .describe("ユーザID"),
+    .regex(halfSizeRegex, "半角文字で入力してください"),
   userName: z
     .string({
       required_error: "ユーザ表示名は必須です",
@@ -38,30 +49,51 @@ export const UserAccountInputComponent: FC<Props> = ({
   submitFunc,
   disabledFlag,
 }) => {
+  const form = useForm<z.infer<typeof userAccountInputFormSchema>>({
+    resolver: zodResolver(userAccountInputFormSchema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+  });
+
   return (
-    <AutoForm
-      onSubmit={submitFunc}
-      formSchema={userAccountInputFormSchema}
-      fieldConfig={{
-        userSettingId: {
-          inputProps: {
-            className: inputTextStyle(),
-          },
-        },
-        userName: {
-          inputProps: {
-            className: inputTextStyle(),
-          },
-        },
-      }}
-    >
-      <Button
-        className={buttonStyle({ color: "indigo" })}
-        type="submit"
-        disabled={disabledFlag}
-      >
-        <p>ユーザ登録</p>
-      </Button>
-    </AutoForm>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(submitFunc)}>
+        <div className="flex flex-col gap-4">
+          <FormField
+            control={form.control}
+            name="userSettingId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className={requiredMark()}>ユーザID</FormLabel>
+                <FormControl>
+                  <Input {...field} className={inputTextStyle()} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="userName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className={requiredMark()}>ユーザ表示名</FormLabel>
+                <FormControl>
+                  <Input {...field} className={inputTextStyle()} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <Button
+          className={`${buttonStyle({ color: "indigo" })} mt-5`}
+          type="submit"
+          disabled={disabledFlag}
+        >
+          <p>ユーザ登録</p>
+        </Button>
+      </form>
+    </Form>
   );
 };
