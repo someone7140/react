@@ -7,7 +7,7 @@ export const inputTextStyle = tv({
 });
 
 export const inputTextAreaStyle = tv({
-  base: "border-gray-400 min-h-[120px] w-[500px] max-w-[95%]",
+  base: "border-gray-400 min-h-[120px] w-[500px] w-[95%]",
 });
 
 export const requiredMark = tv({

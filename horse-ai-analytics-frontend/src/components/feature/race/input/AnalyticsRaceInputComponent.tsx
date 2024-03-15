@@ -1,13 +1,16 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
-import { useForm } from "react-hook-form";
+import { format, parse } from "date-fns";
+import { CalendarIcon, Copy } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { AnalyticsRaceOddsTableComponent } from "@/components/feature/race/AnalyticsRaceOddsTableComponent";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -17,15 +20,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useGetRaceInfoFromUrlLazyQuery } from "@/query/graphqlGen/graphql";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { toast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import {
+  OddsInfoResponse,
+  useGetRaceInfoFromUrlLazyQuery,
+} from "@/query/graphqlGen/graphql";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
 import {
   inputTextAreaStyle,
   inputTextStyle,
   requiredMark,
 } from "@/styles/FormStyle";
-import { Textarea } from "@/components/ui/textarea";
-import { Copy } from "lucide-react";
 
 export const analyticsRaceInputFormSchema = z.object({
   analyticsUrl: z.string().optional(),
@@ -36,7 +48,17 @@ export const analyticsRaceInputFormSchema = z.object({
     .min(1, {
       message: "レース名は必須です",
     }),
+  raceDate: z.date({
+    required_error: "日付は必須です",
+  }),
   prompt: z.string().optional(),
+  memoList: z.array(
+    z.object({
+      memoId: z.string().optional(),
+      title: z.string().optional(),
+      contents: z.string().optional(),
+    })
+  ),
 });
 
 export const AnalyticsRaceInputComponent: FC = () => {
@@ -44,9 +66,25 @@ export const AnalyticsRaceInputComponent: FC = () => {
     resolver: zodResolver(analyticsRaceInputFormSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
+    defaultValues: {
+      memoList: [{}],
+    },
   });
+  const control = form.control;
+  const {
+    fields: memoFields,
+    prepend: memoPrepend,
+    remove: memoRemove,
+  } = useFieldArray({
+    control,
+    name: "memoList",
+  });
+
   const [getRaceInfoQuery, { loading: raceLoading }] =
     useGetRaceInfoFromUrlLazyQuery();
+  const [oddsInfo, setOddsInfo] = useState<OddsInfoResponse | undefined>(
+    undefined
+  );
 
   const onClickGetRaceInfo = async () => {
     const analyticsUrl = form.getValues("analyticsUrl");
@@ -57,11 +95,18 @@ export const AnalyticsRaceInputComponent: FC = () => {
         })
       ).data?.getRaceInfoFromUrl;
       if (response) {
+        const raceDate = parse(
+          response.raceDateYyyyMmDd,
+          "yyyy/MM/dd",
+          new Date()
+        );
         form.reset({
           ...form.getValues(),
           raceName: response.raceName,
+          raceDate: raceDate,
           prompt: response.prompt,
         });
+        setOddsInfo(response.odds ?? undefined);
       } else {
         toast({
           className: `${toastStyle({ textColor: "amber" })}`,
@@ -89,12 +134,14 @@ export const AnalyticsRaceInputComponent: FC = () => {
 
   const submitFunc = async (
     data: z.infer<typeof analyticsRaceInputFormSchema>
-  ) => {};
+  ) => {
+    console.log(data);
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submitFunc)}>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 ml-2">
           <div className="flex gap-4 items-end">
             <FormField
               control={form.control}
@@ -117,6 +164,7 @@ export const AnalyticsRaceInputComponent: FC = () => {
               className={buttonStyle({ color: "lime" })}
               disabled={raceLoading}
               onClick={onClickGetRaceInfo}
+              type="button"
             >
               取得
             </Button>
@@ -134,6 +182,47 @@ export const AnalyticsRaceInputComponent: FC = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="raceDate"
+            render={({ field }) => (
+              <FormItem>
+                <div>
+                  <FormLabel className={requiredMark()}>レース日付</FormLabel>
+                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "yyyy/MM/dd")
+                        ) : (
+                          <span>レース日付を選択</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {oddsInfo && <AnalyticsRaceOddsTableComponent oddsInfo={oddsInfo} />}
           <FormField
             control={form.control}
             name="prompt"
@@ -155,71 +244,73 @@ export const AnalyticsRaceInputComponent: FC = () => {
               </FormItem>
             )}
           />
+          <div className="flex flex-row gap-2 items-center">
+            <FormLabel>メモ（AI回答など）</FormLabel>
+            <Button
+              className={buttonStyle({ color: "lime" })}
+              onClick={() => {
+                memoPrepend({});
+              }}
+              type="button"
+            >
+              メモを追加
+            </Button>
+          </div>
+          {memoFields.map((memo, index) => (
+            <>
+              {/* idはuseFieldArrayで割り当てられる値 */}
+              <div key={memo.id} className="flex flex-col gap-2">
+                <FormField
+                  control={form.control}
+                  name={`memoList.${index}.title`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className={inputTextStyle()}
+                          placeholder="メモのタイトルを入力"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`memoList.${index}.contents`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          className={inputTextAreaStyle()}
+                          placeholder="メモの内容を入力"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  name={`memoList.${index}.delete`}
+                  className={`${buttonStyle({ color: "gray" })} w-28`}
+                  onClick={() => {
+                    memoRemove(index);
+                  }}
+                  type="button"
+                >
+                  メモを削除
+                </Button>
+              </div>
+            </>
+          ))}
         </div>
         <Button
           className={`${buttonStyle({ color: "indigo" })} mt-5`}
           type="submit"
-          disabled={true}
         >
           <p>結果を登録</p>
         </Button>
       </form>
-      {/*
-      <AutoForm
-        onSubmit={submitFunc}
-        formSchema={analyticsRaceInputFormSchema}
-        fieldConfig={{
-          analyticsUrl: {
-            fieldType: ({
-              label,
-              isRequired,
-              field,
-              fieldProps,
-            }: AutoFormInputComponentProps) => (
-              <div className="flex flex-row items-end gap-5">
-                <FormItem>
-                  <AutoFormLabel label={label} isRequired={isRequired} />
-                  <FormControl>
-                    <Input
-                      type="text"
-                      {...fieldProps.fieldPropsWithoutShowLabel}
-                      className={inputTextStyle()}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-                <Button
-                  className={buttonStyle({ color: "lime" })}
-                  disabled={!field.value}
-                  onClick={}
-                >
-                  取得
-                </Button>
-              </div>
-            ),
-          },
-          raceName: {
-            inputProps: {
-              className: inputTextStyle(),
-            },
-          },
-          prompt: {
-            fieldType: "textarea",
-            inputProps: {
-              className: inputTextAreaStyle(),
-            },
-          },
-        }}
-      >
-        <Button
-          className={buttonStyle({ color: "indigo" })}
-          type="submit"
-          disabled={true}
-        >
-          <p>結果を登録</p>
-        </Button>
-      </AutoForm>
-      */}
     </Form>
   );
 };

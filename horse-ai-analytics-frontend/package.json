@@ -32,7 +32,7 @@
     "ahooks": "^3.7.10",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "date-fns": "^3.3.1",
+    "date-fns": "^3.4.0",
     "env-cmd": "^10.1.0",
     "graphql": "^16.8.1",
     "lucide-react": "^0.357.0",
