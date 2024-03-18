@@ -30,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
   OddsInfoResponse,
+  useAddRaceInfoMutation,
   useGetRaceInfoFromUrlLazyQuery,
 } from "@/query/graphqlGen/graphql";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
@@ -38,6 +39,7 @@ import {
   inputTextStyle,
   requiredMark,
 } from "@/styles/FormStyle";
+import { useRouter } from "next/navigation";
 
 export const analyticsRaceInputFormSchema = z.object({
   analyticsUrl: z.string().optional(),
@@ -62,6 +64,7 @@ export const analyticsRaceInputFormSchema = z.object({
 });
 
 export const AnalyticsRaceInputComponent: FC = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof analyticsRaceInputFormSchema>>({
     resolver: zodResolver(analyticsRaceInputFormSchema),
     mode: "onSubmit",
@@ -85,6 +88,8 @@ export const AnalyticsRaceInputComponent: FC = () => {
   const [oddsInfo, setOddsInfo] = useState<OddsInfoResponse | undefined>(
     undefined
   );
+  const [addRaceInfoMutation, { loading: loadingAddRaceInfoMutation }] =
+    useAddRaceInfoMutation();
 
   const onClickGetRaceInfo = async () => {
     const analyticsUrl = form.getValues("analyticsUrl");
@@ -135,7 +140,33 @@ export const AnalyticsRaceInputComponent: FC = () => {
   const submitFunc = async (
     data: z.infer<typeof analyticsRaceInputFormSchema>
   ) => {
-    console.log(data);
+    const result = await addRaceInfoMutation({
+      variables: {
+        raceName: data.raceName,
+        analyticsUrl: data.analyticsUrl,
+        raceDate: data.raceDate.toLocaleDateString("ja-JP", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }),
+        prompt: data.prompt,
+        memoList: data.memoList.filter((memo) => memo.contents || memo.title),
+      },
+    });
+    if (result.data) {
+      toast({
+        className: `${toastStyle({ textColor: "black" })}`,
+        variant: "default",
+        description: "レース情報を登録しました",
+      });
+      router.push("/race/raceInfoList");
+    } else {
+      toast({
+        className: `${toastStyle({ textColor: "amber" })}`,
+        variant: "destructive",
+        description: "レース情報の登録に失敗しました。",
+      });
+    }
   };
 
   return (
@@ -291,7 +322,6 @@ export const AnalyticsRaceInputComponent: FC = () => {
                   )}
                 />
                 <Button
-                  name={`memoList.${index}.delete`}
                   className={`${buttonStyle({ color: "gray" })} w-28`}
                   onClick={() => {
                     memoRemove(index);
@@ -307,6 +337,7 @@ export const AnalyticsRaceInputComponent: FC = () => {
         <Button
           className={`${buttonStyle({ color: "indigo" })} mt-5`}
           type="submit"
+          disabled={loadingAddRaceInfoMutation}
         >
           <p>結果を登録</p>
         </Button>

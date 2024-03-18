@@ -71,7 +71,7 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
                       <div
                         className={menuHeaderNavigationMenuRecordStyle()}
                         onClick={() => {
-                          router.push("/");
+                          router.push("/race/raceInfoList");
                         }}
                       >
                         登録レース一覧
