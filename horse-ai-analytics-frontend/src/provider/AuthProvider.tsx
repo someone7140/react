@@ -4,10 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
-import {
-  useGetUserFromAuthHeaderLazyQuery,
-  useGetUserFromAuthHeaderQuery,
-} from "@/query/graphqlGen/graphql";
+import { useGetUserFromAuthHeaderLazyQuery } from "@/query/graphqlGen/graphql";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 

@@ -1,17 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
+import { RegisteredRaceInfoListComponent } from "@/components/feature/race/RegisteredRaceInfoListComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 
 export default function Home() {
-  const router = useRouter();
   const authStore = useAuthStore();
 
-  if (!authStore.userAccount) {
-    // 未ログインであればトップへ
-    router.push("/");
-  }
-
-  return <div>aaaa</div>;
+  return <>{authStore.userAccount && <RegisteredRaceInfoListComponent />}</>;
 }

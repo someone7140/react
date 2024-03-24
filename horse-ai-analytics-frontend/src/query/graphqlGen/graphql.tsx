@@ -45,6 +45,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addAccountUserFromGoogle: FieldWrapper<AccountUserResponse>;
   addRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
+  deleteRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
   loginGoogleAuthCode: FieldWrapper<AccountUserResponse>;
   validateGoogleAuthCode: FieldWrapper<ValidateGoogleAuthCodeResponse>;
 };
@@ -59,6 +60,11 @@ export type MutationAddAccountUserFromGoogleArgs = {
 
 export type MutationAddRaceInfoArgs = {
   input: AddRaceInfoInputObject;
+};
+
+
+export type MutationDeleteRaceInfoArgs = {
+  raceInfoId: Scalars['String']['input'];
 };
 
 
@@ -85,9 +91,16 @@ export type OddsInfoResponse = {
 
 export type Query = {
   __typename?: 'Query';
+  getMyRaceInfoList: Array<FieldWrapper<RaceInfoForList>>;
   getOddsInfoFromUrl?: Maybe<FieldWrapper<OddsInfoResponse>>;
+  getRaceInfoDetail?: Maybe<FieldWrapper<RaceInfoDetail>>;
   getRaceInfoFromUrl: FieldWrapper<GetRaceInfoResponse>;
   getUserFromAuthHeader: FieldWrapper<AccountUserResponse>;
+};
+
+
+export type QueryGetMyRaceInfoListArgs = {
+  filter?: InputMaybe<RaceInfoListFilterInputObject>;
 };
 
 
@@ -96,8 +109,44 @@ export type QueryGetOddsInfoFromUrlArgs = {
 };
 
 
+export type QueryGetRaceInfoDetailArgs = {
+  raceInfoId: Scalars['String']['input'];
+};
+
+
 export type QueryGetRaceInfoFromUrlArgs = {
   url: Scalars['String']['input'];
+};
+
+export type RaceInfoDetail = {
+  __typename?: 'RaceInfoDetail';
+  analyticsUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  id: FieldWrapper<Scalars['String']['output']>;
+  memoList: Array<FieldWrapper<RaceMemo>>;
+  odds?: Maybe<FieldWrapper<OddsInfoResponse>>;
+  prompt?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  raceDate: FieldWrapper<Scalars['String']['output']>;
+  raceName: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type RaceInfoForList = {
+  __typename?: 'RaceInfoForList';
+  id: FieldWrapper<Scalars['String']['output']>;
+  raceDate: FieldWrapper<Scalars['String']['output']>;
+  raceName: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type RaceInfoListFilterInputObject = {
+  endRaceDate?: InputMaybe<Scalars['String']['input']>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  startRaceDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RaceMemo = {
+  __typename?: 'RaceMemo';
+  contents?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  id: FieldWrapper<Scalars['String']['output']>;
+  title?: Maybe<FieldWrapper<Scalars['String']['output']>>;
 };
 
 export type RaceMemoInputObject = {
@@ -155,6 +204,27 @@ export type AddRaceInfoMutationVariables = Exact<{
 
 
 export type AddRaceInfoMutation = { __typename?: 'Mutation', addRaceInfo: boolean };
+
+export type GetMyRaceInfoListQueryVariables = Exact<{
+  filter?: InputMaybe<RaceInfoListFilterInputObject>;
+}>;
+
+
+export type GetMyRaceInfoListQuery = { __typename?: 'Query', getMyRaceInfoList: Array<{ __typename?: 'RaceInfoForList', id: string, raceName: string, raceDate: string }> };
+
+export type GetRaceInfoDetailQueryVariables = Exact<{
+  raceInfoId: Scalars['String']['input'];
+}>;
+
+
+export type GetRaceInfoDetailQuery = { __typename?: 'Query', getRaceInfoDetail?: { __typename?: 'RaceInfoDetail', id: string, raceName: string, analyticsUrl?: string | null, raceDate: string, prompt?: string | null, memoList: Array<{ __typename?: 'RaceMemo', id: string, title?: string | null, contents?: string | null }>, odds?: { __typename?: 'OddsInfoResponse', oddsUrl: string } | null } | null };
+
+export type DeleteRaceInfoMutationVariables = Exact<{
+  raceInfoId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteRaceInfoMutation = { __typename?: 'Mutation', deleteRaceInfo: boolean };
 
 
 export const LoginGoogleAuthCodeDocument = gql`
@@ -393,3 +463,128 @@ export function useAddRaceInfoMutation(baseOptions?: Apollo.MutationHookOptions<
 export type AddRaceInfoMutationHookResult = ReturnType<typeof useAddRaceInfoMutation>;
 export type AddRaceInfoMutationResult = Apollo.MutationResult<AddRaceInfoMutation>;
 export type AddRaceInfoMutationOptions = Apollo.BaseMutationOptions<AddRaceInfoMutation, AddRaceInfoMutationVariables>;
+export const GetMyRaceInfoListDocument = gql`
+    query GetMyRaceInfoList($filter: RaceInfoListFilterInputObject) {
+  getMyRaceInfoList(filter: $filter) {
+    id
+    raceName
+    raceDate
+  }
+}
+    `;
+
+/**
+ * __useGetMyRaceInfoListQuery__
+ *
+ * To run a query within a React component, call `useGetMyRaceInfoListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyRaceInfoListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyRaceInfoListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetMyRaceInfoListQuery(baseOptions?: Apollo.QueryHookOptions<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>(GetMyRaceInfoListDocument, options);
+      }
+export function useGetMyRaceInfoListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>(GetMyRaceInfoListDocument, options);
+        }
+export function useGetMyRaceInfoListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>(GetMyRaceInfoListDocument, options);
+        }
+export type GetMyRaceInfoListQueryHookResult = ReturnType<typeof useGetMyRaceInfoListQuery>;
+export type GetMyRaceInfoListLazyQueryHookResult = ReturnType<typeof useGetMyRaceInfoListLazyQuery>;
+export type GetMyRaceInfoListSuspenseQueryHookResult = ReturnType<typeof useGetMyRaceInfoListSuspenseQuery>;
+export type GetMyRaceInfoListQueryResult = Apollo.QueryResult<GetMyRaceInfoListQuery, GetMyRaceInfoListQueryVariables>;
+export const GetRaceInfoDetailDocument = gql`
+    query GetRaceInfoDetail($raceInfoId: String!) {
+  getRaceInfoDetail(raceInfoId: $raceInfoId) {
+    id
+    raceName
+    analyticsUrl
+    raceDate
+    prompt
+    memoList {
+      id
+      title
+      contents
+    }
+    odds {
+      oddsUrl
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRaceInfoDetailQuery__
+ *
+ * To run a query within a React component, call `useGetRaceInfoDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRaceInfoDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRaceInfoDetailQuery({
+ *   variables: {
+ *      raceInfoId: // value for 'raceInfoId'
+ *   },
+ * });
+ */
+export function useGetRaceInfoDetailQuery(baseOptions: Apollo.QueryHookOptions<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables> & ({ variables: GetRaceInfoDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables>(GetRaceInfoDetailDocument, options);
+      }
+export function useGetRaceInfoDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables>(GetRaceInfoDetailDocument, options);
+        }
+export function useGetRaceInfoDetailSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables>(GetRaceInfoDetailDocument, options);
+        }
+export type GetRaceInfoDetailQueryHookResult = ReturnType<typeof useGetRaceInfoDetailQuery>;
+export type GetRaceInfoDetailLazyQueryHookResult = ReturnType<typeof useGetRaceInfoDetailLazyQuery>;
+export type GetRaceInfoDetailSuspenseQueryHookResult = ReturnType<typeof useGetRaceInfoDetailSuspenseQuery>;
+export type GetRaceInfoDetailQueryResult = Apollo.QueryResult<GetRaceInfoDetailQuery, GetRaceInfoDetailQueryVariables>;
+export const DeleteRaceInfoDocument = gql`
+    mutation DeleteRaceInfo($raceInfoId: String!) {
+  deleteRaceInfo(raceInfoId: $raceInfoId)
+}
+    `;
+export type DeleteRaceInfoMutationFn = Apollo.MutationFunction<DeleteRaceInfoMutation, DeleteRaceInfoMutationVariables>;
+
+/**
+ * __useDeleteRaceInfoMutation__
+ *
+ * To run a mutation, you first call `useDeleteRaceInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRaceInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRaceInfoMutation, { data, loading, error }] = useDeleteRaceInfoMutation({
+ *   variables: {
+ *      raceInfoId: // value for 'raceInfoId'
+ *   },
+ * });
+ */
+export function useDeleteRaceInfoMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRaceInfoMutation, DeleteRaceInfoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRaceInfoMutation, DeleteRaceInfoMutationVariables>(DeleteRaceInfoDocument, options);
+      }
+export type DeleteRaceInfoMutationHookResult = ReturnType<typeof useDeleteRaceInfoMutation>;
+export type DeleteRaceInfoMutationResult = Apollo.MutationResult<DeleteRaceInfoMutation>;
+export type DeleteRaceInfoMutationOptions = Apollo.BaseMutationOptions<DeleteRaceInfoMutation, DeleteRaceInfoMutationVariables>;

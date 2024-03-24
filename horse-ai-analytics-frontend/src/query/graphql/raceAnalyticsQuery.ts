@@ -36,3 +36,39 @@ export const addRaceInfoMutationDocument = gql`
     )
   }
 `;
+
+export const getMyRaceInfoListQueryDocument = gql`
+  query GetMyRaceInfoList($filter: RaceInfoListFilterInputObject) {
+    getMyRaceInfoList(filter: $filter) {
+      id
+      raceName
+      raceDate
+    }
+  }
+`;
+
+export const getRaceInfoDetailQueryDocument = gql`
+  query GetRaceInfoDetail($raceInfoId: String!) {
+    getRaceInfoDetail(raceInfoId: $raceInfoId) {
+      id
+      raceName
+      analyticsUrl
+      raceDate
+      prompt
+      memoList {
+        id
+        title
+        contents
+      }
+      odds {
+        oddsUrl
+      }
+    }
+  }
+`;
+
+export const deleteRaceInfoMutationDocument = gql`
+  mutation DeleteRaceInfo($raceInfoId: String!) {
+    deleteRaceInfo(raceInfoId: $raceInfoId)
+  }
+`;
