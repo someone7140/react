@@ -62,6 +62,10 @@ export const getRaceInfoDetailQueryDocument = gql`
       }
       odds {
         oddsUrl
+        oddsList {
+          horseName
+          odds
+        }
       }
     }
   }

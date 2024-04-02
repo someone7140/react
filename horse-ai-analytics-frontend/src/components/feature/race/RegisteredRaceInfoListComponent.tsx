@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
 import { DeleteRaceInfoDialogComponent } from "@/components/feature/race/dialog/DeleteRaceInfoDialogComponent";
+import { SearchRaceInfoDialogComponent } from "@/components/feature/race/dialog/SearchRaceInfoDialogComponent";
+import { RaceInfoTitleComponent } from "@/components/feature/race/ref/RaceInfoTitleComponent";
 import { toast } from "@/components/ui/use-toast";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
 import { Button } from "@/components/ui/button";
@@ -47,7 +49,10 @@ export const RegisteredRaceInfoListComponent: FC = () => {
 
   return (
     <div>
-      <div className="mb-3">登録したレース情報一覧</div>
+      <div className="mb-2">登録したレース情報一覧</div>
+      <div className="mb-5">
+        <SearchRaceInfoDialogComponent filter={filter} setFilter={setFilter} />
+      </div>
       {(!data?.getMyRaceInfoList || data.getMyRaceInfoList.length == 0) && (
         <div>レース情報はありません</div>
       )}
@@ -56,10 +61,10 @@ export const RegisteredRaceInfoListComponent: FC = () => {
           {data.getMyRaceInfoList.map((race) => {
             return (
               <div key={race.id} className="flex flex-col gap-2">
-                <div className="flex justify-between items-start gap-2 w-[100%]">
-                  <div className="break-all text-xl">{race.raceName}</div>
-                  <div>{race.raceDate}</div>
-                </div>
+                <RaceInfoTitleComponent
+                  raceName={race.raceName}
+                  raceDate={race.raceDate}
+                />
                 <div className="flex items-center gap-12">
                   <Link
                     href={`/race/raceInfoDetail?id=${race.id}`}

@@ -217,7 +217,7 @@ export type GetRaceInfoDetailQueryVariables = Exact<{
 }>;
 
 
-export type GetRaceInfoDetailQuery = { __typename?: 'Query', getRaceInfoDetail?: { __typename?: 'RaceInfoDetail', id: string, raceName: string, analyticsUrl?: string | null, raceDate: string, prompt?: string | null, memoList: Array<{ __typename?: 'RaceMemo', id: string, title?: string | null, contents?: string | null }>, odds?: { __typename?: 'OddsInfoResponse', oddsUrl: string } | null } | null };
+export type GetRaceInfoDetailQuery = { __typename?: 'Query', getRaceInfoDetail?: { __typename?: 'RaceInfoDetail', id: string, raceName: string, analyticsUrl?: string | null, raceDate: string, prompt?: string | null, memoList: Array<{ __typename?: 'RaceMemo', id: string, title?: string | null, contents?: string | null }>, odds?: { __typename?: 'OddsInfoResponse', oddsUrl: string, oddsList: Array<{ __typename?: 'OddsInfo', horseName: string, odds: string }> } | null } | null };
 
 export type DeleteRaceInfoMutationVariables = Exact<{
   raceInfoId: Scalars['String']['input'];
@@ -520,6 +520,10 @@ export const GetRaceInfoDetailDocument = gql`
     }
     odds {
       oddsUrl
+      oddsList {
+        horseName
+        odds
+      }
     }
   }
 }

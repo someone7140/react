@@ -4,11 +4,12 @@ import React, { FC, useState } from "react";
 
 import { format, parse } from "date-fns";
 import { CalendarIcon, Copy } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AnalyticsRaceOddsTableComponent } from "@/components/feature/race/AnalyticsRaceOddsTableComponent";
+import { AnalyticsRaceOddsTableComponent } from "@/components/feature/race/ref/AnalyticsRaceOddsTableComponent";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import { useRaceInfoCommonUtil } from "@/hooks/useRaceInfoCommonUtil";
 import { cn } from "@/lib/utils";
 import {
   OddsInfoResponse,
@@ -39,7 +41,6 @@ import {
   inputTextStyle,
   requiredMark,
 } from "@/styles/FormStyle";
-import { useRouter } from "next/navigation";
 
 export const analyticsRaceInputFormSchema = z.object({
   analyticsUrl: z.string().optional(),
@@ -85,11 +86,12 @@ export const AnalyticsRaceInputComponent: FC = () => {
 
   const [getRaceInfoQuery, { loading: raceLoading }] =
     useGetRaceInfoFromUrlLazyQuery();
+  const [addRaceInfoMutation, { loading: loadingAddRaceInfoMutation }] =
+    useAddRaceInfoMutation();
   const [oddsInfo, setOddsInfo] = useState<OddsInfoResponse | undefined>(
     undefined
   );
-  const [addRaceInfoMutation, { loading: loadingAddRaceInfoMutation }] =
-    useAddRaceInfoMutation();
+  const { copyToClipboard } = useRaceInfoCommonUtil();
 
   const onClickGetRaceInfo = async () => {
     const analyticsUrl = form.getValues("analyticsUrl");
@@ -126,15 +128,6 @@ export const AnalyticsRaceInputComponent: FC = () => {
         description: "URLを入力してください。",
       });
     }
-  };
-
-  const copyToClipboardPrompt = async () => {
-    await global.navigator.clipboard.writeText(form.getValues("prompt") ?? "");
-    toast({
-      className: `${toastStyle({ textColor: "black" })}`,
-      variant: "default",
-      description: "プロンプトをコピーしました。",
-    });
   };
 
   const submitFunc = async (
@@ -263,7 +256,12 @@ export const AnalyticsRaceInputComponent: FC = () => {
                   <FormLabel>プロンプト</FormLabel>
                   <div
                     className="cursor-pointer"
-                    onClick={copyToClipboardPrompt}
+                    onClick={() => {
+                      copyToClipboard(
+                        form.getValues("prompt") ?? "",
+                        "プロンプト"
+                      );
+                    }}
                   >
                     <Copy />
                   </div>

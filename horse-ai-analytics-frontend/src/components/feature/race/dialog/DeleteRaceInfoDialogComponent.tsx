@@ -2,8 +2,6 @@
 
 import React, { FC, useState } from "react";
 
-import { ApolloQueryResult } from "@apollo/client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
