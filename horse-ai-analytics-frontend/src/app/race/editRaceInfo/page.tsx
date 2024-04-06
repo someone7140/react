@@ -2,8 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { RaceInfoDetailComponent } from "@/components/feature/race/RaceInfoDetailComponent";
+import { EditRaceInfoComponent } from "@/components/feature/race/EditRaceInfoComponent";
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
+
 export default function Home() {
   const authStore = useAuthStore();
   const router = useRouter();
@@ -16,10 +17,8 @@ export default function Home() {
   }
 
   return (
-    <>
-      {authStore.userAccount && id && (
-        <RaceInfoDetailComponent raceInfoId={id} />
-      )}
-    </>
+    <div>
+      {authStore.userAccount && <EditRaceInfoComponent raceInfoId={id ?? ""} />}
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
@@ -15,6 +15,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
   const [getUserFromAuthHeader, { loading }] =
     useGetUserFromAuthHeaderLazyQuery();
   const { setAuthInfo, removeAuthInfo } = useAuthManagement();
+  const [isAuthProcessEnd, setIsAuthProcessEnd] = useState<boolean>(false);
 
   useEffect(() => {
     const authExec = async () => {
@@ -30,6 +31,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
       } else {
         removeAuthInfo();
       }
+      setIsAuthProcessEnd(true);
     };
     if (!authStore.userAccount && !effectRan.current) {
       authExec();
@@ -48,8 +50,8 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
 
   return (
     <>
-      {!loading && effectRan.current && children}
-      {(loading || !effectRan.current) && <LoadingSpinner />}
+      {!loading && isAuthProcessEnd && children}
+      {(loading || !isAuthProcessEnd) && <LoadingSpinner />}
     </>
   );
 }

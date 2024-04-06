@@ -8,7 +8,7 @@ import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { toastStyle } from "@/styles/CommonStyle";
 import { useLoginGoogleAuthCodeMutation } from "@/query/graphqlGen/graphql";
 
-export const AuthUserAccountForLoginComponent: FC = () => {
+export const AuthUserAccountLoginComponent: FC = () => {
   const { toast } = useToast();
 
   const [loginGoogleAuthCode, { loading }] = useLoginGoogleAuthCodeMutation();

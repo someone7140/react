@@ -7,7 +7,7 @@ import { AuthGoogleComponent } from "@/components/feature/auth/AuthGoogleCompone
 import {
   UserAccountInputComponent,
   userAccountInputFormSchema,
-} from "@/components/feature/userAccount/UserAccountInputComponent";
+} from "@/components/feature/userAccount/input/UserAccountInputComponent";
 import { toast } from "@/components/ui/use-toast";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/query/graphqlGen/graphql";
 import { toastStyle } from "@/styles/CommonStyle";
 
-export const AuthUserAccountForRegisterComponent: FC = () => {
+export const AuthUserAccountRegisterComponent: FC = () => {
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
   );

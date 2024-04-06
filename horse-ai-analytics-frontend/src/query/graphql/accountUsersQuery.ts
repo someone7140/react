@@ -45,3 +45,13 @@ export const getUserFromAuthHeaderQueryDocument = gql`
     }
   }
 `;
+
+export const editAccountUserMutationDocument = gql`
+  mutation EditAccountUser($userSettingId: String!, $name: String!) {
+    editAccountUser(userSettingId: $userSettingId, name: $name) {
+      authToken
+      userSettingId
+      name
+    }
+  }
+`;

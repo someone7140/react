@@ -32,7 +32,7 @@ import { useRaceInfoCommonUtil } from "@/hooks/useRaceInfoCommonUtil";
 import { cn } from "@/lib/utils";
 import {
   OddsInfoResponse,
-  useAddRaceInfoMutation,
+  RaceInfoDetail,
   useGetRaceInfoFromUrlLazyQuery,
 } from "@/query/graphqlGen/graphql";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
@@ -64,15 +64,41 @@ export const analyticsRaceInputFormSchema = z.object({
   ),
 });
 
-export const AnalyticsRaceInputComponent: FC = () => {
+type Props = {
+  submitFunc: (data: z.infer<typeof analyticsRaceInputFormSchema>) => void;
+  registerDisabled?: boolean;
+  raceInfo?: RaceInfoDetail;
+};
+
+export const AnalyticsRaceInputComponent: FC<Props> = ({
+  submitFunc,
+  registerDisabled,
+  raceInfo,
+}) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof analyticsRaceInputFormSchema>>({
     resolver: zodResolver(analyticsRaceInputFormSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    defaultValues: {
-      memoList: [{}],
-    },
+    defaultValues: raceInfo
+      ? {
+          analyticsUrl: raceInfo.analyticsUrl?.toString() ?? undefined,
+          raceName: raceInfo.raceName,
+          raceDate: raceInfo.raceDate
+            ? parse(raceInfo.raceDate, "yyyy/MM/dd", new Date())
+            : undefined,
+          prompt: raceInfo.prompt?.toString() ?? undefined,
+          memoList: raceInfo.memoList.map((memo) => {
+            return {
+              memoId: memo.id,
+              title: memo.title?.toString() ?? undefined,
+              contents: memo.contents?.toString() ?? undefined,
+            };
+          }),
+        }
+      : {
+          memoList: [{}],
+        },
   });
   const control = form.control;
   const {
@@ -84,10 +110,8 @@ export const AnalyticsRaceInputComponent: FC = () => {
     name: "memoList",
   });
 
-  const [getRaceInfoQuery, { loading: raceLoading }] =
+  const [getRaceInfoFromUrlQuery, { loading: getRaceInfoFromUrlLoading }] =
     useGetRaceInfoFromUrlLazyQuery();
-  const [addRaceInfoMutation, { loading: loadingAddRaceInfoMutation }] =
-    useAddRaceInfoMutation();
   const [oddsInfo, setOddsInfo] = useState<OddsInfoResponse | undefined>(
     undefined
   );
@@ -97,7 +121,7 @@ export const AnalyticsRaceInputComponent: FC = () => {
     const analyticsUrl = form.getValues("analyticsUrl");
     if (analyticsUrl) {
       const response = (
-        await getRaceInfoQuery({
+        await getRaceInfoFromUrlQuery({
           variables: { url: analyticsUrl },
         })
       ).data?.getRaceInfoFromUrl;
@@ -130,38 +154,6 @@ export const AnalyticsRaceInputComponent: FC = () => {
     }
   };
 
-  const submitFunc = async (
-    data: z.infer<typeof analyticsRaceInputFormSchema>
-  ) => {
-    const result = await addRaceInfoMutation({
-      variables: {
-        raceName: data.raceName,
-        analyticsUrl: data.analyticsUrl,
-        raceDate: data.raceDate.toLocaleDateString("ja-JP", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }),
-        prompt: data.prompt,
-        memoList: data.memoList.filter((memo) => memo.contents || memo.title),
-      },
-    });
-    if (result.data) {
-      toast({
-        className: `${toastStyle({ textColor: "black" })}`,
-        variant: "default",
-        description: "レース情報を登録しました",
-      });
-      router.push("/race/raceInfoList");
-    } else {
-      toast({
-        className: `${toastStyle({ textColor: "amber" })}`,
-        variant: "destructive",
-        description: "レース情報の登録に失敗しました。",
-      });
-    }
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submitFunc)}>
@@ -186,7 +178,7 @@ export const AnalyticsRaceInputComponent: FC = () => {
             />
             <Button
               className={buttonStyle({ color: "lime" })}
-              disabled={raceLoading}
+              disabled={getRaceInfoFromUrlLoading}
               onClick={onClickGetRaceInfo}
               type="button"
             >
@@ -278,7 +270,11 @@ export const AnalyticsRaceInputComponent: FC = () => {
             <Button
               className={buttonStyle({ color: "lime" })}
               onClick={() => {
-                memoPrepend({});
+                memoPrepend({
+                  memoId: undefined,
+                  title: "",
+                  contents: "",
+                });
               }}
               type="button"
             >
@@ -332,13 +328,36 @@ export const AnalyticsRaceInputComponent: FC = () => {
             </>
           ))}
         </div>
-        <Button
-          className={`${buttonStyle({ color: "indigo" })} mt-5`}
-          type="submit"
-          disabled={loadingAddRaceInfoMutation}
-        >
-          <p>結果を登録</p>
-        </Button>
+        {raceInfo ? (
+          <div className="flex flex-row justify-center items-center gap-8 mt-5">
+            <Button
+              className={`${buttonStyle({ color: "indigo" })} mt-5`}
+              type="submit"
+              disabled={registerDisabled}
+            >
+              <p>編集する</p>
+            </Button>
+            <Button
+              className={`${buttonStyle({ color: "cyan" })} mt-5`}
+              type="button"
+              onClick={() => {
+                router.push("/race/raceInfoList");
+              }}
+            >
+              <p>一覧へ</p>
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-row justify-center mt-5">
+            <Button
+              className={`${buttonStyle({ color: "indigo" })}`}
+              type="submit"
+              disabled={registerDisabled}
+            >
+              <p>結果を登録</p>
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   );

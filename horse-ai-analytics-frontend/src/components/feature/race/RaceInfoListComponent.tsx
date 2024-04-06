@@ -2,6 +2,7 @@
 
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
 import { DeleteRaceInfoDialogComponent } from "@/components/feature/race/dialog/DeleteRaceInfoDialogComponent";
@@ -15,7 +16,8 @@ import {
   useGetMyRaceInfoListQuery,
 } from "@/query/graphqlGen/graphql";
 
-export const RegisteredRaceInfoListComponent: FC = () => {
+export const RaceInfoListComponent: FC = () => {
+  const router = useRouter();
   const [filter, setFilter] = useState<
     RaceInfoListFilterInputObject | undefined
   >(undefined);
@@ -74,7 +76,12 @@ export const RegisteredRaceInfoListComponent: FC = () => {
                       詳細へ
                     </Button>
                   </Link>
-                  <Button className={buttonStyle({ color: "lime" })}>
+                  <Button
+                    className={buttonStyle({ color: "lime" })}
+                    onClick={() => {
+                      router.push(`/race/editRaceInfo?id=${race.id}`);
+                    }}
+                  >
                     編集
                   </Button>
                   <DeleteRaceInfoDialogComponent

@@ -37,6 +37,28 @@ export const addRaceInfoMutationDocument = gql`
   }
 `;
 
+export const editRaceInfoMutationDocument = gql`
+  mutation EditRaceInfo(
+    $id: String!
+    $raceName: String!
+    $analyticsUrl: String
+    $raceDate: String!
+    $prompt: String
+    $memoList: [RaceMemoInputObject!]!
+  ) {
+    editRaceInfo(
+      input: {
+        id: $id
+        raceName: $raceName
+        analyticsUrl: $analyticsUrl
+        raceDate: $raceDate
+        prompt: $prompt
+        memoList: $memoList
+      }
+    )
+  }
+`;
+
 export const getMyRaceInfoListQueryDocument = gql`
   query GetMyRaceInfoList($filter: RaceInfoListFilterInputObject) {
     getMyRaceInfoList(filter: $filter) {

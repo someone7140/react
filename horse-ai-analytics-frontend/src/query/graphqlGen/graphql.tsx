@@ -25,8 +25,9 @@ export type AccountUserResponse = {
   userSettingId: FieldWrapper<Scalars['String']['output']>;
 };
 
-export type AddRaceInfoInputObject = {
+export type EditRaceInfoInputObject = {
   analyticsUrl?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
   memoList: Array<RaceMemoInputObject>;
   prompt?: InputMaybe<Scalars['String']['input']>;
   raceDate: Scalars['String']['input'];
@@ -46,6 +47,8 @@ export type Mutation = {
   addAccountUserFromGoogle: FieldWrapper<AccountUserResponse>;
   addRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
   deleteRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
+  editAccountUser: FieldWrapper<AccountUserResponse>;
+  editRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
   loginGoogleAuthCode: FieldWrapper<AccountUserResponse>;
   validateGoogleAuthCode: FieldWrapper<ValidateGoogleAuthCodeResponse>;
 };
@@ -59,12 +62,23 @@ export type MutationAddAccountUserFromGoogleArgs = {
 
 
 export type MutationAddRaceInfoArgs = {
-  input: AddRaceInfoInputObject;
+  input: RaceInfoInputObject;
 };
 
 
 export type MutationDeleteRaceInfoArgs = {
   raceInfoId: Scalars['String']['input'];
+};
+
+
+export type MutationEditAccountUserArgs = {
+  name: Scalars['String']['input'];
+  userSettingId: Scalars['String']['input'];
+};
+
+
+export type MutationEditRaceInfoArgs = {
+  input: EditRaceInfoInputObject;
 };
 
 
@@ -136,6 +150,14 @@ export type RaceInfoForList = {
   raceName: FieldWrapper<Scalars['String']['output']>;
 };
 
+export type RaceInfoInputObject = {
+  analyticsUrl?: InputMaybe<Scalars['String']['input']>;
+  memoList: Array<RaceMemoInputObject>;
+  prompt?: InputMaybe<Scalars['String']['input']>;
+  raceDate: Scalars['String']['input'];
+  raceName: Scalars['String']['input'];
+};
+
 export type RaceInfoListFilterInputObject = {
   endRaceDate?: InputMaybe<Scalars['String']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
@@ -151,6 +173,7 @@ export type RaceMemo = {
 
 export type RaceMemoInputObject = {
   contents?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -187,6 +210,14 @@ export type GetUserFromAuthHeaderQueryVariables = Exact<{ [key: string]: never; 
 
 export type GetUserFromAuthHeaderQuery = { __typename?: 'Query', getUserFromAuthHeader: { __typename?: 'AccountUserResponse', authToken?: string | null, userSettingId: string, name: string } };
 
+export type EditAccountUserMutationVariables = Exact<{
+  userSettingId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type EditAccountUserMutation = { __typename?: 'Mutation', editAccountUser: { __typename?: 'AccountUserResponse', authToken?: string | null, userSettingId: string, name: string } };
+
 export type GetRaceInfoFromUrlQueryVariables = Exact<{
   url: Scalars['String']['input'];
 }>;
@@ -204,6 +235,18 @@ export type AddRaceInfoMutationVariables = Exact<{
 
 
 export type AddRaceInfoMutation = { __typename?: 'Mutation', addRaceInfo: boolean };
+
+export type EditRaceInfoMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  raceName: Scalars['String']['input'];
+  analyticsUrl?: InputMaybe<Scalars['String']['input']>;
+  raceDate: Scalars['String']['input'];
+  prompt?: InputMaybe<Scalars['String']['input']>;
+  memoList: Array<RaceMemoInputObject> | RaceMemoInputObject;
+}>;
+
+
+export type EditRaceInfoMutation = { __typename?: 'Mutation', editRaceInfo: boolean };
 
 export type GetMyRaceInfoListQueryVariables = Exact<{
   filter?: InputMaybe<RaceInfoListFilterInputObject>;
@@ -377,6 +420,42 @@ export type GetUserFromAuthHeaderQueryHookResult = ReturnType<typeof useGetUserF
 export type GetUserFromAuthHeaderLazyQueryHookResult = ReturnType<typeof useGetUserFromAuthHeaderLazyQuery>;
 export type GetUserFromAuthHeaderSuspenseQueryHookResult = ReturnType<typeof useGetUserFromAuthHeaderSuspenseQuery>;
 export type GetUserFromAuthHeaderQueryResult = Apollo.QueryResult<GetUserFromAuthHeaderQuery, GetUserFromAuthHeaderQueryVariables>;
+export const EditAccountUserDocument = gql`
+    mutation EditAccountUser($userSettingId: String!, $name: String!) {
+  editAccountUser(userSettingId: $userSettingId, name: $name) {
+    authToken
+    userSettingId
+    name
+  }
+}
+    `;
+export type EditAccountUserMutationFn = Apollo.MutationFunction<EditAccountUserMutation, EditAccountUserMutationVariables>;
+
+/**
+ * __useEditAccountUserMutation__
+ *
+ * To run a mutation, you first call `useEditAccountUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditAccountUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editAccountUserMutation, { data, loading, error }] = useEditAccountUserMutation({
+ *   variables: {
+ *      userSettingId: // value for 'userSettingId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useEditAccountUserMutation(baseOptions?: Apollo.MutationHookOptions<EditAccountUserMutation, EditAccountUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditAccountUserMutation, EditAccountUserMutationVariables>(EditAccountUserDocument, options);
+      }
+export type EditAccountUserMutationHookResult = ReturnType<typeof useEditAccountUserMutation>;
+export type EditAccountUserMutationResult = Apollo.MutationResult<EditAccountUserMutation>;
+export type EditAccountUserMutationOptions = Apollo.BaseMutationOptions<EditAccountUserMutation, EditAccountUserMutationVariables>;
 export const GetRaceInfoFromUrlDocument = gql`
     query GetRaceInfoFromUrl($url: String!) {
   getRaceInfoFromUrl(url: $url) {
@@ -463,6 +542,44 @@ export function useAddRaceInfoMutation(baseOptions?: Apollo.MutationHookOptions<
 export type AddRaceInfoMutationHookResult = ReturnType<typeof useAddRaceInfoMutation>;
 export type AddRaceInfoMutationResult = Apollo.MutationResult<AddRaceInfoMutation>;
 export type AddRaceInfoMutationOptions = Apollo.BaseMutationOptions<AddRaceInfoMutation, AddRaceInfoMutationVariables>;
+export const EditRaceInfoDocument = gql`
+    mutation EditRaceInfo($id: String!, $raceName: String!, $analyticsUrl: String, $raceDate: String!, $prompt: String, $memoList: [RaceMemoInputObject!]!) {
+  editRaceInfo(
+    input: {id: $id, raceName: $raceName, analyticsUrl: $analyticsUrl, raceDate: $raceDate, prompt: $prompt, memoList: $memoList}
+  )
+}
+    `;
+export type EditRaceInfoMutationFn = Apollo.MutationFunction<EditRaceInfoMutation, EditRaceInfoMutationVariables>;
+
+/**
+ * __useEditRaceInfoMutation__
+ *
+ * To run a mutation, you first call `useEditRaceInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditRaceInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editRaceInfoMutation, { data, loading, error }] = useEditRaceInfoMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      raceName: // value for 'raceName'
+ *      analyticsUrl: // value for 'analyticsUrl'
+ *      raceDate: // value for 'raceDate'
+ *      prompt: // value for 'prompt'
+ *      memoList: // value for 'memoList'
+ *   },
+ * });
+ */
+export function useEditRaceInfoMutation(baseOptions?: Apollo.MutationHookOptions<EditRaceInfoMutation, EditRaceInfoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditRaceInfoMutation, EditRaceInfoMutationVariables>(EditRaceInfoDocument, options);
+      }
+export type EditRaceInfoMutationHookResult = ReturnType<typeof useEditRaceInfoMutation>;
+export type EditRaceInfoMutationResult = Apollo.MutationResult<EditRaceInfoMutation>;
+export type EditRaceInfoMutationOptions = Apollo.BaseMutationOptions<EditRaceInfoMutation, EditRaceInfoMutationVariables>;
 export const GetMyRaceInfoListDocument = gql`
     query GetMyRaceInfoList($filter: RaceInfoListFilterInputObject) {
   getMyRaceInfoList(filter: $filter) {

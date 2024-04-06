@@ -23,9 +23,7 @@ type Props = {
   raceInfoId: string;
 };
 
-export const RegisteredRaceInfoDetailComponent: FC<Props> = ({
-  raceInfoId,
-}) => {
+export const RaceInfoDetailComponent: FC<Props> = ({ raceInfoId }) => {
   const router = useRouter();
   const { data, loading, error } = useGetRaceInfoDetailQuery({
     variables: { raceInfoId },
@@ -157,7 +155,14 @@ export const RegisteredRaceInfoDetailComponent: FC<Props> = ({
             </div>
           )}
           <div className="flex flex-row justify-center items-center gap-8 mt-3">
-            <Button className={buttonStyle({ color: "lime" })}>編集</Button>
+            <Button
+              className={buttonStyle({ color: "lime" })}
+              onClick={() => {
+                router.push(`/race/editRaceInfo?id=${detail.id}`);
+              }}
+            >
+              編集
+            </Button>
             <DeleteRaceInfoDialogComponent
               raceId={detail.id}
               raceName={detail.raceName}

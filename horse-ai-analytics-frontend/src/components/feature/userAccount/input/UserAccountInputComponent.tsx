@@ -20,10 +20,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AccountUserResponse } from "@/query/graphqlGen/graphql";
 
 type Props = {
   submitFunc: (form: z.infer<typeof userAccountInputFormSchema>) => void;
   disabledFlag?: boolean;
+  userAccount?: AccountUserResponse;
 };
 
 export const userAccountInputFormSchema = z.object({
@@ -48,11 +50,18 @@ export const userAccountInputFormSchema = z.object({
 export const UserAccountInputComponent: FC<Props> = ({
   submitFunc,
   disabledFlag,
+  userAccount,
 }) => {
   const form = useForm<z.infer<typeof userAccountInputFormSchema>>({
     resolver: zodResolver(userAccountInputFormSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
+    defaultValues: userAccount
+      ? {
+          userName: userAccount.name,
+          userSettingId: userAccount.userSettingId,
+        }
+      : undefined,
   });
 
   return (
@@ -91,7 +100,7 @@ export const UserAccountInputComponent: FC<Props> = ({
           type="submit"
           disabled={disabledFlag}
         >
-          <p>ユーザ登録</p>
+          <p>ユーザ{userAccount ? "編集" : "登録"}</p>
         </Button>
       </form>
     </Form>

@@ -94,7 +94,7 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
                       <div
                         className={menuHeaderNavigationMenuRecordStyle()}
                         onClick={() => {
-                          router.push("/");
+                          router.push("/userAccount/edit");
                         }}
                       >
                         ユーザ情報編集
@@ -151,7 +151,7 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
         </div>
       </header>
       <div className="w-[100%] flex justify-center">
-        <div className="w-[100%] max-w-xl flex justify-start ml-2 mr-2">
+        <div className="w-[100%] max-w-xl flex justify-start ml-2 mr-2 mb-3">
           {children}
         </div>
       </div>
