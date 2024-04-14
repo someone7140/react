@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { useAsyncEffect } from "ahooks";
 
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
@@ -9,7 +10,6 @@ import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { useAuthTokenLocalStorage } from "@/hooks/useAuthTokenLocalStorage";
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
-  const effectRan = useRef(false);
   const authStore = useAuthStore();
   const { authToken } = useAuthTokenLocalStorage();
   const [getUserFromAuthHeader, { loading }] =
@@ -17,8 +17,8 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
   const { setAuthInfo, removeAuthInfo } = useAuthManagement();
   const [isAuthProcessEnd, setIsAuthProcessEnd] = useState<boolean>(false);
 
-  useEffect(() => {
-    const authExec = async () => {
+  useAsyncEffect(async () => {
+    if (!isAuthProcessEnd) {
       if (authToken) {
         if (!authStore.userAccount) {
           const response = await getUserFromAuthHeader();
@@ -32,21 +32,8 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         removeAuthInfo();
       }
       setIsAuthProcessEnd(true);
-    };
-    if (!authStore.userAccount && !effectRan.current) {
-      authExec();
     }
-
-    return () => {
-      effectRan.current = true;
-    };
-  }, [
-    authToken,
-    authStore,
-    getUserFromAuthHeader,
-    removeAuthInfo,
-    setAuthInfo,
-  ]);
+  }, [authToken]);
 
   return (
     <>
