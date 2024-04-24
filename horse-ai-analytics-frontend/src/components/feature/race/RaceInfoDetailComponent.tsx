@@ -144,9 +144,16 @@ export const RaceInfoDetailComponent: FC<Props> = ({ raceInfoId }) => {
                         {memo.title}
                       </CardTitle>
                       <CardContent>
-                        <div className="whitespace-pre-wrap">
+                        <Label className="mb-2">＜内容＞</Label>
+                        <div className="whitespace-pre-wrap ml-2 mb-2">
                           {memo.contents}
                         </div>
+                        {memo.evaluation != null && (
+                          <>
+                            <Label className="mb-2">＜評価値＞</Label>
+                            <div className="ml-2">{memo.evaluation}</div>
+                          </>
+                        )}
                       </CardContent>
                     </Card>
                   );

@@ -60,6 +60,20 @@ export const analyticsRaceInputFormSchema = z.object({
       memoId: z.string().optional(),
       title: z.string().optional(),
       contents: z.string().optional(),
+      evaluation: z.preprocess(
+        (v) => {
+          const valueStr = String(v);
+          if (v != null && valueStr) {
+            return parseInt(valueStr);
+          }
+          return undefined;
+        },
+        z
+          .number({
+            invalid_type_error: "評価値は数値を入力してください",
+          })
+          .optional()
+      ),
     })
   ),
 });
@@ -93,6 +107,7 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
               memoId: memo.id,
               title: memo.title?.toString() ?? undefined,
               contents: memo.contents?.toString() ?? undefined,
+              evaluation: memo.evaluation ?? undefined,
             };
           }),
         }
@@ -312,6 +327,22 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
                           placeholder="メモの内容を入力"
                         />
                       </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`memoList.${index}.evaluation`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className={inputTextStyle()}
+                          placeholder="内容評価を数値で入力"
+                        />
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

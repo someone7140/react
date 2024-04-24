@@ -81,6 +81,7 @@ export const getRaceInfoDetailQueryDocument = gql`
         id
         title
         contents
+        evaluation
       }
       odds {
         oddsUrl

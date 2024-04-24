@@ -67,6 +67,7 @@ export const EditRaceInfoComponent: FC<Props> = ({ raceInfoId }) => {
                 id: memo.memoId,
                 title: memo.title,
                 contents: memo.contents,
+                evaluation: memo.evaluation,
               };
             }),
         },
