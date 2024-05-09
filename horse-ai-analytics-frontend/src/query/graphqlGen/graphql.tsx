@@ -106,6 +106,7 @@ export type OddsInfoResponse = {
 export type Query = {
   __typename?: 'Query';
   getMyRaceInfoList: Array<FieldWrapper<RaceInfoForList>>;
+  getRaceEvaluation: Array<FieldWrapper<RaceEvaluationResult>>;
   getRaceInfoDetail?: Maybe<FieldWrapper<RaceInfoDetail>>;
   getRaceInfoFromUrl: FieldWrapper<GetRaceInfoResponse>;
   getUserFromAuthHeader: FieldWrapper<AccountUserResponse>;
@@ -117,6 +118,12 @@ export type QueryGetMyRaceInfoListArgs = {
 };
 
 
+export type QueryGetRaceEvaluationArgs = {
+  endRaceDateFilter?: InputMaybe<Scalars['String']['input']>;
+  startRaceDateFilter?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryGetRaceInfoDetailArgs = {
   raceInfoId: Scalars['String']['input'];
 };
@@ -124,6 +131,14 @@ export type QueryGetRaceInfoDetailArgs = {
 
 export type QueryGetRaceInfoFromUrlArgs = {
   url: Scalars['String']['input'];
+};
+
+export type RaceEvaluationResult = {
+  __typename?: 'RaceEvaluationResult';
+  average?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  count: FieldWrapper<Scalars['Int']['output']>;
+  median?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  title: FieldWrapper<Scalars['String']['output']>;
 };
 
 export type RaceInfoDetail = {
@@ -264,6 +279,14 @@ export type DeleteRaceInfoMutationVariables = Exact<{
 
 
 export type DeleteRaceInfoMutation = { __typename?: 'Mutation', deleteRaceInfo: boolean };
+
+export type GetRaceEvaluationQueryVariables = Exact<{
+  startRaceDateFilter?: InputMaybe<Scalars['String']['input']>;
+  endRaceDateFilter?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetRaceEvaluationQuery = { __typename?: 'Query', getRaceEvaluation: Array<{ __typename?: 'RaceEvaluationResult', title: string, average?: string | null, median?: string | null, count: number }> };
 
 
 export const LoginGoogleAuthCodeDocument = gql`
@@ -706,3 +729,50 @@ export function useDeleteRaceInfoMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteRaceInfoMutationHookResult = ReturnType<typeof useDeleteRaceInfoMutation>;
 export type DeleteRaceInfoMutationResult = Apollo.MutationResult<DeleteRaceInfoMutation>;
 export type DeleteRaceInfoMutationOptions = Apollo.BaseMutationOptions<DeleteRaceInfoMutation, DeleteRaceInfoMutationVariables>;
+export const GetRaceEvaluationDocument = gql`
+    query GetRaceEvaluation($startRaceDateFilter: String, $endRaceDateFilter: String) {
+  getRaceEvaluation(
+    startRaceDateFilter: $startRaceDateFilter
+    endRaceDateFilter: $endRaceDateFilter
+  ) {
+    title
+    average
+    median
+    count
+  }
+}
+    `;
+
+/**
+ * __useGetRaceEvaluationQuery__
+ *
+ * To run a query within a React component, call `useGetRaceEvaluationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRaceEvaluationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRaceEvaluationQuery({
+ *   variables: {
+ *      startRaceDateFilter: // value for 'startRaceDateFilter'
+ *      endRaceDateFilter: // value for 'endRaceDateFilter'
+ *   },
+ * });
+ */
+export function useGetRaceEvaluationQuery(baseOptions?: Apollo.QueryHookOptions<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>(GetRaceEvaluationDocument, options);
+      }
+export function useGetRaceEvaluationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>(GetRaceEvaluationDocument, options);
+        }
+export function useGetRaceEvaluationSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>(GetRaceEvaluationDocument, options);
+        }
+export type GetRaceEvaluationQueryHookResult = ReturnType<typeof useGetRaceEvaluationQuery>;
+export type GetRaceEvaluationLazyQueryHookResult = ReturnType<typeof useGetRaceEvaluationLazyQuery>;
+export type GetRaceEvaluationSuspenseQueryHookResult = ReturnType<typeof useGetRaceEvaluationSuspenseQuery>;
+export type GetRaceEvaluationQueryResult = Apollo.QueryResult<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>;

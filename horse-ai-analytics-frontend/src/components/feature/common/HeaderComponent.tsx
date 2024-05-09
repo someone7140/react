@@ -87,6 +87,16 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
                         レース分析用のプロンプト・回答メモ登録
                       </div>
                     </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/race/aggregateEvaluate");
+                        }}
+                      >
+                        回答評価値の集計結果
+                      </div>
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>

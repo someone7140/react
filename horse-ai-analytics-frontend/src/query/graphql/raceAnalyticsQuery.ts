@@ -99,3 +99,20 @@ export const deleteRaceInfoMutationDocument = gql`
     deleteRaceInfo(raceInfoId: $raceInfoId)
   }
 `;
+
+export const GetRaceEvaluationQueryDocument = gql`
+  query GetRaceEvaluation(
+    $startRaceDateFilter: String
+    $endRaceDateFilter: String
+  ) {
+    getRaceEvaluation(
+      startRaceDateFilter: $startRaceDateFilter
+      endRaceDateFilter: $endRaceDateFilter
+    ) {
+      title
+      average
+      median
+      count
+    }
+  }
+`;

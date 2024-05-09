@@ -17,63 +17,53 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { RaceInfoListFilterInputObject } from "@/query/graphqlGen/graphql";
+import { Form, FormField } from "@/components/ui/form";
+import { GetRaceEvaluationQueryVariables } from "@/query/graphqlGen/graphql";
 import { buttonStyle } from "@/styles/CommonStyle";
-import { inputTextStyle } from "@/styles/FormStyle";
 
 type Props = {
-  filter?: RaceInfoListFilterInputObject;
+  filter?: GetRaceEvaluationQueryVariables;
   setFilter: React.Dispatch<
-    React.SetStateAction<RaceInfoListFilterInputObject | undefined>
+    React.SetStateAction<GetRaceEvaluationQueryVariables | undefined>
   >;
 };
 
-export const searchRaceInfoFormSchema = z.object({
+export const searchRaceEvaluateFormSchema = z.object({
   startRaceDate: z.date().optional(),
   endRaceDate: z.date().optional(),
-  keyword: z.string().optional(),
 });
 
-export const SearchRaceInfoDialogComponent: FC<Props> = ({
+export const SearchRaceEvaluateDialogComponent: FC<Props> = ({
   filter,
   setFilter,
 }) => {
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof searchRaceInfoFormSchema>>({
-    resolver: zodResolver(searchRaceInfoFormSchema),
+  const form = useForm<z.infer<typeof searchRaceEvaluateFormSchema>>({
+    resolver: zodResolver(searchRaceEvaluateFormSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     defaultValues: {
-      startRaceDate: filter?.startRaceDate
-        ? new Date(filter?.startRaceDate)
+      startRaceDate: filter?.startRaceDateFilter
+        ? new Date(filter?.startRaceDateFilter)
         : undefined,
-      endRaceDate: filter?.endRaceDate
-        ? new Date(filter?.endRaceDate)
+      endRaceDate: filter?.endRaceDateFilter
+        ? new Date(filter?.endRaceDateFilter)
         : undefined,
-      keyword: filter?.keyword ?? undefined,
     },
   });
 
-  const submitFunc = async (data: z.infer<typeof searchRaceInfoFormSchema>) => {
-    const startRaceDate = data.startRaceDate
+  const submitFunc = async (
+    data: z.infer<typeof searchRaceEvaluateFormSchema>
+  ) => {
+    const startRaceDateFilter = data.startRaceDate
       ? format(data.startRaceDate, "yyyy/MM/dd")
       : undefined;
-    const endRaceDate = data.endRaceDate
+    const endRaceDateFilter = data.endRaceDate
       ? format(data.endRaceDate, "yyyy/MM/dd")
       : undefined;
-    const keyword = data.keyword || undefined;
 
-    if (startRaceDate || endRaceDate || keyword) {
-      setFilter({ startRaceDate, endRaceDate, keyword });
+    if (startRaceDateFilter || endRaceDateFilter) {
+      setFilter({ startRaceDateFilter, endRaceDateFilter });
     } else {
       setFilter(undefined);
     }
@@ -103,11 +93,12 @@ export const SearchRaceInfoDialogComponent: FC<Props> = ({
         <>
           <div className="mt-2">検索条件</div>
           <div className="flex flex-col">
-            {filter.startRaceDate && (
-              <div>・開始日付：{filter.startRaceDate}</div>
+            {filter.startRaceDateFilter && (
+              <div>・開始日付：{filter.startRaceDateFilter}</div>
             )}
-            {filter.endRaceDate && <div>・終了日付：{filter.endRaceDate}</div>}
-            {filter.keyword && <div>・キーワード：{filter.keyword}</div>}
+            {filter.endRaceDateFilter && (
+              <div>・終了日付：{filter.endRaceDateFilter}</div>
+            )}
           </div>
         </>
       )}
@@ -138,23 +129,6 @@ export const SearchRaceInfoDialogComponent: FC<Props> = ({
                     value={field.value}
                     placeholder="検索対象にしたい終了日付を選択"
                   />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="keyword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>キーワード</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className={inputTextStyle()}
-                        placeholder="検索対象にしたいワード"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
                 )}
               />
             </div>

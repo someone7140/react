@@ -2,16 +2,16 @@
 
 import React, { FC, useState } from "react";
 
-import { format, parse } from "date-fns";
-import { CalendarIcon, Copy } from "lucide-react";
+import { parse } from "date-fns";
+import { Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { CalendarInputItemComponent } from "@/components/feature/common/CalendarInputItemComponent";
 import { AnalyticsRaceOddsTableComponent } from "@/components/feature/race/ref/AnalyticsRaceOddsTableComponent";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -21,15 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { useRaceInfoCommonUtil } from "@/hooks/useRaceInfoCommonUtil";
-import { cn } from "@/lib/utils";
 import {
   OddsInfoResponse,
   RaceInfoDetail,
@@ -217,40 +211,13 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
             control={form.control}
             name="raceDate"
             render={({ field }) => (
-              <FormItem>
-                <div>
-                  <FormLabel className={requiredMark()}>レース日付</FormLabel>
-                </div>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "yyyy/MM/dd")
-                        ) : (
-                          <span>レース日付を選択</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
+              <CalendarInputItemComponent
+                title="レース日付"
+                onChange={field.onChange}
+                value={field.value}
+                placeholder="レース日付を選択"
+                required={true}
+              />
             )}
           />
           {oddsInfo && <AnalyticsRaceOddsTableComponent oddsInfo={oddsInfo} />}
@@ -289,6 +256,7 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
                   memoId: undefined,
                   title: "",
                   contents: "",
+                  evaluation: undefined,
                 });
               }}
               type="button"
