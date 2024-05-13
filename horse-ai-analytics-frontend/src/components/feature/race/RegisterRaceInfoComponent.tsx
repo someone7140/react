@@ -52,9 +52,12 @@ export const RegisterRaceInfoComponent: FC = () => {
   };
 
   return (
-    <AnalyticsRaceInputComponent
-      submitFunc={submitFunc}
-      registerDisabled={loadingAddRaceInfoMutation}
-    />
+    <>
+      <div className="mb-2">レース情報の登録</div>
+      <AnalyticsRaceInputComponent
+        submitFunc={submitFunc}
+        registerDisabled={loadingAddRaceInfoMutation}
+      />
+    </>
   );
 };

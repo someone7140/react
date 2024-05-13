@@ -45,9 +45,12 @@ export type GetRaceInfoResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   addAccountUserFromGoogle: FieldWrapper<AccountUserResponse>;
+  addMemoCategory: FieldWrapper<Scalars['Boolean']['output']>;
   addRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
+  deleteMemoCategory: FieldWrapper<Scalars['Boolean']['output']>;
   deleteRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
   editAccountUser: FieldWrapper<AccountUserResponse>;
+  editMemoCategory: FieldWrapper<Scalars['Boolean']['output']>;
   editRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
   loginGoogleAuthCode: FieldWrapper<AccountUserResponse>;
   validateGoogleAuthCode: FieldWrapper<ValidateGoogleAuthCodeResponse>;
@@ -61,8 +64,19 @@ export type MutationAddAccountUserFromGoogleArgs = {
 };
 
 
+export type MutationAddMemoCategoryArgs = {
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+};
+
+
 export type MutationAddRaceInfoArgs = {
   input: RaceInfoInputObject;
+};
+
+
+export type MutationDeleteMemoCategoryArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -74,6 +88,13 @@ export type MutationDeleteRaceInfoArgs = {
 export type MutationEditAccountUserArgs = {
   name: Scalars['String']['input'];
   userSettingId: Scalars['String']['input'];
+};
+
+
+export type MutationEditMemoCategoryArgs = {
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -109,6 +130,7 @@ export type Query = {
   getRaceEvaluation: Array<FieldWrapper<RaceEvaluationResult>>;
   getRaceInfoDetail?: Maybe<FieldWrapper<RaceInfoDetail>>;
   getRaceInfoFromUrl: FieldWrapper<GetRaceInfoResponse>;
+  getRaceMemoCategoryList: Array<FieldWrapper<RaceMemoCategory>>;
   getUserFromAuthHeader: FieldWrapper<AccountUserResponse>;
 };
 
@@ -131,6 +153,11 @@ export type QueryGetRaceInfoDetailArgs = {
 
 export type QueryGetRaceInfoFromUrlArgs = {
   url: Scalars['String']['input'];
+};
+
+
+export type QueryGetRaceMemoCategoryListArgs = {
+  idFilter?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type RaceEvaluationResult = {
@@ -175,13 +202,22 @@ export type RaceInfoListFilterInputObject = {
 
 export type RaceMemo = {
   __typename?: 'RaceMemo';
+  categoryId?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   contents?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   evaluation?: Maybe<FieldWrapper<Scalars['Int']['output']>>;
   id: FieldWrapper<Scalars['String']['output']>;
   title?: Maybe<FieldWrapper<Scalars['String']['output']>>;
 };
 
+export type RaceMemoCategory = {
+  __typename?: 'RaceMemoCategory';
+  displayOrder?: Maybe<FieldWrapper<Scalars['Int']['output']>>;
+  id: FieldWrapper<Scalars['String']['output']>;
+  name: FieldWrapper<Scalars['String']['output']>;
+};
+
 export type RaceMemoInputObject = {
+  categoryId?: InputMaybe<Scalars['String']['input']>;
   contents?: InputMaybe<Scalars['String']['input']>;
   evaluation?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
@@ -287,6 +323,37 @@ export type GetRaceEvaluationQueryVariables = Exact<{
 
 
 export type GetRaceEvaluationQuery = { __typename?: 'Query', getRaceEvaluation: Array<{ __typename?: 'RaceEvaluationResult', title: string, average?: string | null, median?: string | null, count: number }> };
+
+export type AddMemoCategoryMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type AddMemoCategoryMutation = { __typename?: 'Mutation', addMemoCategory: boolean };
+
+export type EditMemoCategoryMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type EditMemoCategoryMutation = { __typename?: 'Mutation', editMemoCategory: boolean };
+
+export type GetRaceMemoCategoryListQueryVariables = Exact<{
+  idFilter?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetRaceMemoCategoryListQuery = { __typename?: 'Query', getRaceMemoCategoryList: Array<{ __typename?: 'RaceMemoCategory', id: string, name: string, displayOrder?: number | null }> };
+
+export type DeleteMemoCategoryMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteMemoCategoryMutation = { __typename?: 'Mutation', deleteMemoCategory: boolean };
 
 
 export const LoginGoogleAuthCodeDocument = gql`
@@ -776,3 +843,141 @@ export type GetRaceEvaluationQueryHookResult = ReturnType<typeof useGetRaceEvalu
 export type GetRaceEvaluationLazyQueryHookResult = ReturnType<typeof useGetRaceEvaluationLazyQuery>;
 export type GetRaceEvaluationSuspenseQueryHookResult = ReturnType<typeof useGetRaceEvaluationSuspenseQuery>;
 export type GetRaceEvaluationQueryResult = Apollo.QueryResult<GetRaceEvaluationQuery, GetRaceEvaluationQueryVariables>;
+export const AddMemoCategoryDocument = gql`
+    mutation AddMemoCategory($name: String!, $displayOrder: Int) {
+  addMemoCategory(name: $name, displayOrder: $displayOrder)
+}
+    `;
+export type AddMemoCategoryMutationFn = Apollo.MutationFunction<AddMemoCategoryMutation, AddMemoCategoryMutationVariables>;
+
+/**
+ * __useAddMemoCategoryMutation__
+ *
+ * To run a mutation, you first call `useAddMemoCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddMemoCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addMemoCategoryMutation, { data, loading, error }] = useAddMemoCategoryMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      displayOrder: // value for 'displayOrder'
+ *   },
+ * });
+ */
+export function useAddMemoCategoryMutation(baseOptions?: Apollo.MutationHookOptions<AddMemoCategoryMutation, AddMemoCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddMemoCategoryMutation, AddMemoCategoryMutationVariables>(AddMemoCategoryDocument, options);
+      }
+export type AddMemoCategoryMutationHookResult = ReturnType<typeof useAddMemoCategoryMutation>;
+export type AddMemoCategoryMutationResult = Apollo.MutationResult<AddMemoCategoryMutation>;
+export type AddMemoCategoryMutationOptions = Apollo.BaseMutationOptions<AddMemoCategoryMutation, AddMemoCategoryMutationVariables>;
+export const EditMemoCategoryDocument = gql`
+    mutation EditMemoCategory($id: String!, $name: String!, $displayOrder: Int) {
+  editMemoCategory(id: $id, name: $name, displayOrder: $displayOrder)
+}
+    `;
+export type EditMemoCategoryMutationFn = Apollo.MutationFunction<EditMemoCategoryMutation, EditMemoCategoryMutationVariables>;
+
+/**
+ * __useEditMemoCategoryMutation__
+ *
+ * To run a mutation, you first call `useEditMemoCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditMemoCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editMemoCategoryMutation, { data, loading, error }] = useEditMemoCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      displayOrder: // value for 'displayOrder'
+ *   },
+ * });
+ */
+export function useEditMemoCategoryMutation(baseOptions?: Apollo.MutationHookOptions<EditMemoCategoryMutation, EditMemoCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditMemoCategoryMutation, EditMemoCategoryMutationVariables>(EditMemoCategoryDocument, options);
+      }
+export type EditMemoCategoryMutationHookResult = ReturnType<typeof useEditMemoCategoryMutation>;
+export type EditMemoCategoryMutationResult = Apollo.MutationResult<EditMemoCategoryMutation>;
+export type EditMemoCategoryMutationOptions = Apollo.BaseMutationOptions<EditMemoCategoryMutation, EditMemoCategoryMutationVariables>;
+export const GetRaceMemoCategoryListDocument = gql`
+    query GetRaceMemoCategoryList($idFilter: String) {
+  getRaceMemoCategoryList(idFilter: $idFilter) {
+    id
+    name
+    displayOrder
+  }
+}
+    `;
+
+/**
+ * __useGetRaceMemoCategoryListQuery__
+ *
+ * To run a query within a React component, call `useGetRaceMemoCategoryListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRaceMemoCategoryListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRaceMemoCategoryListQuery({
+ *   variables: {
+ *      idFilter: // value for 'idFilter'
+ *   },
+ * });
+ */
+export function useGetRaceMemoCategoryListQuery(baseOptions?: Apollo.QueryHookOptions<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>(GetRaceMemoCategoryListDocument, options);
+      }
+export function useGetRaceMemoCategoryListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>(GetRaceMemoCategoryListDocument, options);
+        }
+export function useGetRaceMemoCategoryListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>(GetRaceMemoCategoryListDocument, options);
+        }
+export type GetRaceMemoCategoryListQueryHookResult = ReturnType<typeof useGetRaceMemoCategoryListQuery>;
+export type GetRaceMemoCategoryListLazyQueryHookResult = ReturnType<typeof useGetRaceMemoCategoryListLazyQuery>;
+export type GetRaceMemoCategoryListSuspenseQueryHookResult = ReturnType<typeof useGetRaceMemoCategoryListSuspenseQuery>;
+export type GetRaceMemoCategoryListQueryResult = Apollo.QueryResult<GetRaceMemoCategoryListQuery, GetRaceMemoCategoryListQueryVariables>;
+export const DeleteMemoCategoryDocument = gql`
+    mutation DeleteMemoCategory($id: String!) {
+  deleteMemoCategory(id: $id)
+}
+    `;
+export type DeleteMemoCategoryMutationFn = Apollo.MutationFunction<DeleteMemoCategoryMutation, DeleteMemoCategoryMutationVariables>;
+
+/**
+ * __useDeleteMemoCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteMemoCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMemoCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMemoCategoryMutation, { data, loading, error }] = useDeleteMemoCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMemoCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMemoCategoryMutation, DeleteMemoCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMemoCategoryMutation, DeleteMemoCategoryMutationVariables>(DeleteMemoCategoryDocument, options);
+      }
+export type DeleteMemoCategoryMutationHookResult = ReturnType<typeof useDeleteMemoCategoryMutation>;
+export type DeleteMemoCategoryMutationResult = Apollo.MutationResult<DeleteMemoCategoryMutation>;
+export type DeleteMemoCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteMemoCategoryMutation, DeleteMemoCategoryMutationVariables>;

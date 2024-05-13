@@ -99,6 +99,27 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <div
+                      className={menuHeaderNavigationMenuRecordStyle()}
+                      onClick={() => {
+                        router.push("/race/memoCategory/addCategory");
+                      }}
+                    >
+                      回答のカテゴリー登録
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <div
+                      className={menuHeaderNavigationMenuRecordStyle()}
+                      onClick={() => {
+                        router.push("/race/memoCategory/categoryList");
+                      }}
+                    >
+                      回答カテゴリー一覧
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
                       <div

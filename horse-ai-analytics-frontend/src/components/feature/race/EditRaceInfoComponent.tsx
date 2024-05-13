@@ -96,11 +96,14 @@ export const EditRaceInfoComponent: FC<Props> = ({ raceInfoId }) => {
   return (
     <>
       {detail?.getRaceInfoDetail && (
-        <AnalyticsRaceInputComponent
-          submitFunc={submitFunc}
-          registerDisabled={loadingAddRaceInfoMutation}
-          raceInfo={detail.getRaceInfoDetail}
-        />
+        <>
+          <div className="mb-2">レース情報の編集</div>
+          <AnalyticsRaceInputComponent
+            submitFunc={submitFunc}
+            registerDisabled={loadingAddRaceInfoMutation}
+            raceInfo={detail.getRaceInfoDetail}
+          />
+        </>
       )}
     </>
   );
