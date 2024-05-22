@@ -307,7 +307,7 @@ export type GetRaceInfoDetailQueryVariables = Exact<{
 }>;
 
 
-export type GetRaceInfoDetailQuery = { __typename?: 'Query', getRaceInfoDetail?: { __typename?: 'RaceInfoDetail', id: string, raceName: string, analyticsUrl?: string | null, raceDate: string, prompt?: string | null, memoList: Array<{ __typename?: 'RaceMemo', id: string, title?: string | null, contents?: string | null, evaluation?: number | null }>, odds?: { __typename?: 'OddsInfoResponse', oddsUrl: string, oddsList: Array<{ __typename?: 'OddsInfo', horseName: string, odds: string }> } | null } | null };
+export type GetRaceInfoDetailQuery = { __typename?: 'Query', getRaceInfoDetail?: { __typename?: 'RaceInfoDetail', id: string, raceName: string, analyticsUrl?: string | null, raceDate: string, prompt?: string | null, memoList: Array<{ __typename?: 'RaceMemo', id: string, title?: string | null, contents?: string | null, evaluation?: number | null, categoryId?: string | null }>, odds?: { __typename?: 'OddsInfoResponse', oddsUrl: string, oddsList: Array<{ __typename?: 'OddsInfo', horseName: string, odds: string }> } | null } | null, getRaceMemoCategoryList: Array<{ __typename?: 'RaceMemoCategory', id: string, name: string, displayOrder?: number | null }> };
 
 export type DeleteRaceInfoMutationVariables = Exact<{
   raceInfoId: Scalars['String']['input'];
@@ -721,6 +721,7 @@ export const GetRaceInfoDetailDocument = gql`
       title
       contents
       evaluation
+      categoryId
     }
     odds {
       oddsUrl
@@ -729,6 +730,11 @@ export const GetRaceInfoDetailDocument = gql`
         odds
       }
     }
+  }
+  getRaceMemoCategoryList {
+    id
+    name
+    displayOrder
   }
 }
     `;

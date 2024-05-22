@@ -69,6 +69,8 @@ export const RaceInfoDetailComponent: FC<Props> = ({ raceInfoId }) => {
   }
 
   const detail = data?.getRaceInfoDetail;
+  const categoryList = data?.getRaceMemoCategoryList;
+
   return (
     <>
       {detail && (
@@ -148,6 +150,18 @@ export const RaceInfoDetailComponent: FC<Props> = ({ raceInfoId }) => {
                         <div className="whitespace-pre-wrap ml-2 mb-2">
                           {memo.contents}
                         </div>
+                        {memo.categoryId != null && (
+                          <>
+                            <Label className="mb-2">＜カテゴリー＞</Label>
+                            <div className="ml-2 mb-2">
+                              {
+                                categoryList?.find(
+                                  (c) => c.id === memo.categoryId
+                                )?.name
+                              }
+                            </div>
+                          </>
+                        )}
                         {memo.evaluation != null && (
                           <>
                             <Label className="mb-2">＜評価値＞</Label>

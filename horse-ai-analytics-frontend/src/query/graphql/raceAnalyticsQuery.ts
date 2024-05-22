@@ -82,6 +82,7 @@ export const getRaceInfoDetailQueryDocument = gql`
         title
         contents
         evaluation
+        categoryId
       }
       odds {
         oddsUrl
@@ -90,6 +91,11 @@ export const getRaceInfoDetailQueryDocument = gql`
           odds
         }
       }
+    }
+    getRaceMemoCategoryList {
+      id
+      name
+      displayOrder
     }
   }
 `;

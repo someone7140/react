@@ -32,7 +32,15 @@ export const RegisterRaceInfoComponent: FC = () => {
           day: "2-digit",
         }),
         prompt: data.prompt,
-        memoList: data.memoList.filter((memo) => memo.contents || memo.title),
+        memoList: data.memoList
+          .filter((memo) => memo.contents || memo.title)
+          .map((memo) => {
+            return {
+              ...memo,
+              categoryId:
+                memo.categoryId === "dummy" ? undefined : memo.categoryId,
+            };
+          }),
       },
     });
     if (result.data) {

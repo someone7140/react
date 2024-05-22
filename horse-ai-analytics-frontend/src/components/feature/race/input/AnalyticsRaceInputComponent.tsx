@@ -21,6 +21,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { useRaceInfoCommonUtil } from "@/hooks/useRaceInfoCommonUtil";
@@ -28,6 +35,7 @@ import {
   OddsInfoResponse,
   RaceInfoDetail,
   useGetRaceInfoFromUrlLazyQuery,
+  useGetRaceMemoCategoryListQuery,
 } from "@/query/graphqlGen/graphql";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
 import {
@@ -54,10 +62,11 @@ export const analyticsRaceInputFormSchema = z.object({
       memoId: z.string().optional(),
       title: z.string().optional(),
       contents: z.string().optional(),
+      categoryId: z.string().optional(),
       evaluation: z.preprocess(
         (v) => {
           const valueStr = String(v);
-          if (v != null && valueStr) {
+          if (v != null && !Number.isNaN(v) && valueStr) {
             return parseInt(valueStr);
           }
           return undefined;
@@ -102,6 +111,7 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
               title: memo.title?.toString() ?? undefined,
               contents: memo.contents?.toString() ?? undefined,
               evaluation: memo.evaluation ?? undefined,
+              categoryId: memo.categoryId?.toString() ?? undefined,
             };
           }),
         }
@@ -121,8 +131,12 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
 
   const [getRaceInfoFromUrlQuery, { loading: getRaceInfoFromUrlLoading }] =
     useGetRaceInfoFromUrlLazyQuery();
+  const { data: categoryListData } = useGetRaceMemoCategoryListQuery({
+    fetchPolicy: "network-only",
+  });
+
   const [oddsInfo, setOddsInfo] = useState<OddsInfoResponse | undefined>(
-    undefined
+    raceInfo?.odds ?? undefined
   );
   const { copyToClipboard } = useRaceInfoCommonUtil();
 
@@ -256,7 +270,8 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
                   memoId: undefined,
                   title: "",
                   contents: "",
-                  evaluation: undefined,
+                  evaluation: NaN,
+                  categoryId: undefined,
                 });
               }}
               type="button"
@@ -298,6 +313,43 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
                     </FormItem>
                   )}
                 />
+                {categoryListData?.getRaceMemoCategoryList &&
+                  categoryListData.getRaceMemoCategoryList.length > 0 && (
+                    <FormField
+                      control={form.control}
+                      name={`memoList.${index}.categoryId`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="カテゴリーを選択" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="dummy">-</SelectItem>
+                              {categoryListData?.getRaceMemoCategoryList.map(
+                                (category) => {
+                                  return (
+                                    <SelectItem
+                                      key={category.id}
+                                      value={category.id}
+                                    >
+                                      {category.name}
+                                    </SelectItem>
+                                  );
+                                }
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 <FormField
                   control={form.control}
                   name={`memoList.${index}.evaluation`}
@@ -308,6 +360,7 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
                           {...field}
                           className={inputTextStyle()}
                           placeholder="内容評価を数値で入力"
+                          value={Number.isNaN(field.value) ? "" : field.value}
                         />
                       </FormControl>
                       <FormMessage />
