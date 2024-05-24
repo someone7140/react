@@ -25,6 +25,14 @@ export type AccountUserResponse = {
   userSettingId: FieldWrapper<Scalars['String']['output']>;
 };
 
+export type CategoryEvaluation = {
+  __typename?: 'CategoryEvaluation';
+  average?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  categoryId: FieldWrapper<Scalars['String']['output']>;
+  count: FieldWrapper<Scalars['Int']['output']>;
+  median?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+};
+
 export type EditRaceInfoInputObject = {
   analyticsUrl?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
@@ -163,6 +171,7 @@ export type QueryGetRaceMemoCategoryListArgs = {
 export type RaceEvaluationResult = {
   __typename?: 'RaceEvaluationResult';
   average?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  categoryEvaluationList: Array<FieldWrapper<CategoryEvaluation>>;
   count: FieldWrapper<Scalars['Int']['output']>;
   median?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   title: FieldWrapper<Scalars['String']['output']>;
@@ -322,7 +331,7 @@ export type GetRaceEvaluationQueryVariables = Exact<{
 }>;
 
 
-export type GetRaceEvaluationQuery = { __typename?: 'Query', getRaceEvaluation: Array<{ __typename?: 'RaceEvaluationResult', title: string, average?: string | null, median?: string | null, count: number }> };
+export type GetRaceEvaluationQuery = { __typename?: 'Query', getRaceEvaluation: Array<{ __typename?: 'RaceEvaluationResult', title: string, average?: string | null, median?: string | null, count: number, categoryEvaluationList: Array<{ __typename?: 'CategoryEvaluation', categoryId: string, average?: string | null, median?: string | null, count: number }> }>, getRaceMemoCategoryList: Array<{ __typename?: 'RaceMemoCategory', id: string, name: string, displayOrder?: number | null }> };
 
 export type AddMemoCategoryMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -812,6 +821,17 @@ export const GetRaceEvaluationDocument = gql`
     average
     median
     count
+    categoryEvaluationList {
+      categoryId
+      average
+      median
+      count
+    }
+  }
+  getRaceMemoCategoryList {
+    id
+    name
+    displayOrder
   }
 }
     `;

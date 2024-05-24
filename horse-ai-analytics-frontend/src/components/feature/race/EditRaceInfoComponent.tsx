@@ -64,12 +64,14 @@ export const EditRaceInfoComponent: FC<Props> = ({ raceInfoId }) => {
             .filter((memo) => memo.contents || memo.title)
             .map((memo) => {
               return {
-                id: memo.memoId,
+                id: memo.memoId || undefined,
                 title: memo.title,
                 contents: memo.contents,
                 evaluation: memo.evaluation,
                 categoryId:
-                  memo.categoryId === "dummy" ? undefined : memo.categoryId,
+                  memo.categoryId === "dummy" || !memo.categoryId
+                    ? undefined
+                    : memo.categoryId,
               };
             }),
         },

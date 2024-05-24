@@ -267,11 +267,11 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
               className={buttonStyle({ color: "lime" })}
               onClick={() => {
                 memoPrepend({
-                  memoId: undefined,
+                  memoId: "",
                   title: "",
                   contents: "",
                   evaluation: NaN,
-                  categoryId: undefined,
+                  categoryId: "",
                 });
               }}
               type="button"

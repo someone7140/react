@@ -119,6 +119,17 @@ export const GetRaceEvaluationQueryDocument = gql`
       average
       median
       count
+      categoryEvaluationList {
+        categoryId
+        average
+        median
+        count
+      }
+    }
+    getRaceMemoCategoryList {
+      id
+      name
+      displayOrder
     }
   }
 `;

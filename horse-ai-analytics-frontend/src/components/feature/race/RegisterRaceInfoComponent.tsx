@@ -37,8 +37,11 @@ export const RegisterRaceInfoComponent: FC = () => {
           .map((memo) => {
             return {
               ...memo,
+              memoId: undefined,
               categoryId:
-                memo.categoryId === "dummy" ? undefined : memo.categoryId,
+                memo.categoryId === "dummy" || !memo.categoryId
+                  ? undefined
+                  : memo.categoryId,
             };
           }),
       },

@@ -45,10 +45,37 @@ export const RaceEvaluateRefComponent: FC = () => {
                 <CardTitle className="ml-4 mb-3 mt-4">
                   {evaluation.title}
                 </CardTitle>
-                <CardContent className="flex flex-col gap-2">
-                  <Label>・平均値：{evaluation.average}</Label>
-                  <Label>・中央値：{evaluation.median}</Label>
-                  <Label>・登録件数：{evaluation.count}</Label>
+                <CardContent>
+                  <div className="flex flex-col gap-2">
+                    <Label>・平均値：{evaluation.average}</Label>
+                    <Label>・中央値：{evaluation.median}</Label>
+                    <Label>・登録件数：{evaluation.count}</Label>
+                  </div>
+                  {evaluation.categoryEvaluationList.length > 0 && (
+                    <div className="mt-4 flex flex-col gap-3">
+                      {evaluation.categoryEvaluationList.map((category) => {
+                        return (
+                          <div
+                            className="flex flex-col gap-2"
+                            key={category.categoryId}
+                          >
+                            <Label className="font-bold">
+                              【
+                              {
+                                data?.getRaceMemoCategoryList.find(
+                                  (c) => c.id === category.categoryId
+                                )?.name
+                              }
+                              】
+                            </Label>
+                            <Label>・平均値：{category.average}</Label>
+                            <Label>・中央値：{category.median}</Label>
+                            <Label>・登録件数：{category.count}</Label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
