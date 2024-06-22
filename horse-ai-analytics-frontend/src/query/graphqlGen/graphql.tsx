@@ -55,6 +55,7 @@ export type Mutation = {
   addAccountUserFromGoogle: FieldWrapper<AccountUserResponse>;
   addMemoCategory: FieldWrapper<Scalars['Boolean']['output']>;
   addRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
+  addVoteResult: FieldWrapper<Scalars['Boolean']['output']>;
   deleteMemoCategory: FieldWrapper<Scalars['Boolean']['output']>;
   deleteRaceInfo: FieldWrapper<Scalars['Boolean']['output']>;
   editAccountUser: FieldWrapper<AccountUserResponse>;
@@ -80,6 +81,11 @@ export type MutationAddMemoCategoryArgs = {
 
 export type MutationAddRaceInfoArgs = {
   input: RaceInfoInputObject;
+};
+
+
+export type MutationAddVoteResultArgs = {
+  input: VoteResultInputObject;
 };
 
 
@@ -137,6 +143,7 @@ export type Query = {
   getMyRaceInfoList: Array<FieldWrapper<RaceInfoForList>>;
   getRaceEvaluation: Array<FieldWrapper<RaceEvaluationResult>>;
   getRaceInfoDetail?: Maybe<FieldWrapper<RaceInfoDetail>>;
+  getRaceInfoDetailsByDate: Array<FieldWrapper<RaceInfoDetail>>;
   getRaceInfoFromUrl: FieldWrapper<GetRaceInfoResponse>;
   getRaceMemoCategoryList: Array<FieldWrapper<RaceMemoCategory>>;
   getUserFromAuthHeader: FieldWrapper<AccountUserResponse>;
@@ -156,6 +163,11 @@ export type QueryGetRaceEvaluationArgs = {
 
 export type QueryGetRaceInfoDetailArgs = {
   raceInfoId: Scalars['String']['input'];
+};
+
+
+export type QueryGetRaceInfoDetailsByDateArgs = {
+  raceDate: Scalars['String']['input'];
 };
 
 
@@ -236,6 +248,25 @@ export type RaceMemoInputObject = {
 export type ValidateGoogleAuthCodeResponse = {
   __typename?: 'ValidateGoogleAuthCodeResponse';
   authToken: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type VoteRaceContentInputObject = {
+  betAmount: Scalars['Int']['input'];
+  contents?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  mostPriorityMemoId?: InputMaybe<Scalars['String']['input']>;
+  returnAmount: Scalars['Int']['input'];
+};
+
+export type VoteRaceInputObject = {
+  raceId: Scalars['String']['input'];
+  voteRaceContents: Array<VoteRaceContentInputObject>;
+};
+
+export type VoteResultInputObject = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  raceDate: Scalars['String']['input'];
+  voteRaceList: Array<VoteRaceInputObject>;
 };
 
 export type LoginGoogleAuthCodeMutationVariables = Exact<{
@@ -363,6 +394,20 @@ export type DeleteMemoCategoryMutationVariables = Exact<{
 
 
 export type DeleteMemoCategoryMutation = { __typename?: 'Mutation', deleteMemoCategory: boolean };
+
+export type AddVoteResultMutationVariables = Exact<{
+  input: VoteResultInputObject;
+}>;
+
+
+export type AddVoteResultMutation = { __typename?: 'Mutation', addVoteResult: boolean };
+
+export type GetRaceInfoForVoteResultQueryVariables = Exact<{
+  raceDate: Scalars['String']['input'];
+}>;
+
+
+export type GetRaceInfoForVoteResultQuery = { __typename?: 'Query', getRaceInfoDetailsByDate: Array<{ __typename?: 'RaceInfoDetail', id: string, raceName: string, analyticsUrl?: string | null, raceDate: string, prompt?: string | null, memoList: Array<{ __typename?: 'RaceMemo', id: string, title?: string | null, contents?: string | null, evaluation?: number | null, categoryId?: string | null }> }>, getRaceMemoCategoryList: Array<{ __typename?: 'RaceMemoCategory', id: string, name: string, displayOrder?: number | null }> };
 
 
 export const LoginGoogleAuthCodeDocument = gql`
@@ -1007,3 +1052,90 @@ export function useDeleteMemoCategoryMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteMemoCategoryMutationHookResult = ReturnType<typeof useDeleteMemoCategoryMutation>;
 export type DeleteMemoCategoryMutationResult = Apollo.MutationResult<DeleteMemoCategoryMutation>;
 export type DeleteMemoCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteMemoCategoryMutation, DeleteMemoCategoryMutationVariables>;
+export const AddVoteResultDocument = gql`
+    mutation AddVoteResult($input: VoteResultInputObject!) {
+  addVoteResult(input: $input)
+}
+    `;
+export type AddVoteResultMutationFn = Apollo.MutationFunction<AddVoteResultMutation, AddVoteResultMutationVariables>;
+
+/**
+ * __useAddVoteResultMutation__
+ *
+ * To run a mutation, you first call `useAddVoteResultMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddVoteResultMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addVoteResultMutation, { data, loading, error }] = useAddVoteResultMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddVoteResultMutation(baseOptions?: Apollo.MutationHookOptions<AddVoteResultMutation, AddVoteResultMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddVoteResultMutation, AddVoteResultMutationVariables>(AddVoteResultDocument, options);
+      }
+export type AddVoteResultMutationHookResult = ReturnType<typeof useAddVoteResultMutation>;
+export type AddVoteResultMutationResult = Apollo.MutationResult<AddVoteResultMutation>;
+export type AddVoteResultMutationOptions = Apollo.BaseMutationOptions<AddVoteResultMutation, AddVoteResultMutationVariables>;
+export const GetRaceInfoForVoteResultDocument = gql`
+    query GetRaceInfoForVoteResult($raceDate: String!) {
+  getRaceInfoDetailsByDate(raceDate: $raceDate) {
+    id
+    raceName
+    analyticsUrl
+    raceDate
+    prompt
+    memoList {
+      id
+      title
+      contents
+      evaluation
+      categoryId
+    }
+  }
+  getRaceMemoCategoryList {
+    id
+    name
+    displayOrder
+  }
+}
+    `;
+
+/**
+ * __useGetRaceInfoForVoteResultQuery__
+ *
+ * To run a query within a React component, call `useGetRaceInfoForVoteResultQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRaceInfoForVoteResultQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRaceInfoForVoteResultQuery({
+ *   variables: {
+ *      raceDate: // value for 'raceDate'
+ *   },
+ * });
+ */
+export function useGetRaceInfoForVoteResultQuery(baseOptions: Apollo.QueryHookOptions<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables> & ({ variables: GetRaceInfoForVoteResultQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables>(GetRaceInfoForVoteResultDocument, options);
+      }
+export function useGetRaceInfoForVoteResultLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables>(GetRaceInfoForVoteResultDocument, options);
+        }
+export function useGetRaceInfoForVoteResultSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables>(GetRaceInfoForVoteResultDocument, options);
+        }
+export type GetRaceInfoForVoteResultQueryHookResult = ReturnType<typeof useGetRaceInfoForVoteResultQuery>;
+export type GetRaceInfoForVoteResultLazyQueryHookResult = ReturnType<typeof useGetRaceInfoForVoteResultLazyQuery>;
+export type GetRaceInfoForVoteResultSuspenseQueryHookResult = ReturnType<typeof useGetRaceInfoForVoteResultSuspenseQuery>;
+export type GetRaceInfoForVoteResultQueryResult = Apollo.QueryResult<GetRaceInfoForVoteResultQuery, GetRaceInfoForVoteResultQueryVariables>;

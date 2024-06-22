@@ -15,7 +15,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { useRaceInfoCommonUtil } from "@/hooks/useRaceInfoCommonUtil";
+import { useFormCommonUtil } from "@/hooks/useFormCommonUtil";
 import { useGetRaceInfoDetailQuery } from "@/query/graphqlGen/graphql";
 import { buttonStyle, toastStyle } from "@/styles/CommonStyle";
 
@@ -33,7 +33,7 @@ export const RaceInfoDetailComponent: FC<Props> = ({ raceInfoId }) => {
   const [isDisplayCollapsible, setIsDisplayCollapsible] =
     useState<boolean>(false);
   const promptContentRef = useRef<HTMLDivElement>(null);
-  const { copyToClipboard } = useRaceInfoCommonUtil();
+  const { copyToClipboard } = useFormCommonUtil();
 
   useEffect(() => {
     if (!loading && promptContentRef && promptContentRef.current) {

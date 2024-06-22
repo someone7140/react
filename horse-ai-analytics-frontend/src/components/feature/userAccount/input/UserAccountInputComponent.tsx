@@ -2,15 +2,14 @@
 
 import React, { FC } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import { halfSizeRegex } from "@/constants/ValidationConsntants";
-import { inputTextStyle, requiredMark } from "@/styles/FormStyle";
 import { buttonStyle } from "@/styles/CommonStyle";
-
+import { inputTextStyle, requiredMark } from "@/styles/FormStyle";
 import {
   Form,
   FormControl,

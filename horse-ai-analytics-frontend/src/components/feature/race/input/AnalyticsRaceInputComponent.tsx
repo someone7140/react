@@ -30,7 +30,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-import { useRaceInfoCommonUtil } from "@/hooks/useRaceInfoCommonUtil";
+import { useFormCommonUtil } from "@/hooks/useFormCommonUtil";
+import { numberInputConvert } from "@/lib/utils";
 import {
   OddsInfoResponse,
   RaceInfoDetail,
@@ -64,13 +65,7 @@ export const analyticsRaceInputFormSchema = z.object({
       contents: z.string().optional(),
       categoryId: z.string().optional(),
       evaluation: z.preprocess(
-        (v) => {
-          const valueStr = String(v);
-          if (v != null && !Number.isNaN(v) && valueStr) {
-            return parseInt(valueStr);
-          }
-          return undefined;
-        },
+        numberInputConvert,
         z
           .number({
             invalid_type_error: "評価値は数値を入力してください",
@@ -138,7 +133,7 @@ export const AnalyticsRaceInputComponent: FC<Props> = ({
   const [oddsInfo, setOddsInfo] = useState<OddsInfoResponse | undefined>(
     raceInfo?.odds ?? undefined
   );
-  const { copyToClipboard } = useRaceInfoCommonUtil();
+  const { copyToClipboard } = useFormCommonUtil();
 
   const onClickGetRaceInfo = async () => {
     const analyticsUrl = form.getValues("analyticsUrl");

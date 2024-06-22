@@ -1,7 +1,7 @@
 import { toast } from "@/components/ui/use-toast";
 import { toastStyle } from "@/styles/CommonStyle";
 
-export const useRaceInfoCommonUtil = () => {
+export const useFormCommonUtil = () => {
   const copyToClipboard = async (copyString: string, copyItemName: string) => {
     await global.navigator.clipboard.writeText(copyString);
     toast({
@@ -11,5 +11,13 @@ export const useRaceInfoCommonUtil = () => {
     });
   };
 
-  return { copyToClipboard };
+  const dateToString = (d: Date) => {
+    return d.toLocaleDateString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
+  return { copyToClipboard, dateToString };
 };

@@ -10,6 +10,7 @@ import {
   analyticsRaceInputFormSchema,
 } from "@/components/feature/race/input/AnalyticsRaceInputComponent";
 import { toast } from "@/components/ui/use-toast";
+import { useFormCommonUtil } from "@/hooks/useFormCommonUtil";
 import { useAddRaceInfoMutation } from "@/query/graphqlGen/graphql";
 import { toastStyle } from "@/styles/CommonStyle";
 
@@ -18,6 +19,7 @@ export const RegisterRaceInfoComponent: FC = () => {
 
   const [addRaceInfoMutation, { loading: loadingAddRaceInfoMutation }] =
     useAddRaceInfoMutation();
+  const { dateToString } = useFormCommonUtil();
 
   const submitFunc = async (
     data: z.infer<typeof analyticsRaceInputFormSchema>
@@ -26,11 +28,7 @@ export const RegisterRaceInfoComponent: FC = () => {
       variables: {
         raceName: data.raceName,
         analyticsUrl: data.analyticsUrl,
-        raceDate: data.raceDate.toLocaleDateString("ja-JP", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }),
+        raceDate: dateToString(data.raceDate),
         prompt: data.prompt,
         memoList: data.memoList
           .filter((memo) => memo.contents || memo.title)

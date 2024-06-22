@@ -99,26 +99,51 @@ export const HeaderComponent: FC<Props> = ({ children }) => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <div
-                      className={menuHeaderNavigationMenuRecordStyle()}
-                      onClick={() => {
-                        router.push("/race/memoCategory/addCategory");
-                      }}
-                    >
-                      回答のカテゴリー登録
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <div
-                      className={menuHeaderNavigationMenuRecordStyle()}
-                      onClick={() => {
-                        router.push("/race/memoCategory/categoryList");
-                      }}
-                    >
-                      回答カテゴリー一覧
-                    </div>
-                  </DropdownMenuItem>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/race/memoCategory/addCategory");
+                        }}
+                      >
+                        回答のカテゴリー登録
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/race/memoCategory/categoryList");
+                        }}
+                      >
+                        回答カテゴリー一覧
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/vote/addVoteResult");
+                        }}
+                      >
+                        投票結果の登録
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div
+                        className={menuHeaderNavigationMenuRecordStyle()}
+                        onClick={() => {
+                          router.push("/race/memoCategory/categoryList");
+                        }}
+                      >
+                        投票結果一覧
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
