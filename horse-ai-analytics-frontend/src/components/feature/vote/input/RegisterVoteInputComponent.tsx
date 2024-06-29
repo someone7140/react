@@ -2,14 +2,15 @@
 
 import React, { FC, useEffect, useState } from "react";
 
-import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { CalendarInputItemComponent } from "@/components/feature/common/CalendarInputItemComponent";
 import { LoadingSpinner } from "@/components/feature/common/LoadingComponent";
+import { RegisterVoteContentsInputComponent } from "@/components/feature/vote/input/RegisterVoteContentsInputComponent";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -45,7 +46,7 @@ export const voteResultInputFormSchema = z.object({
             numberInputConvert,
             z.number({
               required_error: "賭金額は必須です",
-              invalid_type_error: "賭金額は数値を入力してください",
+              invalid_type_error: "賭け金額は数値を入力してください",
             })
           ),
           returnAmount: z.preprocess(
@@ -61,6 +62,17 @@ export const voteResultInputFormSchema = z.object({
   ),
 });
 
+export const defaultVoteContent = {
+  betAmount: NaN,
+  returnAmount: NaN,
+  mostPriorityMemoId: "dummy",
+};
+
+export const defaultRace = {
+  raceId: "dummy",
+  voteRaceContents: [defaultVoteContent],
+};
+
 type Props = {
   submitFunc: (data: z.infer<typeof voteResultInputFormSchema>) => void;
   registerDisabled?: boolean;
@@ -70,14 +82,8 @@ export const RegisterVoteInputComponent: FC<Props> = ({
   submitFunc,
   registerDisabled,
 }) => {
-  const router = useRouter();
   const { dateToString } = useFormCommonUtil();
   const [resetFlag, setResetFlag] = useState<boolean>(false);
-
-  const defaultRace = {
-    raceId: "dummy",
-    voteRaceContents: [{ betAmount: NaN, returnAmount: NaN }],
-  };
   const defaultValues = {
     voteRaceList: [defaultRace],
   };
@@ -164,65 +170,89 @@ export const RegisterVoteInputComponent: FC<Props> = ({
               </div>
               {voteRaceFields.map((race, index) => {
                 return (
-                  <div key={race.id} className="flex gap-4">
-                    {/* idはuseFieldArrayで割り当てられる値 */}
-                    <FormField
-                      control={form.control}
-                      name={`voteRaceList.${index}.raceId`}
-                      render={({ field }) => (
-                        <FormItem className="min-w-[200px]">
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="カテゴリーを選択" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="dummy">-</SelectItem>
-                              {details
-                                ?.filter((v) => {
-                                  if (field.value === v.id) {
-                                    return true;
-                                  }
-                                  return !form
-                                    .watch("voteRaceList")
-                                    .some(
-                                      (f) => f.raceId === v.id && field.value
-                                    );
-                                })
-                                .map((detail) => {
-                                  return (
-                                    <SelectItem
-                                      key={detail.id}
-                                      value={detail.id}
-                                    >
-                                      {detail.raceName}
-                                    </SelectItem>
-                                  );
-                                })}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {voteRaceFields.length > 1 && (
-                      <div>
-                        <Button
-                          className={`${buttonStyle({ color: "gray" })} w-18`}
-                          onClick={() => {
-                            voteRaceRemove(index);
-                          }}
-                          type="button"
-                        >
-                          削除
-                        </Button>
+                  <Card key={race.id}>
+                    <CardContent className="p-2 min-w-[350px]">
+                      <div className="flex gap-4">
+                        {/* idはuseFieldArrayで割り当てられる値 */}
+                        <FormField
+                          control={form.control}
+                          name={`voteRaceList.${index}.raceId`}
+                          render={({ field }) => (
+                            <FormItem className="min-w-[200px]">
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="レースを選択" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="dummy">
+                                    レースを選択
+                                  </SelectItem>
+                                  {details
+                                    ?.filter((v) => {
+                                      if (field.value === v.id) {
+                                        return true;
+                                      }
+                                      return !form
+                                        .watch("voteRaceList")
+                                        .some(
+                                          (f) =>
+                                            f.raceId === v.id && field.value
+                                        );
+                                    })
+                                    .map((detail) => {
+                                      return (
+                                        <SelectItem
+                                          key={detail.id}
+                                          value={detail.id}
+                                        >
+                                          {detail.raceName}
+                                        </SelectItem>
+                                      );
+                                    })}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        {voteRaceFields.length > 1 && (
+                          <div>
+                            <Button
+                              className={`${buttonStyle({
+                                color: "gray",
+                              })} w-18`}
+                              onClick={() => {
+                                voteRaceRemove(index);
+                              }}
+                              type="button"
+                            >
+                              レースを削除
+                            </Button>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                      <div className="mt-2">
+                        <RegisterVoteContentsInputComponent
+                          control={form.control}
+                          raceIndex={index}
+                          raceMemoList={
+                            details.find((d) => {
+                              return (
+                                d.id ===
+                                form.watch(`voteRaceList.${index}.raceId`)
+                              );
+                            })?.memoList ?? []
+                          }
+                          memoCategories={memoCategories ?? []}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
                 );
               })}
             </>
@@ -233,7 +263,8 @@ export const RegisterVoteInputComponent: FC<Props> = ({
               type="submit"
               disabled={
                 (registerDisabled ?? true) ||
-                voteRaceFields.filter((v) => v.raceId !== "dummy").length < 1
+                form.watch("voteRaceList").filter((v) => v.raceId !== "dummy")
+                  .length < 1
               }
             >
               <p>投票内容を登録</p>

@@ -37,7 +37,10 @@ export const RegisterVoteResultComponent: FC = () => {
                   return {
                     id: undefined,
                     contents: c.contents,
-                    mostPriorityMemoId: c.mostPriorityMemoId,
+                    mostPriorityMemoId:
+                      c.mostPriorityMemoId === "dummy"
+                        ? undefined
+                        : c.mostPriorityMemoId,
                     betAmount: c.betAmount,
                     returnAmount: c.returnAmount,
                   };
