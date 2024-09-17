@@ -16,7 +16,6 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  DateTime: { input: Date; output: Date; }
   Upload: { input: File; output: File; }
 };
 
@@ -33,7 +32,7 @@ export type GoogleAuthCodeVerifyResponse = {
   token: FieldWrapper<Scalars['String']['output']>;
 };
 
-export type LatLonInput = {
+export type LatLon = {
   lat: Scalars['Float']['input'];
   lon: Scalars['Float']['input'];
 };
@@ -44,15 +43,13 @@ export type LatLonResponse = {
   lon: FieldWrapper<Scalars['Float']['output']>;
 };
 
-export type Mutation = {
-  __typename?: 'Mutation';
+export type PlaceNoteMutation = {
+  __typename?: 'PlaceNoteMutation';
   addAccountUserByGoogle: FieldWrapper<AccountUserResponse>;
-  addPost: FieldWrapper<Scalars['Boolean']['output']>;
   addPostCategory: FieldWrapper<Scalars['Boolean']['output']>;
-  addPostPlace: FieldWrapper<Scalars['String']['output']>;
+  addPostPlace: FieldWrapper<Scalars['Boolean']['output']>;
   deletePostCategory: FieldWrapper<Scalars['Boolean']['output']>;
   deletePostPlace: FieldWrapper<Scalars['Boolean']['output']>;
-  editAccountUser: FieldWrapper<AccountUserResponse>;
   editPostCategory: FieldWrapper<Scalars['Boolean']['output']>;
   editPostPlace: FieldWrapper<Scalars['Boolean']['output']>;
   googleAuthCodeVerify: FieldWrapper<GoogleAuthCodeVerifyResponse>;
@@ -60,7 +57,7 @@ export type Mutation = {
 };
 
 
-export type MutationAddAccountUserByGoogleArgs = {
+export type PlaceNoteMutationAddAccountUserByGoogleArgs = {
   authToken: Scalars['String']['input'];
   imageFile?: InputMaybe<Scalars['Upload']['input']>;
   name: Scalars['String']['input'];
@@ -68,54 +65,36 @@ export type MutationAddAccountUserByGoogleArgs = {
 };
 
 
-export type MutationAddPostArgs = {
+export type PlaceNoteMutationAddPostCategoryArgs = {
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  memo?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  parentCategoryId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type PlaceNoteMutationAddPostPlaceArgs = {
+  address?: InputMaybe<Scalars['String']['input']>;
   categoryIdList: Array<Scalars['String']['input']>;
   detail?: InputMaybe<Scalars['String']['input']>;
-  isOpen: Scalars['Boolean']['input'];
-  placeId: Scalars['String']['input'];
-  title: Scalars['String']['input'];
+  latLon?: InputMaybe<LatLon>;
+  name: Scalars['String']['input'];
+  prefectureCode?: InputMaybe<Scalars['String']['input']>;
   urlList: Array<Scalars['String']['input']>;
-  visitedDate: Scalars['DateTime']['input'];
 };
 
 
-export type MutationAddPostCategoryArgs = {
-  displayOrder?: InputMaybe<Scalars['Int']['input']>;
-  memo?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  parentCategoryId?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationAddPostPlaceArgs = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  categoryIdList: Array<Scalars['String']['input']>;
-  detail?: InputMaybe<Scalars['String']['input']>;
-  latLon?: InputMaybe<LatLonInput>;
-  name: Scalars['String']['input'];
-  prefectureCode?: InputMaybe<Scalars['String']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationDeletePostCategoryArgs = {
+export type PlaceNoteMutationDeletePostCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type MutationDeletePostPlaceArgs = {
+export type PlaceNoteMutationDeletePostPlaceArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type MutationEditAccountUserArgs = {
-  imageFile?: InputMaybe<Scalars['Upload']['input']>;
-  name: Scalars['String']['input'];
-  userSettingId: Scalars['String']['input'];
-};
-
-
-export type MutationEditPostCategoryArgs = {
+export type PlaceNoteMutationEditPostCategoryArgs = {
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
   memo?: InputMaybe<Scalars['String']['input']>;
@@ -124,25 +103,55 @@ export type MutationEditPostCategoryArgs = {
 };
 
 
-export type MutationEditPostPlaceArgs = {
+export type PlaceNoteMutationEditPostPlaceArgs = {
   address?: InputMaybe<Scalars['String']['input']>;
   categoryIdList: Array<Scalars['String']['input']>;
   detail?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
-  latLon?: InputMaybe<LatLonInput>;
+  latLon?: InputMaybe<LatLon>;
   name: Scalars['String']['input'];
   prefectureCode?: InputMaybe<Scalars['String']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
+  urlList: Array<Scalars['String']['input']>;
 };
 
 
-export type MutationGoogleAuthCodeVerifyArgs = {
+export type PlaceNoteMutationGoogleAuthCodeVerifyArgs = {
   authCode: Scalars['String']['input'];
 };
 
 
-export type MutationLoginByGoogleAuthCodeArgs = {
+export type PlaceNoteMutationLoginByGoogleAuthCodeArgs = {
   authCode: Scalars['String']['input'];
+};
+
+export type PlaceNoteQuery = {
+  __typename?: 'PlaceNoteQuery';
+  getAccountUserByToken: FieldWrapper<AccountUserResponse>;
+  getLatLonFromAddress?: Maybe<FieldWrapper<LatLonResponse>>;
+  getMyPostCategories: Array<FieldWrapper<PostCategoryResponse>>;
+  getMyPostCategoryById: FieldWrapper<PostCategoryResponse>;
+  getPostPlaces: FieldWrapper<PostCategoryResponse>;
+};
+
+
+export type PlaceNoteQueryGetLatLonFromAddressArgs = {
+  address: Scalars['String']['input'];
+};
+
+
+export type PlaceNoteQueryGetMyPostCategoriesArgs = {
+  nameFilter?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type PlaceNoteQueryGetMyPostCategoryByIdArgs = {
+  idFilter: Scalars['String']['input'];
+};
+
+
+export type PlaceNoteQueryGetPostPlacesArgs = {
+  categoryFilter?: InputMaybe<Scalars['String']['input']>;
+  idFilter?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PostCategoryResponse = {
@@ -155,109 +164,19 @@ export type PostCategoryResponse = {
   userSettingId: FieldWrapper<Scalars['String']['output']>;
 };
 
-export type PostPlaceResponse = {
-  __typename?: 'PostPlaceResponse';
-  address?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  categoryIdList: Array<FieldWrapper<Scalars['String']['output']>>;
-  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  id: FieldWrapper<Scalars['String']['output']>;
-  latLon?: Maybe<FieldWrapper<LatLonResponse>>;
-  name: FieldWrapper<Scalars['String']['output']>;
-  prefectureCode?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  url?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  userSettingId: FieldWrapper<Scalars['String']['output']>;
-};
-
-export type PostResponse = {
-  __typename?: 'PostResponse';
-  categoryIdList: Array<FieldWrapper<Scalars['String']['output']>>;
-  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  id: FieldWrapper<Scalars['String']['output']>;
-  isOpen: FieldWrapper<Scalars['Boolean']['output']>;
-  placeId: FieldWrapper<Scalars['String']['output']>;
-  placeName: FieldWrapper<Scalars['String']['output']>;
-  placePrefectureCode?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  placeUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  title: FieldWrapper<Scalars['String']['output']>;
-  urlList: Array<FieldWrapper<UrlDetail>>;
-  userSettingId: FieldWrapper<Scalars['String']['output']>;
-  visitedDate: FieldWrapper<Scalars['String']['output']>;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  getAccountUserByToken: FieldWrapper<AccountUserResponse>;
-  getLatLonFromAddress?: Maybe<FieldWrapper<LatLonResponse>>;
-  getMyPostCategories: Array<FieldWrapper<PostCategoryResponse>>;
-  getMyPostCategoryById: FieldWrapper<PostCategoryResponse>;
-  getMyPosts: Array<FieldWrapper<PostResponse>>;
-  getPostPlaces: Array<FieldWrapper<PostPlaceResponse>>;
-};
-
-
-export type QueryGetLatLonFromAddressArgs = {
-  address: Scalars['String']['input'];
-};
-
-
-export type QueryGetMyPostCategoriesArgs = {
-  nameFilter?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryGetMyPostCategoryByIdArgs = {
-  idFilter: Scalars['String']['input'];
-};
-
-
-export type QueryGetMyPostsArgs = {
-  idFilter?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryGetPostPlacesArgs = {
-  categoryFilter?: InputMaybe<Scalars['String']['input']>;
-  idFilter?: InputMaybe<Scalars['String']['input']>;
-  nameFilter?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type UrlDetail = {
-  __typename?: 'UrlDetail';
-  embedHtml?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  url: FieldWrapper<Scalars['String']['output']>;
-  urlId: FieldWrapper<Scalars['String']['output']>;
-  urlInfo?: Maybe<FieldWrapper<UrlInfo>>;
-  urlType: FieldWrapper<UrlTypeEnum>;
-};
-
-export type UrlInfo = {
-  __typename?: 'UrlInfo';
-  imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  siteName?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  title: FieldWrapper<Scalars['String']['output']>;
-};
-
-export enum UrlTypeEnum {
-  Instagram = 'Instagram',
-  Threads = 'Threads',
-  WebNoInfo = 'WebNoInfo',
-  WebWithInfo = 'WebWithInfo',
-  X = 'X'
-}
-
 export type GoogleAuthCodeVerifyMutationVariables = Exact<{
   authCode: Scalars['String']['input'];
 }>;
 
 
-export type GoogleAuthCodeVerifyMutation = { __typename?: 'Mutation', googleAuthCodeVerify: { __typename?: 'GoogleAuthCodeVerifyResponse', token: string } };
+export type GoogleAuthCodeVerifyMutation = { __typename?: 'PlaceNoteMutation', googleAuthCodeVerify: { __typename?: 'GoogleAuthCodeVerifyResponse', token: string } };
 
 export type LoginByGoogleAuthCodeMutationVariables = Exact<{
   authCode: Scalars['String']['input'];
 }>;
 
 
-export type LoginByGoogleAuthCodeMutation = { __typename?: 'Mutation', loginByGoogleAuthCode: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type LoginByGoogleAuthCodeMutation = { __typename?: 'PlaceNoteMutation', loginByGoogleAuthCode: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
 
 export type AddAccountUserByGoogleMutationVariables = Exact<{
   authToken: Scalars['String']['input'];
@@ -267,21 +186,12 @@ export type AddAccountUserByGoogleMutationVariables = Exact<{
 }>;
 
 
-export type AddAccountUserByGoogleMutation = { __typename?: 'Mutation', addAccountUserByGoogle: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
-
-export type EditAccountUserMutationVariables = Exact<{
-  userSettingId: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  file?: InputMaybe<Scalars['Upload']['input']>;
-}>;
-
-
-export type EditAccountUserMutation = { __typename?: 'Mutation', editAccountUser: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type AddAccountUserByGoogleMutation = { __typename?: 'PlaceNoteMutation', addAccountUserByGoogle: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
 
 export type GetAccountUserByTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAccountUserByTokenQuery = { __typename?: 'Query', getAccountUserByToken: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type GetAccountUserByTokenQuery = { __typename?: 'PlaceNoteQuery', getAccountUserByToken: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
 
 
 export const GoogleAuthCodeVerifyDocument = gql`
@@ -397,44 +307,6 @@ export function useAddAccountUserByGoogleMutation(baseOptions?: Apollo.MutationH
 export type AddAccountUserByGoogleMutationHookResult = ReturnType<typeof useAddAccountUserByGoogleMutation>;
 export type AddAccountUserByGoogleMutationResult = Apollo.MutationResult<AddAccountUserByGoogleMutation>;
 export type AddAccountUserByGoogleMutationOptions = Apollo.BaseMutationOptions<AddAccountUserByGoogleMutation, AddAccountUserByGoogleMutationVariables>;
-export const EditAccountUserDocument = gql`
-    mutation EditAccountUser($userSettingId: String!, $name: String!, $file: Upload) {
-  editAccountUser(userSettingId: $userSettingId, name: $name, imageFile: $file) {
-    token
-    userSettingId
-    name
-    imageUrl
-  }
-}
-    `;
-export type EditAccountUserMutationFn = Apollo.MutationFunction<EditAccountUserMutation, EditAccountUserMutationVariables>;
-
-/**
- * __useEditAccountUserMutation__
- *
- * To run a mutation, you first call `useEditAccountUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEditAccountUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [editAccountUserMutation, { data, loading, error }] = useEditAccountUserMutation({
- *   variables: {
- *      userSettingId: // value for 'userSettingId'
- *      name: // value for 'name'
- *      file: // value for 'file'
- *   },
- * });
- */
-export function useEditAccountUserMutation(baseOptions?: Apollo.MutationHookOptions<EditAccountUserMutation, EditAccountUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EditAccountUserMutation, EditAccountUserMutationVariables>(EditAccountUserDocument, options);
-      }
-export type EditAccountUserMutationHookResult = ReturnType<typeof useEditAccountUserMutation>;
-export type EditAccountUserMutationResult = Apollo.MutationResult<EditAccountUserMutation>;
-export type EditAccountUserMutationOptions = Apollo.BaseMutationOptions<EditAccountUserMutation, EditAccountUserMutationVariables>;
 export const GetAccountUserByTokenDocument = gql`
     query getAccountUserByToken {
   getAccountUserByToken {

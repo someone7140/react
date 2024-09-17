@@ -40,25 +40,6 @@ export const addAccountUserByGoogleMutationDocument = gql`
   }
 `;
 
-export const editAccountUserMutationDocument = gql`
-  mutation EditAccountUser(
-    $userSettingId: String!
-    $name: String!
-    $file: Upload
-  ) {
-    editAccountUser(
-      userSettingId: $userSettingId
-      name: $name
-      imageFile: $file
-    ) {
-      token
-      userSettingId
-      name
-      imageUrl
-    }
-  }
-`;
-
 export const getAccountUserByTokenQueryDocument = gql`
   query getAccountUserByToken {
     getAccountUserByToken {

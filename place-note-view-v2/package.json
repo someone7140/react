@@ -12,8 +12,11 @@
   "dependencies": {
     "@apollo/client": "^3.11.8",
     "@apollo/experimental-nextjs-app-support": "^0.11.3",
+    "@heroicons/react": "^2.1.5",
     "@material-tailwind/react": "^2.1.10",
     "@react-oauth/google": "^0.12.1",
+    "@tanstack/react-form": "^0.32.0",
+    "@tanstack/zod-form-adapter": "^0.32.0",
     "ahooks": "^3.8.1",
     "apollo-upload-client": "^18.0.1",
     "env-cmd": "^10.1.0",
@@ -22,7 +25,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-toastify": "^10.0.5",
-    "tailwind-variants": "^0.2.1"
+    "tailwind-variants": "^0.2.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",

@@ -3,9 +3,9 @@ import localFont from "next/font/local";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import "./globals.css";
 import { HeaderComponent } from "@/components/common/HeaderComponent";
 import { ApiProvider } from "@/provider/ApiProvider";
+import "@/style/globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

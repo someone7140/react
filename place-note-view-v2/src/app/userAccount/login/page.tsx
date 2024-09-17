@@ -1,9 +1,10 @@
 import { UserAccountLoginComponent } from "@/components/userAccount/UserAccountLoginComponent";
+import { pageTitleStyle } from "@/style/CommonStyle";
 
 export default function Home() {
   return (
     <>
-      <div className="mb-2">ログイン</div>
+      <div className={pageTitleStyle()}>ログイン</div>
       <UserAccountLoginComponent />
     </>
   );

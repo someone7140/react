@@ -19,7 +19,7 @@ function makeClient(authToken?: string) {
   }
 
   const apolloLink = createUploadLink({
-    uri: `${process.env.NEXT_PUBLIC_API_DOMAIN}/graphql`,
+    uri: `${process.env.NEXT_PUBLIC_API_URL}`,
     headers,
     useGETForQueries: false,
   });
