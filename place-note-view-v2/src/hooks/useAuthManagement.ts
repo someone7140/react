@@ -2,10 +2,28 @@
 
 import { useLocalStorageState } from "ahooks";
 
-export const useAuthManagement = () => {
-  const { authTokenLocalStorage } = useAuthTokenLocalStorage();
+import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
+import { AccountUserResponse } from "@/graphql/gen/graphql";
 
-  return { authTokenLocalStorage };
+export const useAuthManagement = () => {
+  const { userAccount, setUserAccount, removeUserAccount } = useAuthStore();
+  const {
+    authTokenLocalStorage,
+    updateAuthToken,
+    removeAuthTokenLocalStorage,
+  } = useAuthTokenLocalStorage();
+
+  const updateAuthInfo = (user: AccountUserResponse) => {
+    setUserAccount(user);
+    updateAuthToken(user.token);
+  };
+
+  const removeAuthInfo = () => {
+    removeUserAccount();
+    removeAuthTokenLocalStorage();
+  };
+
+  return { userAccount, authTokenLocalStorage, updateAuthInfo, removeAuthInfo };
 };
 
 const useAuthTokenLocalStorage = () => {
@@ -22,5 +40,7 @@ const useAuthTokenLocalStorage = () => {
 
   return {
     authTokenLocalStorage,
+    updateAuthToken,
+    removeAuthTokenLocalStorage,
   };
 };

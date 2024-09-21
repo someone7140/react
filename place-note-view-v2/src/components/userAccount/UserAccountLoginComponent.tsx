@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { useLoginByGoogleAuthCodeMutation } from "@/graphql/gen/graphql";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 export const UserAccountLoginComponent: FC = () => {
   const [loginGoogleAuthCode, { loading }] = useLoginByGoogleAuthCodeMutation();
+  const { updateAuthInfo } = useAuthManagement();
 
   const onAuthGoogle = async (authCode: string) => {
     const displayErrorToast = () => {
@@ -22,6 +24,7 @@ export const UserAccountLoginComponent: FC = () => {
       if (authResult.errors || !accountData) {
         displayErrorToast();
       } else {
+        updateAuthInfo(accountData);
         window.location.href = "/";
       }
     } catch (e) {

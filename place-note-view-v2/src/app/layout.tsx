@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { HeaderComponent } from "@/components/common/HeaderComponent";
 import { ApiProvider } from "@/provider/ApiProvider";
+import { AuthProvider } from "@/provider/AuthProvider";
 import "@/style/globals.css";
 
 const geistSans = localFont({
@@ -34,26 +35,28 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ApiProvider>
-          <HeaderComponent />
-          <div className="flex justify-center mt-3">
-            <div className="max-w-[95%] min-w-[300px]">
-              <div className="flex justify-start w-[100%] ml-3">
-                <div>{children}</div>
+          <AuthProvider>
+            <HeaderComponent />
+            <div className="flex justify-center mt-3">
+              <div className="max-w-[95%] min-w-[300px]">
+                <div className="flex justify-start w-[100%] ml-3">
+                  <div>{children}</div>
+                </div>
               </div>
             </div>
-          </div>
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </AuthProvider>
         </ApiProvider>
       </body>
     </html>

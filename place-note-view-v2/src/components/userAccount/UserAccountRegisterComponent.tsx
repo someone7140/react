@@ -8,10 +8,18 @@ import {
   UserAccountInputComponent,
   UserAccountInputFormType,
 } from "@/components/userAccount/input/UserAccountInputComponent";
-import { useGoogleAuthCodeVerifyMutation } from "@/graphql/gen/graphql";
+import {
+  useAddAccountUserByGoogleMutation,
+  useGoogleAuthCodeVerifyMutation,
+} from "@/graphql/gen/graphql";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 export const UserAccountRegisterComponent: FC = () => {
-  const [googleAuthCodeVerify, { loading }] = useGoogleAuthCodeVerifyMutation();
+  const [addAccountUserByGoogle, { loading: addAccountUserByGoogleLoading }] =
+    useAddAccountUserByGoogleMutation();
+  const [googleAuthCodeVerify, { loading: googleAuthCodeVerifyLoading }] =
+    useGoogleAuthCodeVerifyMutation();
+  const { updateAuthInfo } = useAuthManagement();
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
   );
@@ -37,21 +45,40 @@ export const UserAccountRegisterComponent: FC = () => {
   };
 
   const execSubmit = async (formData: UserAccountInputFormType) => {
-    console.log(formData);
+    const result = await addAccountUserByGoogle({
+      variables: {
+        authToken: googleAuthToken ?? "",
+        userSettingId: formData.userSettingId,
+        name: formData.name,
+        file: formData.imageFile,
+      },
+    });
+
+    const accountData = result.data?.addAccountUserByGoogle;
+    if (result.errors || !accountData) {
+      toast.error(
+        "登録に失敗しました。すでに登録済みのユーザIDである可能性があります"
+      );
+    } else {
+      updateAuthInfo(accountData);
+      window.location.href = "/";
+    }
   };
 
   return (
     <>
-      <UserAccountInputComponent execSubmit={execSubmit} />
-      {/*
       {!googleAuthToken && (
         <AuthGoogleComponent
           onAuthGoogle={onAuthGoogle}
-          disabledFlag={loading}
+          disabledFlag={googleAuthCodeVerifyLoading}
         />
       )}
-      {googleAuthToken && <>入力</>}
-     */}
+      {googleAuthToken && (
+        <UserAccountInputComponent
+          execSubmit={execSubmit}
+          disabledFlag={addAccountUserByGoogleLoading}
+        />
+      )}
     </>
   );
 };

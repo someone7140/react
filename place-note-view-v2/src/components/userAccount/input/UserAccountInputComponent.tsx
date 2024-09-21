@@ -2,11 +2,11 @@
 
 import React, { FC } from "react";
 import { z } from "zod";
-
-import { halfSizeRegex } from "@/constants/ValidationConsntants";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button, Input, Typography } from "@material-tailwind/react";
+
+import { halfSizeRegex } from "@/constants/ValidationConsntants";
 import {
   formItemAreaStyle,
   formLabelStyle,
@@ -37,7 +37,7 @@ export const userAccountInputFormSchema = z.object({
     .min(1, {
       message: "名前は必須です",
     }),
-  imageFile: z.custom<File>(),
+  imageFile: z.custom<File>().optional(),
 });
 
 export type UserAccountInputFormType = z.infer<
@@ -48,7 +48,7 @@ export const UserAccountInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
 }) => {
-  const { Field, handleSubmit } = useForm({
+  const { Field, handleSubmit, setFieldValue } = useForm({
     validatorAdapter: zodValidator(),
     defaultValues: {} as UserAccountInputFormType,
     onSubmit: async ({ value }) => {
@@ -111,6 +111,22 @@ export const UserAccountInputComponent: FC<Props> = ({
               crossOrigin={undefined}
             />
             <FormErrorMessageComponent errors={field.state.meta.errors} />
+          </div>
+        )}
+      </Field>
+      <Field name="imageFile">
+        {(field) => (
+          <div className={formItemAreaStyle()}>
+            <Typography color="blue-gray" className={formLabelStyle()}>
+              アイコン画像
+            </Typography>
+            <input
+              type="file"
+              name={field.name}
+              onChange={(e) => {
+                setFieldValue("imageFile", e.target.files?.[0]);
+              }}
+            />
           </div>
         )}
       </Field>

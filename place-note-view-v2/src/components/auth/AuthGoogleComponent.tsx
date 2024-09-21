@@ -21,7 +21,7 @@ const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle, disabledFlag }) => {
   return (
     <Button
       variant="filled"
-      disabled={disabledFlag}
+      loading={disabledFlag}
       onClick={login}
       color="light-blue"
     >
