@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import { toast } from "react-toastify";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
+import { TOP_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { useLoginByGoogleAuthCodeMutation } from "@/graphql/gen/graphql";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
@@ -25,7 +26,7 @@ export const UserAccountLoginComponent: FC = () => {
         displayErrorToast();
       } else {
         updateAuthInfo(accountData);
-        window.location.href = "/";
+        window.location.href = TOP_PAGE_PATH;
       }
     } catch (e) {
       displayErrorToast();

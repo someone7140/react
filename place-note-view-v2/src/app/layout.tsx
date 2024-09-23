@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { HeaderComponent } from "@/components/common/HeaderComponent";
+import { SidebarComponent } from "@/components/menu/SidebarComponent";
 import { ApiProvider } from "@/provider/ApiProvider";
 import { AuthProvider } from "@/provider/AuthProvider";
 import "@/style/globals.css";
@@ -37,7 +38,8 @@ export default function RootLayout({
         <ApiProvider>
           <AuthProvider>
             <HeaderComponent />
-            <div className="flex justify-center mt-3">
+            <SidebarComponent />
+            <div className="flex justify-center mt-4">
               <div className="max-w-[95%] min-w-[300px]">
                 <div className="flex justify-start w-[100%] ml-3">
                   <div>{children}</div>

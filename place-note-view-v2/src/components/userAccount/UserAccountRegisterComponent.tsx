@@ -4,6 +4,7 @@ import React, { FC, useState } from "react";
 import { toast } from "react-toastify";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
+import { TOP_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import {
   UserAccountInputComponent,
   UserAccountInputFormType,
@@ -61,7 +62,7 @@ export const UserAccountRegisterComponent: FC = () => {
       );
     } else {
       updateAuthInfo(accountData);
-      window.location.href = "/";
+      window.location.href = TOP_PAGE_PATH;
     }
   };
 
