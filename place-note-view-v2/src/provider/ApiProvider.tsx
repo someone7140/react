@@ -27,6 +27,14 @@ function makeClient(authToken?: string) {
   return new ApolloClient({
     cache: new InMemoryCache(),
     link: apolloLink,
+    defaultOptions: {
+      query: {
+        errorPolicy: "all",
+      },
+      mutate: {
+        errorPolicy: "all",
+      },
+    },
   });
 }
 

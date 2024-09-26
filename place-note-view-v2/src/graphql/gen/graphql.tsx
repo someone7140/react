@@ -50,6 +50,7 @@ export type PlaceNoteMutation = {
   addPostPlace: FieldWrapper<Scalars['Boolean']['output']>;
   deletePostCategory: FieldWrapper<Scalars['Boolean']['output']>;
   deletePostPlace: FieldWrapper<Scalars['Boolean']['output']>;
+  editAccountUser: FieldWrapper<AccountUserResponse>;
   editPostCategory: FieldWrapper<Scalars['Boolean']['output']>;
   editPostPlace: FieldWrapper<Scalars['Boolean']['output']>;
   googleAuthCodeVerify: FieldWrapper<GoogleAuthCodeVerifyResponse>;
@@ -66,8 +67,8 @@ export type PlaceNoteMutationAddAccountUserByGoogleArgs = {
 
 
 export type PlaceNoteMutationAddPostCategoryArgs = {
+  detail?: InputMaybe<Scalars['String']['input']>;
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
-  memo?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   parentCategoryId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -94,10 +95,17 @@ export type PlaceNoteMutationDeletePostPlaceArgs = {
 };
 
 
+export type PlaceNoteMutationEditAccountUserArgs = {
+  imageFile?: InputMaybe<Scalars['Upload']['input']>;
+  name: Scalars['String']['input'];
+  userSettingId: Scalars['String']['input'];
+};
+
+
 export type PlaceNoteMutationEditPostCategoryArgs = {
+  detail?: InputMaybe<Scalars['String']['input']>;
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
-  memo?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   parentCategoryId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -156,13 +164,15 @@ export type PlaceNoteQueryGetPostPlacesArgs = {
 
 export type PostCategoryResponse = {
   __typename?: 'PostCategoryResponse';
+  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   displayOrder?: Maybe<FieldWrapper<Scalars['Int']['output']>>;
   id: FieldWrapper<Scalars['String']['output']>;
-  memo?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   name: FieldWrapper<Scalars['String']['output']>;
   parentCategoryId?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   userSettingId: FieldWrapper<Scalars['String']['output']>;
 };
+
+export type AccountUserObjFragment = { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null };
 
 export type GoogleAuthCodeVerifyMutationVariables = Exact<{
   authCode: Scalars['String']['input'];
@@ -188,12 +198,64 @@ export type AddAccountUserByGoogleMutationVariables = Exact<{
 
 export type AddAccountUserByGoogleMutation = { __typename?: 'PlaceNoteMutation', addAccountUserByGoogle: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
 
+export type EditAccountUserMutationVariables = Exact<{
+  userSettingId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  file?: InputMaybe<Scalars['Upload']['input']>;
+}>;
+
+
+export type EditAccountUserMutation = { __typename?: 'PlaceNoteMutation', editAccountUser: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+
 export type GetAccountUserByTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAccountUserByTokenQuery = { __typename?: 'PlaceNoteQuery', getAccountUserByToken: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
 
+export type PostCategoryObjFragment = { __typename?: 'PostCategoryResponse', id: string, userSettingId: string, name: string, parentCategoryId?: string | null, displayOrder?: number | null, detail?: string | null };
 
+export type AddPostCategoryMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  parentCategoryId?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  detail?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type AddPostCategoryMutation = { __typename?: 'PlaceNoteMutation', addPostCategory: boolean };
+
+export type GetMyPostCategoriesQueryVariables = Exact<{
+  nameFilter?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetMyPostCategoriesQuery = { __typename?: 'PlaceNoteQuery', getMyPostCategories: Array<{ __typename?: 'PostCategoryResponse', id: string, userSettingId: string, name: string, parentCategoryId?: string | null, displayOrder?: number | null, detail?: string | null }> };
+
+export type GetMyPostCategoryByIdQueryVariables = Exact<{
+  idFilter: Scalars['String']['input'];
+}>;
+
+
+export type GetMyPostCategoryByIdQuery = { __typename?: 'PlaceNoteQuery', getMyPostCategoryById: { __typename?: 'PostCategoryResponse', id: string, userSettingId: string, name: string, parentCategoryId?: string | null, displayOrder?: number | null, detail?: string | null } };
+
+export const AccountUserObjFragmentDoc = gql`
+    fragment AccountUserObj on AccountUserResponse {
+  token
+  userSettingId
+  name
+  imageUrl
+}
+    `;
+export const PostCategoryObjFragmentDoc = gql`
+    fragment PostCategoryObj on PostCategoryResponse {
+  id
+  userSettingId
+  name
+  parentCategoryId
+  displayOrder
+  detail
+}
+    `;
 export const GoogleAuthCodeVerifyDocument = gql`
     mutation GoogleAuthCodeVerify($authCode: String!) {
   googleAuthCodeVerify(authCode: $authCode) {
@@ -230,13 +292,10 @@ export type GoogleAuthCodeVerifyMutationOptions = Apollo.BaseMutationOptions<Goo
 export const LoginByGoogleAuthCodeDocument = gql`
     mutation LoginByGoogleAuthCode($authCode: String!) {
   loginByGoogleAuthCode(authCode: $authCode) {
-    token
-    userSettingId
-    name
-    imageUrl
+    ...AccountUserObj
   }
 }
-    `;
+    ${AccountUserObjFragmentDoc}`;
 export type LoginByGoogleAuthCodeMutationFn = Apollo.MutationFunction<LoginByGoogleAuthCodeMutation, LoginByGoogleAuthCodeMutationVariables>;
 
 /**
@@ -271,13 +330,10 @@ export const AddAccountUserByGoogleDocument = gql`
     name: $name
     imageFile: $file
   ) {
-    token
-    userSettingId
-    name
-    imageUrl
+    ...AccountUserObj
   }
 }
-    `;
+    ${AccountUserObjFragmentDoc}`;
 export type AddAccountUserByGoogleMutationFn = Apollo.MutationFunction<AddAccountUserByGoogleMutation, AddAccountUserByGoogleMutationVariables>;
 
 /**
@@ -307,16 +363,48 @@ export function useAddAccountUserByGoogleMutation(baseOptions?: Apollo.MutationH
 export type AddAccountUserByGoogleMutationHookResult = ReturnType<typeof useAddAccountUserByGoogleMutation>;
 export type AddAccountUserByGoogleMutationResult = Apollo.MutationResult<AddAccountUserByGoogleMutation>;
 export type AddAccountUserByGoogleMutationOptions = Apollo.BaseMutationOptions<AddAccountUserByGoogleMutation, AddAccountUserByGoogleMutationVariables>;
-export const GetAccountUserByTokenDocument = gql`
-    query getAccountUserByToken {
-  getAccountUserByToken {
-    token
-    userSettingId
-    name
-    imageUrl
+export const EditAccountUserDocument = gql`
+    mutation EditAccountUser($userSettingId: String!, $name: String!, $file: Upload) {
+  editAccountUser(userSettingId: $userSettingId, name: $name, imageFile: $file) {
+    ...AccountUserObj
   }
 }
-    `;
+    ${AccountUserObjFragmentDoc}`;
+export type EditAccountUserMutationFn = Apollo.MutationFunction<EditAccountUserMutation, EditAccountUserMutationVariables>;
+
+/**
+ * __useEditAccountUserMutation__
+ *
+ * To run a mutation, you first call `useEditAccountUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditAccountUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editAccountUserMutation, { data, loading, error }] = useEditAccountUserMutation({
+ *   variables: {
+ *      userSettingId: // value for 'userSettingId'
+ *      name: // value for 'name'
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useEditAccountUserMutation(baseOptions?: Apollo.MutationHookOptions<EditAccountUserMutation, EditAccountUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditAccountUserMutation, EditAccountUserMutationVariables>(EditAccountUserDocument, options);
+      }
+export type EditAccountUserMutationHookResult = ReturnType<typeof useEditAccountUserMutation>;
+export type EditAccountUserMutationResult = Apollo.MutationResult<EditAccountUserMutation>;
+export type EditAccountUserMutationOptions = Apollo.BaseMutationOptions<EditAccountUserMutation, EditAccountUserMutationVariables>;
+export const GetAccountUserByTokenDocument = gql`
+    query GetAccountUserByToken {
+  getAccountUserByToken {
+    ...AccountUserObj
+  }
+}
+    ${AccountUserObjFragmentDoc}`;
 
 /**
  * __useGetAccountUserByTokenQuery__
@@ -349,3 +437,122 @@ export type GetAccountUserByTokenQueryHookResult = ReturnType<typeof useGetAccou
 export type GetAccountUserByTokenLazyQueryHookResult = ReturnType<typeof useGetAccountUserByTokenLazyQuery>;
 export type GetAccountUserByTokenSuspenseQueryHookResult = ReturnType<typeof useGetAccountUserByTokenSuspenseQuery>;
 export type GetAccountUserByTokenQueryResult = Apollo.QueryResult<GetAccountUserByTokenQuery, GetAccountUserByTokenQueryVariables>;
+export const AddPostCategoryDocument = gql`
+    mutation AddPostCategory($name: String!, $parentCategoryId: String, $displayOrder: Int, $detail: String) {
+  addPostCategory(
+    name: $name
+    parentCategoryId: $parentCategoryId
+    displayOrder: $displayOrder
+    detail: $detail
+  )
+}
+    `;
+export type AddPostCategoryMutationFn = Apollo.MutationFunction<AddPostCategoryMutation, AddPostCategoryMutationVariables>;
+
+/**
+ * __useAddPostCategoryMutation__
+ *
+ * To run a mutation, you first call `useAddPostCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPostCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPostCategoryMutation, { data, loading, error }] = useAddPostCategoryMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      parentCategoryId: // value for 'parentCategoryId'
+ *      displayOrder: // value for 'displayOrder'
+ *      detail: // value for 'detail'
+ *   },
+ * });
+ */
+export function useAddPostCategoryMutation(baseOptions?: Apollo.MutationHookOptions<AddPostCategoryMutation, AddPostCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddPostCategoryMutation, AddPostCategoryMutationVariables>(AddPostCategoryDocument, options);
+      }
+export type AddPostCategoryMutationHookResult = ReturnType<typeof useAddPostCategoryMutation>;
+export type AddPostCategoryMutationResult = Apollo.MutationResult<AddPostCategoryMutation>;
+export type AddPostCategoryMutationOptions = Apollo.BaseMutationOptions<AddPostCategoryMutation, AddPostCategoryMutationVariables>;
+export const GetMyPostCategoriesDocument = gql`
+    query GetMyPostCategories($nameFilter: String) {
+  getMyPostCategories(nameFilter: $nameFilter) {
+    ...PostCategoryObj
+  }
+}
+    ${PostCategoryObjFragmentDoc}`;
+
+/**
+ * __useGetMyPostCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetMyPostCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyPostCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyPostCategoriesQuery({
+ *   variables: {
+ *      nameFilter: // value for 'nameFilter'
+ *   },
+ * });
+ */
+export function useGetMyPostCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>(GetMyPostCategoriesDocument, options);
+      }
+export function useGetMyPostCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>(GetMyPostCategoriesDocument, options);
+        }
+export function useGetMyPostCategoriesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>(GetMyPostCategoriesDocument, options);
+        }
+export type GetMyPostCategoriesQueryHookResult = ReturnType<typeof useGetMyPostCategoriesQuery>;
+export type GetMyPostCategoriesLazyQueryHookResult = ReturnType<typeof useGetMyPostCategoriesLazyQuery>;
+export type GetMyPostCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetMyPostCategoriesSuspenseQuery>;
+export type GetMyPostCategoriesQueryResult = Apollo.QueryResult<GetMyPostCategoriesQuery, GetMyPostCategoriesQueryVariables>;
+export const GetMyPostCategoryByIdDocument = gql`
+    query GetMyPostCategoryById($idFilter: String!) {
+  getMyPostCategoryById(idFilter: $idFilter) {
+    ...PostCategoryObj
+  }
+}
+    ${PostCategoryObjFragmentDoc}`;
+
+/**
+ * __useGetMyPostCategoryByIdQuery__
+ *
+ * To run a query within a React component, call `useGetMyPostCategoryByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyPostCategoryByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyPostCategoryByIdQuery({
+ *   variables: {
+ *      idFilter: // value for 'idFilter'
+ *   },
+ * });
+ */
+export function useGetMyPostCategoryByIdQuery(baseOptions: Apollo.QueryHookOptions<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables> & ({ variables: GetMyPostCategoryByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables>(GetMyPostCategoryByIdDocument, options);
+      }
+export function useGetMyPostCategoryByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables>(GetMyPostCategoryByIdDocument, options);
+        }
+export function useGetMyPostCategoryByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables>(GetMyPostCategoryByIdDocument, options);
+        }
+export type GetMyPostCategoryByIdQueryHookResult = ReturnType<typeof useGetMyPostCategoryByIdQuery>;
+export type GetMyPostCategoryByIdLazyQueryHookResult = ReturnType<typeof useGetMyPostCategoryByIdLazyQuery>;
+export type GetMyPostCategoryByIdSuspenseQueryHookResult = ReturnType<typeof useGetMyPostCategoryByIdSuspenseQuery>;
+export type GetMyPostCategoryByIdQueryResult = Apollo.QueryResult<GetMyPostCategoryByIdQuery, GetMyPostCategoryByIdQueryVariables>;

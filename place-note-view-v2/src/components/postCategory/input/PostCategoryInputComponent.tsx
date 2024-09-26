@@ -1,13 +1,11 @@
 "use client";
 
 import React, { FC } from "react";
-import Image from "next/image";
 import { z } from "zod";
 import { useForm, Validator } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import { Button, Input, Typography } from "@material-tailwind/react";
+import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
-import { halfSizeRegex } from "@/constants/ValidationConsntants";
 import {
   formItemAreaStyle,
   formLabelStyle,
@@ -16,23 +14,14 @@ import {
   inputTextStyle,
 } from "@/style/FormStyle";
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
-import { AccountUserResponse } from "@/graphql/gen/graphql";
+import { numberInputConvert } from "@/utils/formUtil";
 
 type Props = {
-  execSubmit: (form: UserAccountInputFormType) => void;
+  execSubmit: (form: PostCategoryInputFormType) => void;
   disabledFlag?: boolean;
-  editUser?: AccountUserResponse;
 };
 
-export const userAccountInputFormSchema = z.object({
-  userSettingId: z
-    .string({
-      required_error: "ユーザIDは必須です",
-    })
-    .min(1, {
-      message: "ユーザIDは必須です",
-    })
-    .regex(halfSizeRegex, "半角文字で入力してください"),
+export const postCategoryInputFormSchema = z.object({
   name: z
     .string({
       required_error: "名前は必須です",
@@ -40,32 +29,35 @@ export const userAccountInputFormSchema = z.object({
     .min(1, {
       message: "名前は必須です",
     }),
-  imageFile: z.custom<File>().optional(),
+  parentCategoryId: z.string().optional(),
+  displayOrder: z.preprocess(
+    numberInputConvert,
+    z
+      .number({
+        invalid_type_error: "表示順は数値を入力してください",
+      })
+      .optional()
+  ),
+  detail: z.string().optional(),
 });
 
-export type UserAccountInputFormType = z.infer<
-  typeof userAccountInputFormSchema
+export type PostCategoryInputFormType = z.infer<
+  typeof postCategoryInputFormSchema
 >;
 
-export const UserAccountInputComponent: FC<Props> = ({
+export const PostCategoryInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
-  editUser,
 }) => {
-  const { Field, handleSubmit, setFieldValue } = useForm<
-    UserAccountInputFormType,
-    Validator<UserAccountInputFormType>
+  const { Field, handleSubmit } = useForm<
+    PostCategoryInputFormType,
+    Validator<PostCategoryInputFormType>
   >({
     validatorAdapter: zodValidator(),
     validators: {
-      onSubmit: userAccountInputFormSchema,
+      onSubmit: postCategoryInputFormSchema,
     },
-    defaultValues: (editUser
-      ? {
-          userSettingId: editUser.userSettingId,
-          name: editUser.name,
-        }
-      : {}) as UserAccountInputFormType,
+    defaultValues: {} as PostCategoryInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
@@ -73,35 +65,10 @@ export const UserAccountInputComponent: FC<Props> = ({
 
   return (
     <form>
-      <Field name="userSettingId">
-        {(field) => (
-          <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              ユーザID
-            </Typography>
-            <Input
-              name={field.name}
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              placeholder="半角文字で入力"
-              className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
-              }}
-              onChange={(e) => field.handleChange(e.target.value)}
-              crossOrigin={undefined}
-            />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
-          </div>
-        )}
-      </Field>
       <Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography
-              color="blue-gray"
-              className={formLabelStyle({ type: "required" })}
-            >
+            <Typography className={formLabelStyle({ type: "required" })}>
               名前
             </Typography>
             <Input
@@ -119,28 +86,39 @@ export const UserAccountInputComponent: FC<Props> = ({
           </div>
         )}
       </Field>
-      <Field name="imageFile">
+      <Field name="displayOrder">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography color="blue-gray" className={formLabelStyle()}>
-              アイコン画像
-            </Typography>
-            <input
-              type="file"
+            <Typography color="blue-gray">表示順</Typography>
+            <Input
               name={field.name}
-              onChange={(e) => {
-                setFieldValue("imageFile", e.target.files?.[0]);
+              value={Number.isNaN(field.state.value) ? "" : field.state.value}
+              onBlur={field.handleBlur}
+              className={inputTextStyle()}
+              labelProps={{
+                className: inputTextLabelStyle(),
+              }}
+              onChange={(e) => field.handleChange(parseInt(e.target.value))}
+              crossOrigin={undefined}
+            />
+            <FormErrorMessageComponent errors={field.state.meta.errors} />
+          </div>
+        )}
+      </Field>
+      <Field name="detail">
+        {(field) => (
+          <div className={formItemAreaStyle()}>
+            <Typography color="blue-gray">詳細</Typography>
+            <Textarea
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              className={inputTextStyle()}
+              onChange={(e) => field.handleChange(e.target.value)}
+              labelProps={{
+                className: inputTextLabelStyle(),
               }}
             />
-            {editUser?.imageUrl && !field.state.value && (
-              <Image
-                src={editUser.imageUrl}
-                width={150}
-                height={150}
-                alt={editUser.name}
-                className="mt-2"
-              />
-            )}
           </div>
         )}
       </Field>

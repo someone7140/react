@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client/core";
 
+export const accountUserResponseFragment = gql`
+  fragment AccountUserObj on AccountUserResponse {
+    token
+    userSettingId
+    name
+    imageUrl
+  }
+`;
+
 export const googleAuthCodeVerifyMutationDocument = gql`
   mutation GoogleAuthCodeVerify($authCode: String!) {
     googleAuthCodeVerify(authCode: $authCode) {
@@ -11,10 +20,7 @@ export const googleAuthCodeVerifyMutationDocument = gql`
 export const loginByGoogleAuthCodeMutationDocument = gql`
   mutation LoginByGoogleAuthCode($authCode: String!) {
     loginByGoogleAuthCode(authCode: $authCode) {
-      token
-      userSettingId
-      name
-      imageUrl
+      ...AccountUserObj
     }
   }
 `;
@@ -32,21 +38,31 @@ export const addAccountUserByGoogleMutationDocument = gql`
       name: $name
       imageFile: $file
     ) {
-      token
-      userSettingId
-      name
-      imageUrl
+      ...AccountUserObj
+    }
+  }
+`;
+
+export const editAccountUserMutationDocument = gql`
+  mutation EditAccountUser(
+    $userSettingId: String!
+    $name: String!
+    $file: Upload
+  ) {
+    editAccountUser(
+      userSettingId: $userSettingId
+      name: $name
+      imageFile: $file
+    ) {
+      ...AccountUserObj
     }
   }
 `;
 
 export const getAccountUserByTokenQueryDocument = gql`
-  query getAccountUserByToken {
+  query GetAccountUserByToken {
     getAccountUserByToken {
-      token
-      userSettingId
-      name
-      imageUrl
+      ...AccountUserObj
     }
   }
 `;

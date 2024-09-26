@@ -51,7 +51,7 @@ export const UserAccountRegisterComponent: FC = () => {
         authToken: googleAuthToken ?? "",
         userSettingId: formData.userSettingId,
         name: formData.name,
-        file: formData.imageFile,
+        file: formData.imageFile ?? null,
       },
     });
 

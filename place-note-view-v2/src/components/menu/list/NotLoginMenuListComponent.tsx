@@ -49,7 +49,7 @@ export const NotLoginMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
         <ListItemPrefix>
           <UserPlusIcon className="h-5 w-5" />
         </ListItemPrefix>
-        会員登録
+        ユーザ登録
       </ListItem>
     </List>
   );
