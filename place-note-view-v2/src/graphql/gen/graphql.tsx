@@ -224,6 +224,13 @@ export type AddPostCategoryMutationVariables = Exact<{
 
 export type AddPostCategoryMutation = { __typename?: 'PlaceNoteMutation', addPostCategory: boolean };
 
+export type DeletePostCategoryMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeletePostCategoryMutation = { __typename?: 'PlaceNoteMutation', deletePostCategory: boolean };
+
 export type GetMyPostCategoriesQueryVariables = Exact<{
   nameFilter?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -476,6 +483,37 @@ export function useAddPostCategoryMutation(baseOptions?: Apollo.MutationHookOpti
 export type AddPostCategoryMutationHookResult = ReturnType<typeof useAddPostCategoryMutation>;
 export type AddPostCategoryMutationResult = Apollo.MutationResult<AddPostCategoryMutation>;
 export type AddPostCategoryMutationOptions = Apollo.BaseMutationOptions<AddPostCategoryMutation, AddPostCategoryMutationVariables>;
+export const DeletePostCategoryDocument = gql`
+    mutation DeletePostCategory($id: String!) {
+  deletePostCategory(id: $id)
+}
+    `;
+export type DeletePostCategoryMutationFn = Apollo.MutationFunction<DeletePostCategoryMutation, DeletePostCategoryMutationVariables>;
+
+/**
+ * __useDeletePostCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeletePostCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostCategoryMutation, { data, loading, error }] = useDeletePostCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePostCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeletePostCategoryMutation, DeletePostCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePostCategoryMutation, DeletePostCategoryMutationVariables>(DeletePostCategoryDocument, options);
+      }
+export type DeletePostCategoryMutationHookResult = ReturnType<typeof useDeletePostCategoryMutation>;
+export type DeletePostCategoryMutationResult = Apollo.MutationResult<DeletePostCategoryMutation>;
+export type DeletePostCategoryMutationOptions = Apollo.BaseMutationOptions<DeletePostCategoryMutation, DeletePostCategoryMutationVariables>;
 export const GetMyPostCategoriesDocument = gql`
     query GetMyPostCategories($nameFilter: String) {
   getMyPostCategories(nameFilter: $nameFilter) {

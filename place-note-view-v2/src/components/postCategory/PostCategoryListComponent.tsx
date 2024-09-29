@@ -24,10 +24,12 @@ export const PostCategoryListComponent: FC = () => {
   }
 
   return (
-    <PostCategoryDisplayComponent
-      categories={categories}
-      displayActionButton
-      refetchCategoryFunc={refetch}
-    />
+    <div className="max-w-[70%] min-w-[320px]">
+      <PostCategoryDisplayComponent
+        categories={categories}
+        displayActionButton
+        refetchCategoryFunc={refetch}
+      />
+    </div>
   );
 };

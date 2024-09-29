@@ -2,17 +2,16 @@
 
 import React, { FC } from "react";
 
-import { PostCategoryActionComponent } from "@/components/postCategory/ref/PostCategoryActionComponent";
 import { PostCategoryResponse } from "@/graphql/gen/graphql";
-import { detailTextStyle } from "@/style/PostStyle";
-import { getRootCategoryList } from "@/utils/postUtil";
+import { getChildrenCategory, getRootCategoryList } from "@/utils/postUtil";
+import { PostCategoryItemComponent } from "./PostCategoryItemComponent";
 
 type Props = {
   categories: PostCategoryResponse[];
   displayActionButton?: boolean;
   displayCheck?: boolean;
   checkedCategoryIds?: string[];
-  updateCategoryIdsFunc?: (ids: string) => void;
+  updateCategoryIdsFunc?: (id: string) => void;
   refetchCategoryFunc?: () => void;
 };
 
@@ -25,22 +24,39 @@ export const PostCategoryDisplayComponent: FC<Props> = ({
   refetchCategoryFunc,
 }) => {
   return (
-    <div className="flex flex-col gap-3 max-w-[70%] min-w-[320px]">
+    <div className="flex flex-col gap-3">
       {getRootCategoryList(categories).map((parentCategory) => {
         return (
           <div key={parentCategory.id}>
-            <div className="text-xl text-wrap break-all">
-              {parentCategory.name}
+            <PostCategoryItemComponent
+              {...{
+                category: parentCategory,
+                displayActionButton,
+                displayCheck,
+                checkedCategoryIds,
+                updateCategoryIdsFunc,
+                refetchCategoryFunc,
+              }}
+            />
+            <div className="ml-4 flex flex-col gap-2">
+              {getChildrenCategory(categories, parentCategory.id).map(
+                (childCategory) => {
+                  return (
+                    <PostCategoryItemComponent
+                      key={childCategory.id}
+                      {...{
+                        category: childCategory,
+                        displayActionButton,
+                        displayCheck,
+                        checkedCategoryIds,
+                        updateCategoryIdsFunc,
+                        refetchCategoryFunc,
+                      }}
+                    />
+                  );
+                }
+              )}
             </div>
-            <div className={`mt-2 ml-2 ${detailTextStyle()}`}>
-              {parentCategory.detail}
-            </div>
-            {displayActionButton && (
-              <PostCategoryActionComponent
-                category={parentCategory}
-                refetchCategoryFunc={refetchCategoryFunc}
-              />
-            )}
           </div>
         );
       })}

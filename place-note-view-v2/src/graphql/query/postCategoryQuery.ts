@@ -27,6 +27,12 @@ export const addPostCategoryMutationDocument = gql`
   }
 `;
 
+export const DeletePostCategoryMutationDocument = gql`
+  mutation DeletePostCategory($id: String!) {
+    deletePostCategory(id: $id)
+  }
+`;
+
 export const getMyPostCategoriesQueryDocument = gql`
   ${categoryResponseFragment}
   query GetMyPostCategories($nameFilter: String) {
