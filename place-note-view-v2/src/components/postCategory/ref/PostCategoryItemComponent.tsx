@@ -1,10 +1,13 @@
 "use client";
 
 import React, { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Checkbox } from "@material-tailwind/react";
 
+import { POST_CATEGORY_EDIT_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { PostCategoryDeleteDialogComponent } from "@/components/postCategory/dialog/PostCategoryDeleteDialogComponent";
 import { PostCategoryResponse } from "@/graphql/gen/graphql";
+import { formSubmitAreaStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
 
 type Props = {
@@ -26,10 +29,11 @@ export const PostCategoryItemComponent: FC<Props> = ({
 }) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const isParent = !category.parentCategoryId;
+  const router = useRouter();
 
   return (
     <>
-      <div className="flex items-center">
+      <div className="flex justify-start items-center min-w-[300px]">
         {displayCheck && (
           <Checkbox
             checked={checkedCategoryIds.some((id) => id === category.id)}
@@ -55,8 +59,15 @@ export const PostCategoryItemComponent: FC<Props> = ({
         {category.detail}
       </div>
       {displayActionButton && (
-        <div className="flex gap-10 justify-center mt-2">
-          <Button color="orange">編集</Button>
+        <div className={formSubmitAreaStyle()}>
+          <Button
+            color="orange"
+            onClick={() => {
+              router.push(`${POST_CATEGORY_EDIT_PAGE_PATH}?id=${category.id}`);
+            }}
+          >
+            編集
+          </Button>
           <Button
             color="blue-gray"
             onClick={() => {

@@ -224,6 +224,17 @@ export type AddPostCategoryMutationVariables = Exact<{
 
 export type AddPostCategoryMutation = { __typename?: 'PlaceNoteMutation', addPostCategory: boolean };
 
+export type EditPostCategoryMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  parentCategoryId?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  detail?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type EditPostCategoryMutation = { __typename?: 'PlaceNoteMutation', editPostCategory: boolean };
+
 export type DeletePostCategoryMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
@@ -483,6 +494,47 @@ export function useAddPostCategoryMutation(baseOptions?: Apollo.MutationHookOpti
 export type AddPostCategoryMutationHookResult = ReturnType<typeof useAddPostCategoryMutation>;
 export type AddPostCategoryMutationResult = Apollo.MutationResult<AddPostCategoryMutation>;
 export type AddPostCategoryMutationOptions = Apollo.BaseMutationOptions<AddPostCategoryMutation, AddPostCategoryMutationVariables>;
+export const EditPostCategoryDocument = gql`
+    mutation EditPostCategory($id: String!, $name: String!, $parentCategoryId: String, $displayOrder: Int, $detail: String) {
+  editPostCategory(
+    id: $id
+    name: $name
+    parentCategoryId: $parentCategoryId
+    displayOrder: $displayOrder
+    detail: $detail
+  )
+}
+    `;
+export type EditPostCategoryMutationFn = Apollo.MutationFunction<EditPostCategoryMutation, EditPostCategoryMutationVariables>;
+
+/**
+ * __useEditPostCategoryMutation__
+ *
+ * To run a mutation, you first call `useEditPostCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditPostCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editPostCategoryMutation, { data, loading, error }] = useEditPostCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      parentCategoryId: // value for 'parentCategoryId'
+ *      displayOrder: // value for 'displayOrder'
+ *      detail: // value for 'detail'
+ *   },
+ * });
+ */
+export function useEditPostCategoryMutation(baseOptions?: Apollo.MutationHookOptions<EditPostCategoryMutation, EditPostCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditPostCategoryMutation, EditPostCategoryMutationVariables>(EditPostCategoryDocument, options);
+      }
+export type EditPostCategoryMutationHookResult = ReturnType<typeof useEditPostCategoryMutation>;
+export type EditPostCategoryMutationResult = Apollo.MutationResult<EditPostCategoryMutation>;
+export type EditPostCategoryMutationOptions = Apollo.BaseMutationOptions<EditPostCategoryMutation, EditPostCategoryMutationVariables>;
 export const DeletePostCategoryDocument = gql`
     mutation DeletePostCategory($id: String!) {
   deletePostCategory(id: $id)

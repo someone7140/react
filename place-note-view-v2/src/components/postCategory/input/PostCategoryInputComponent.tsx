@@ -1,14 +1,19 @@
 "use client";
 
 import React, { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm, Validator } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
+import { POST_CATEGORY_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
-import { useGetMyPostCategoriesQuery } from "@/graphql/gen/graphql";
+import {
+  PostCategoryResponse,
+  useGetMyPostCategoriesQuery,
+} from "@/graphql/gen/graphql";
 import {
   formItemAreaStyle,
   formLabelStyle,
@@ -22,6 +27,7 @@ import { getRootCategoryList } from "@/utils/postUtil";
 type Props = {
   execSubmit: (form: PostCategoryInputFormType) => void;
   disabledFlag?: boolean;
+  registeredCategory?: PostCategoryResponse;
 };
 
 export const postCategoryInputFormSchema = z.object({
@@ -51,12 +57,20 @@ export type PostCategoryInputFormType = z.infer<
 export const PostCategoryInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
+  registeredCategory,
 }) => {
-  const { data } = useGetMyPostCategoriesQuery({
-    variables: { nameFilter: null },
-    fetchPolicy: "network-only",
+  const { data: selectCategoryData, loading: selectCategoryLoading } =
+    useGetMyPostCategoriesQuery({
+      variables: { nameFilter: null },
+      fetchPolicy: "network-only",
+    });
+  const selectCategoryList = getRootCategoryList(
+    selectCategoryData?.getMyPostCategories ?? []
+  ).filter((category) => {
+    return category.id !== registeredCategory?.id;
   });
-  const categories = data?.getMyPostCategories;
+
+  const router = useRouter();
   const [parentCategorySelectDialogOpen, setParentCategorySelectDialogOpen] =
     useState(false);
 
@@ -68,7 +82,14 @@ export const PostCategoryInputComponent: FC<Props> = ({
     validators: {
       onSubmit: postCategoryInputFormSchema,
     },
-    defaultValues: {} as PostCategoryInputFormType,
+    defaultValues: (registeredCategory
+      ? {
+          name: registeredCategory.name,
+          parentCategoryId: registeredCategory.parentCategoryId ?? undefined,
+          displayOrder: registeredCategory.displayOrder ?? undefined,
+          detail: registeredCategory.detail ?? undefined,
+        }
+      : {}) as PostCategoryInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
@@ -78,14 +99,14 @@ export const PostCategoryInputComponent: FC<Props> = ({
     selectParentIdParentId: string,
     nowParentId?: string
   ) => {
-    if (nowParentId === selectParentIdParentId) {
-      return undefined;
+    if (selectParentIdParentId === nowParentId) {
+      return "";
     }
     return selectParentIdParentId;
   };
 
   return (
-    <form className=" max-w-[95%]">
+    <form className="max-w-[95%]">
       <Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
@@ -133,7 +154,7 @@ export const PostCategoryInputComponent: FC<Props> = ({
               <Typography color="blue-gray">親カテゴリー</Typography>
               <Button
                 color="orange"
-                disabled={!categories || categories.length === 0}
+                disabled={selectCategoryList.length === 0}
                 onClick={() => {
                   setParentCategorySelectDialogOpen(true);
                 }}
@@ -141,13 +162,17 @@ export const PostCategoryInputComponent: FC<Props> = ({
                 選択
               </Button>
             </div>
-            {categories && (
+            {!selectCategoryLoading && (
               <>
-                {categories.length === 0 && <>カテゴリーが未登録です</>}
+                {selectCategoryList.length === 0 && (
+                  <div className="mt-2 ml-2">
+                    設定できるカテゴリーがありません
+                  </div>
+                )}
                 {field.state.value && (
                   <div className="ml-2 mt-2 text-wrap break-all">
                     {
-                      categories.find(
+                      selectCategoryList.find(
                         (category) => category.id === field.state.value
                       )?.name
                     }
@@ -158,9 +183,9 @@ export const PostCategoryInputComponent: FC<Props> = ({
                   closeDialog={() => {
                     setParentCategorySelectDialogOpen(false);
                   }}
-                  categories={getRootCategoryList(categories)}
+                  categories={selectCategoryList}
                   updateCategoryIdsFunc={(selectParentId: string) => {
-                    field.handleChange(
+                    field.setValue(
                       getUpdatedParentId(selectParentId, field.state.value)
                     );
                     setParentCategorySelectDialogOpen(false);
@@ -191,7 +216,15 @@ export const PostCategoryInputComponent: FC<Props> = ({
       </Field>
       <div className={formSubmitAreaStyle()}>
         <Button color="indigo" loading={disabledFlag} onClick={handleSubmit}>
-          登録
+          {registeredCategory ? "編集" : "登録"}
+        </Button>
+        <Button
+          color="blue-gray"
+          onClick={() => {
+            router.push(POST_CATEGORY_LIST_PAGE_PATH);
+          }}
+        >
+          一覧へ
         </Button>
       </div>
     </form>

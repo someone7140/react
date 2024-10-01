@@ -27,7 +27,25 @@ export const addPostCategoryMutationDocument = gql`
   }
 `;
 
-export const DeletePostCategoryMutationDocument = gql`
+export const editPostCategoryMutationDocument = gql`
+  mutation EditPostCategory(
+    $id: String!
+    $name: String!
+    $parentCategoryId: String
+    $displayOrder: Int
+    $detail: String
+  ) {
+    editPostCategory(
+      id: $id
+      name: $name
+      parentCategoryId: $parentCategoryId
+      displayOrder: $displayOrder
+      detail: $detail
+    )
+  }
+`;
+
+export const deletePostCategoryMutationDocument = gql`
   mutation DeletePostCategory($id: String!) {
     deletePostCategory(id: $id)
   }

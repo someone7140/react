@@ -38,7 +38,7 @@ export const PostCategoryDisplayComponent: FC<Props> = ({
                 refetchCategoryFunc,
               }}
             />
-            <div className="ml-4 flex flex-col gap-2">
+            <div className="ml-4 flex flex-col gap-2 mt-2">
               {getChildrenCategory(categories, parentCategory.id).map(
                 (childCategory) => {
                   return (

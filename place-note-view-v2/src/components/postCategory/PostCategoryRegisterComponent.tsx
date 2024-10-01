@@ -20,7 +20,9 @@ export const PostCategoryRegisterComponent: FC = () => {
     const result = await addCategory({
       variables: {
         name: formData.name,
-        parentCategoryId: formData.parentCategoryId ?? null,
+        parentCategoryId: formData.parentCategoryId
+          ? formData.parentCategoryId
+          : null,
         displayOrder:
           formData.displayOrder != null ? formData.displayOrder : null,
         detail: formData.detail ?? null,

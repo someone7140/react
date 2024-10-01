@@ -5,7 +5,7 @@ export const formItemAreaStyle = tv({
 });
 
 export const formSubmitAreaStyle = tv({
-  base: "w-[100%] flex justify-center gap-3 mt-5",
+  base: "w-[100%] flex justify-center gap-8 mt-5",
 });
 
 export const formLabelStyle = tv({
