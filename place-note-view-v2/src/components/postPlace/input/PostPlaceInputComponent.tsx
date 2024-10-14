@@ -21,16 +21,14 @@ import {
   inputTextLabelStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
-import { numberInputConvert } from "@/utils/formUtil";
-import { getRootCategoryList } from "@/utils/postUtil";
 
 type Props = {
-  execSubmit: (form: PostCategoryInputFormType) => void;
+  execSubmit: (form: PostPlaceInputFormType) => void;
   disabledFlag?: boolean;
   registeredCategory?: PostCategoryResponse;
 };
 
-export const postCategoryInputFormSchema = z.object({
+export const postPlaceInputFormSchema = z.object({
   name: z
     .string({
       required_error: "名前は必須です",
@@ -38,23 +36,15 @@ export const postCategoryInputFormSchema = z.object({
     .min(1, {
       message: "名前は必須です",
     }),
-  parentCategoryId: z.string().optional(),
-  displayOrder: z.preprocess(
-    numberInputConvert,
-    z
-      .number({
-        invalid_type_error: "表示順は数値を入力してください",
-      })
-      .optional()
-  ),
+  address: z.string().optional(),
+  categoryIdList: z.array(z.string()),
   detail: z.string().optional(),
+  url: z.string().optional(),
 });
 
-export type PostCategoryInputFormType = z.infer<
-  typeof postCategoryInputFormSchema
->;
+export type PostPlaceInputFormType = z.infer<typeof postPlaceInputFormSchema>;
 
-export const PostCategoryInputComponent: FC<Props> = ({
+export const PostPlaceInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
   registeredCategory,
@@ -64,46 +54,26 @@ export const PostCategoryInputComponent: FC<Props> = ({
       variables: { nameFilter: null },
       fetchPolicy: "network-only",
     });
-  const selectCategoryList = getRootCategoryList(
-    selectCategoryData?.getMyPostCategories ?? []
-  ).filter((category) => {
-    return category.id !== registeredCategory?.id;
-  });
-
+  const categoryList = selectCategoryData?.getMyPostCategories;
   const router = useRouter();
-  const [parentCategorySelectDialogOpen, setParentCategorySelectDialogOpen] =
+  const [categorySelectDialogOpen, setCategorySelectDialogOpen] =
     useState(false);
 
   const { Field, handleSubmit } = useForm<
-    PostCategoryInputFormType,
-    Validator<PostCategoryInputFormType>
+    PostPlaceInputFormType,
+    Validator<PostPlaceInputFormType>
   >({
     validatorAdapter: zodValidator(),
     validators: {
-      onSubmit: postCategoryInputFormSchema,
+      onSubmit: postPlaceInputFormSchema,
     },
-    defaultValues: (registeredCategory
-      ? {
-          name: registeredCategory.name,
-          parentCategoryId: registeredCategory.parentCategoryId ?? undefined,
-          displayOrder: registeredCategory.displayOrder ?? undefined,
-          detail: registeredCategory.detail ?? undefined,
-        }
-      : {}) as PostCategoryInputFormType,
+    defaultValues: {
+      categoryIdList: [] as string[],
+    } as PostPlaceInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
   });
-
-  const getUpdatedParentId = (
-    selectParentIdParentId: string,
-    nowParentId?: string
-  ) => {
-    if (selectParentIdParentId === nowParentId) {
-      return "";
-    }
-    return selectParentIdParentId;
-  };
 
   return (
     <form className="max-w-[95%]">
@@ -128,72 +98,91 @@ export const PostCategoryInputComponent: FC<Props> = ({
           </div>
         )}
       </Field>
-      <Field name="displayOrder">
+      <Field name="address">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>表示順</Typography>
+            <Typography className={formLabelStyle()}>住所</Typography>
             <Input
               name={field.name}
-              value={Number.isNaN(field.state.value) ? "" : field.state.value}
+              value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
               labelProps={{
                 className: inputTextLabelStyle(),
               }}
-              onChange={(e) => field.handleChange(parseInt(e.target.value))}
+              onChange={(e) => field.handleChange(e.target.value)}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
           </div>
         )}
       </Field>
-      <Field name="parentCategoryId">
+      <Field name="categoryIdList">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex gap-4 items-center">
-              <Typography color="blue-gray">親カテゴリー</Typography>
+              <Typography className={formLabelStyle()}>カテゴリー</Typography>
               <Button
-                color="orange"
-                disabled={selectCategoryList.length === 0}
+                color="light-green"
+                disabled={!categoryList || categoryList.length === 0}
                 onClick={() => {
-                  setParentCategorySelectDialogOpen(true);
+                  setCategorySelectDialogOpen(true);
                 }}
               >
                 選択
               </Button>
             </div>
-            {!selectCategoryLoading && (
+            {!selectCategoryLoading && categoryList && (
               <>
-                {selectCategoryList.length === 0 && (
+                {selectCategoryData.getMyPostCategories.length === 0 && (
                   <div className="mt-2 ml-2">
                     設定できるカテゴリーがありません
                   </div>
                 )}
-                {field.state.value && (
-                  <div className="ml-2 mt-2 text-wrap break-all">
-                    {
-                      selectCategoryList.find(
-                        (category) => category.id === field.state.value
-                      )?.name
-                    }
+                {field.state.value.map((categoryId) => (
+                  <div
+                    className="ml-2 mt-2 text-wrap break-all"
+                    key="categoryId"
+                  >
+                    {categoryList.find((c) => c.id === categoryId)?.name}
                   </div>
-                )}
+                ))}
                 <PostCategorySelectDialogComponent
-                  isOpen={parentCategorySelectDialogOpen}
+                  isOpen={categorySelectDialogOpen}
                   closeDialog={() => {
-                    setParentCategorySelectDialogOpen(false);
+                    setCategorySelectDialogOpen(false);
                   }}
-                  categories={selectCategoryList}
-                  updateCategoryIdsFunc={(selectParentId: string) => {
-                    field.setValue(
-                      getUpdatedParentId(selectParentId, field.state.value)
-                    );
-                    setParentCategorySelectDialogOpen(false);
+                  categories={categoryList}
+                  updateCategoryIdsFunc={(selectId: string) => {
+                    if (field.state.value.some((id) => id === selectId)) {
+                      field.setValue(
+                        field.state.value.filter((id) => id !== selectId)
+                      );
+                    } else {
+                      field.setValue([...field.state.value, selectId]);
+                    }
                   }}
-                  selectedIds={field.state.value ? [field.state.value] : []}
+                  selectedIds={field.state.value}
                 />
               </>
             )}
+          </div>
+        )}
+      </Field>
+      <Field name="url">
+        {(field) => (
+          <div className={formItemAreaStyle()}>
+            <Typography className={formLabelStyle()}>参考URL</Typography>
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              className={inputTextStyle()}
+              labelProps={{
+                className: inputTextLabelStyle(),
+              }}
+              onChange={(e) => field.handleChange(e.target.value)}
+              crossOrigin={undefined}
+            />
           </div>
         )}
       </Field>

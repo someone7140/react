@@ -19,6 +19,11 @@ export const formLabelStyle = tv({
 
 export const inputTextStyle = tv({
   base: " !border-t-blue-gray-200 focus:!border-t-gray-900 min-w-[330px] !font-semibold",
+  variants: {
+    type: {
+      short: "min-w-[130px] max-w-[200px]",
+    },
+  },
 });
 
 export const inputTextLabelStyle = tv({

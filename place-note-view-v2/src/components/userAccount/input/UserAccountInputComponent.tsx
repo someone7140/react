@@ -98,10 +98,7 @@ export const UserAccountInputComponent: FC<Props> = ({
       <Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography
-              color="blue-gray"
-              className={formLabelStyle({ type: "required" })}
-            >
+            <Typography className={formLabelStyle({ type: "required" })}>
               名前
             </Typography>
             <Input
@@ -122,9 +119,7 @@ export const UserAccountInputComponent: FC<Props> = ({
       <Field name="imageFile">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography color="blue-gray" className={formLabelStyle()}>
-              アイコン画像
-            </Typography>
+            <Typography className={formLabelStyle()}>アイコン画像</Typography>
             <input
               type="file"
               name={field.name}
