@@ -140,7 +140,7 @@ export const UserAccountInputComponent: FC<Props> = ({
         )}
       </Field>
       <div className={formSubmitAreaStyle()}>
-        <Button color="indigo" loading={disabledFlag} onClick={handleSubmit}>
+        <Button color="indigo" disabled={disabledFlag} onClick={handleSubmit}>
           登録
         </Button>
       </div>

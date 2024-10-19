@@ -3,6 +3,7 @@
 import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { Spinner } from "@material-tailwind/react";
 
 import { POST_PLACE_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import {
@@ -11,20 +12,24 @@ import {
 } from "@/components/postPlace/input/PostPlaceInputComponent";
 import {
   LatLon,
-  useAddPostPlaceMutation,
-  useGetMyPostCategoriesQuery,
+  useEditPostPlaceMutation,
+  useGetPostPlacesAndCategoriesQuery,
 } from "@/graphql/gen/graphql";
 import { useGeolocationService } from "@/hooks/geolocation/useGeolocationService";
 
-export const PostPlaceRegisterComponent: FC = () => {
-  const [addPostPlace, { loading: addPostPlaceLoading }] =
-    useAddPostPlaceMutation();
-  const { getAddressInfo } = useGeolocationService();
-  const router = useRouter();
-  const { data: selectCategoryData } = useGetMyPostCategoriesQuery({
-    variables: { nameFilter: null },
+type Props = {
+  placeId: string;
+};
+
+export const PostPlaceEditComponent: FC<Props> = ({ placeId }) => {
+  const { data, loading } = useGetPostPlacesAndCategoriesQuery({
+    variables: { idFilter: placeId, nameFilter: null, categoryFilter: null },
     fetchPolicy: "network-only",
   });
+  const [editPostPlace, { loading: editPostPlaceLoading }] =
+    useEditPostPlaceMutation();
+  const { getAddressInfo } = useGeolocationService();
+  const router = useRouter();
 
   const execSubmit = async (formData: PostPlaceInputFormType) => {
     // 住所から緯度経度と都道府県コードを取得
@@ -41,8 +46,9 @@ export const PostPlaceRegisterComponent: FC = () => {
       prefectureCode = addressInfo?.prefectureCode;
     }
 
-    const result = await addPostPlace({
+    const result = await editPostPlace({
       variables: {
+        id: placeId,
         name: formData.name,
         address: formData.address ?? null,
         latLon: latLon ?? null,
@@ -53,20 +59,29 @@ export const PostPlaceRegisterComponent: FC = () => {
       },
     });
 
-    const addPostPlaceResult = result.data?.addPostPlace;
-    if (result.errors || !addPostPlaceResult) {
-      toast.error("登録に失敗しました");
+    const editPostPlaceResult = result.data?.editPostPlace;
+    if (result.errors || !editPostPlaceResult) {
+      toast.error("更新に失敗しました");
     } else {
-      toast("場所を登録しました");
+      toast("場所を更新しました");
       router.push(POST_PLACE_LIST_PAGE_PATH);
     }
   };
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
-    <PostPlaceInputComponent
-      execSubmit={execSubmit}
-      disabledFlag={addPostPlaceLoading}
-      categoryList={selectCategoryData?.getMyPostCategories}
-    />
+    <>
+      {data && data.getPostPlaces.length > 0 && (
+        <PostPlaceInputComponent
+          execSubmit={execSubmit}
+          disabledFlag={editPostPlaceLoading}
+          categoryList={data.getMyPostCategories}
+          registeredPlace={data.getPostPlaces[0]}
+        />
+      )}
+    </>
   );
 };

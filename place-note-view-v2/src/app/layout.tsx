@@ -41,7 +41,7 @@ export default function RootLayout({
             <SidebarComponent />
             <div className="flex justify-center mt-4">
               <div className="max-w-[95%] min-w-[300px]">
-                <div className="flex justify-start w-[100%] ml-3">
+                <div className="flex justify-start w-[100%] ml-3 mb-4">
                   <div>{children}</div>
                 </div>
               </div>

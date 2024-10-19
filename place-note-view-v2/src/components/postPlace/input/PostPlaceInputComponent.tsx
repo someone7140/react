@@ -8,12 +8,9 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
-import { POST_CATEGORY_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { POST_PLACE_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
-import {
-  PostCategoryResponse,
-  useGetMyPostCategoriesQuery,
-} from "@/graphql/gen/graphql";
+import { PostCategoryResponse, PostPlaceResponse } from "@/graphql/gen/graphql";
 import {
   formItemAreaStyle,
   formLabelStyle,
@@ -25,7 +22,8 @@ import {
 type Props = {
   execSubmit: (form: PostPlaceInputFormType) => void;
   disabledFlag?: boolean;
-  registeredCategory?: PostCategoryResponse;
+  registeredPlace?: PostPlaceResponse;
+  categoryList?: PostCategoryResponse[];
 };
 
 export const postPlaceInputFormSchema = z.object({
@@ -47,14 +45,9 @@ export type PostPlaceInputFormType = z.infer<typeof postPlaceInputFormSchema>;
 export const PostPlaceInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
-  registeredCategory,
+  registeredPlace,
+  categoryList,
 }) => {
-  const { data: selectCategoryData, loading: selectCategoryLoading } =
-    useGetMyPostCategoriesQuery({
-      variables: { nameFilter: null },
-      fetchPolicy: "network-only",
-    });
-  const categoryList = selectCategoryData?.getMyPostCategories;
   const router = useRouter();
   const [categorySelectDialogOpen, setCategorySelectDialogOpen] =
     useState(false);
@@ -67,9 +60,17 @@ export const PostPlaceInputComponent: FC<Props> = ({
     validators: {
       onSubmit: postPlaceInputFormSchema,
     },
-    defaultValues: {
-      categoryIdList: [] as string[],
-    } as PostPlaceInputFormType,
+    defaultValues: (registeredPlace
+      ? {
+          name: registeredPlace.name ?? undefined,
+          address: registeredPlace.address ?? undefined,
+          categoryIdList: registeredPlace.categoryIdList ?? [],
+          detail: registeredPlace.detail ?? undefined,
+          url: registeredPlace.url ?? undefined,
+        }
+      : {
+          categoryIdList: [] as string[],
+        }) as PostPlaceInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
@@ -131,9 +132,9 @@ export const PostPlaceInputComponent: FC<Props> = ({
                 選択
               </Button>
             </div>
-            {!selectCategoryLoading && categoryList && (
+            {categoryList && (
               <>
-                {selectCategoryData.getMyPostCategories.length === 0 && (
+                {categoryList.length === 0 && (
                   <div className="mt-2 ml-2">
                     設定できるカテゴリーがありません
                   </div>
@@ -141,7 +142,7 @@ export const PostPlaceInputComponent: FC<Props> = ({
                 {field.state.value.map((categoryId) => (
                   <div
                     className="ml-2 mt-2 text-wrap break-all"
-                    key="categoryId"
+                    key={categoryId}
                   >
                     {categoryList.find((c) => c.id === categoryId)?.name}
                   </div>
@@ -204,13 +205,13 @@ export const PostPlaceInputComponent: FC<Props> = ({
         )}
       </Field>
       <div className={formSubmitAreaStyle()}>
-        <Button color="indigo" loading={disabledFlag} onClick={handleSubmit}>
-          {registeredCategory ? "編集" : "登録"}
+        <Button color="indigo" disabled={disabledFlag} onClick={handleSubmit}>
+          {registeredPlace ? "編集" : "登録"}
         </Button>
         <Button
           color="blue-gray"
           onClick={() => {
-            router.push(POST_CATEGORY_LIST_PAGE_PATH);
+            router.push(POST_PLACE_LIST_PAGE_PATH);
           }}
         >
           一覧へ

@@ -62,3 +62,33 @@ export const getPostPlacesAndCategoriesQueryDocument = gql`
     }
   }
 `;
+
+export const editPostPlaceMutationDocument = gql`
+  mutation EditPostPlace(
+    $id: String!
+    $name: String!
+    $address: String
+    $latLon: LatLon
+    $prefectureCode: String
+    $categoryIdList: [String!]!
+    $detail: String
+    $url: String
+  ) {
+    editPostPlace(
+      id: $id
+      name: $name
+      address: $address
+      latLon: $latLon
+      prefectureCode: $prefectureCode
+      categoryIdList: $categoryIdList
+      detail: $detail
+      url: $url
+    )
+  }
+`;
+
+export const deletePostPlaceMutationDocument = gql`
+  mutation DeletePostPlace($id: String!) {
+    deletePostPlace(id: $id)
+  }
+`;

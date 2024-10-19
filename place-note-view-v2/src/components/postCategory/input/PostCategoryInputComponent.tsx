@@ -215,7 +215,7 @@ export const PostCategoryInputComponent: FC<Props> = ({
         )}
       </Field>
       <div className={formSubmitAreaStyle()}>
-        <Button color="indigo" loading={disabledFlag} onClick={handleSubmit}>
+        <Button color="indigo" disabled={disabledFlag} onClick={handleSubmit}>
           {registeredCategory ? "編集" : "登録"}
         </Button>
         <Button

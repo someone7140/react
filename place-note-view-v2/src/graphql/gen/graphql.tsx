@@ -299,6 +299,27 @@ export type GetPostPlacesAndCategoriesQueryVariables = Exact<{
 
 export type GetPostPlacesAndCategoriesQuery = { __typename?: 'PlaceNoteQuery', getPostPlaces: Array<{ __typename?: 'PostPlaceResponse', id: string, name: string, userSettingId: string, address?: string | null, prefectureCode?: string | null, categoryIdList: Array<string>, detail?: string | null, url?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }>, getMyPostCategories: Array<{ __typename?: 'PostCategoryResponse', id: string, userSettingId: string, name: string, parentCategoryId?: string | null, displayOrder?: number | null, detail?: string | null }> };
 
+export type EditPostPlaceMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
+  latLon?: InputMaybe<LatLon>;
+  prefectureCode?: InputMaybe<Scalars['String']['input']>;
+  categoryIdList: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  detail?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type EditPostPlaceMutation = { __typename?: 'PlaceNoteMutation', editPostPlace: boolean };
+
+export type DeletePostPlaceMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeletePostPlaceMutation = { __typename?: 'PlaceNoteMutation', deletePostPlace: boolean };
+
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on AccountUserResponse {
   token
@@ -835,3 +856,81 @@ export type GetPostPlacesAndCategoriesQueryHookResult = ReturnType<typeof useGet
 export type GetPostPlacesAndCategoriesLazyQueryHookResult = ReturnType<typeof useGetPostPlacesAndCategoriesLazyQuery>;
 export type GetPostPlacesAndCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetPostPlacesAndCategoriesSuspenseQuery>;
 export type GetPostPlacesAndCategoriesQueryResult = Apollo.QueryResult<GetPostPlacesAndCategoriesQuery, GetPostPlacesAndCategoriesQueryVariables>;
+export const EditPostPlaceDocument = gql`
+    mutation EditPostPlace($id: String!, $name: String!, $address: String, $latLon: LatLon, $prefectureCode: String, $categoryIdList: [String!]!, $detail: String, $url: String) {
+  editPostPlace(
+    id: $id
+    name: $name
+    address: $address
+    latLon: $latLon
+    prefectureCode: $prefectureCode
+    categoryIdList: $categoryIdList
+    detail: $detail
+    url: $url
+  )
+}
+    `;
+export type EditPostPlaceMutationFn = Apollo.MutationFunction<EditPostPlaceMutation, EditPostPlaceMutationVariables>;
+
+/**
+ * __useEditPostPlaceMutation__
+ *
+ * To run a mutation, you first call `useEditPostPlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditPostPlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editPostPlaceMutation, { data, loading, error }] = useEditPostPlaceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      address: // value for 'address'
+ *      latLon: // value for 'latLon'
+ *      prefectureCode: // value for 'prefectureCode'
+ *      categoryIdList: // value for 'categoryIdList'
+ *      detail: // value for 'detail'
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useEditPostPlaceMutation(baseOptions?: Apollo.MutationHookOptions<EditPostPlaceMutation, EditPostPlaceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditPostPlaceMutation, EditPostPlaceMutationVariables>(EditPostPlaceDocument, options);
+      }
+export type EditPostPlaceMutationHookResult = ReturnType<typeof useEditPostPlaceMutation>;
+export type EditPostPlaceMutationResult = Apollo.MutationResult<EditPostPlaceMutation>;
+export type EditPostPlaceMutationOptions = Apollo.BaseMutationOptions<EditPostPlaceMutation, EditPostPlaceMutationVariables>;
+export const DeletePostPlaceDocument = gql`
+    mutation DeletePostPlace($id: String!) {
+  deletePostPlace(id: $id)
+}
+    `;
+export type DeletePostPlaceMutationFn = Apollo.MutationFunction<DeletePostPlaceMutation, DeletePostPlaceMutationVariables>;
+
+/**
+ * __useDeletePostPlaceMutation__
+ *
+ * To run a mutation, you first call `useDeletePostPlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostPlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostPlaceMutation, { data, loading, error }] = useDeletePostPlaceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePostPlaceMutation(baseOptions?: Apollo.MutationHookOptions<DeletePostPlaceMutation, DeletePostPlaceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePostPlaceMutation, DeletePostPlaceMutationVariables>(DeletePostPlaceDocument, options);
+      }
+export type DeletePostPlaceMutationHookResult = ReturnType<typeof useDeletePostPlaceMutation>;
+export type DeletePostPlaceMutationResult = Apollo.MutationResult<DeletePostPlaceMutation>;
+export type DeletePostPlaceMutationOptions = Apollo.BaseMutationOptions<DeletePostPlaceMutation, DeletePostPlaceMutationVariables>;

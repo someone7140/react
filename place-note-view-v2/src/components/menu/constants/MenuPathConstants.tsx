@@ -11,3 +11,4 @@ export const POST_CATEGORY_ADD_PAGE_PATH = "/postCategory/add";
 export const POST_CATEGORY_EDIT_PAGE_PATH = "/postCategory/edit";
 export const POST_PLACE_LIST_PAGE_PATH = "/postPlace/list";
 export const POST_PLACE_ADD_PAGE_PATH = "/postPlace/add";
+export const POST_PLACE_EDIT_PAGE_PATH = "/postPlace/edit";

@@ -4,6 +4,7 @@ import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Input, Spinner } from "@material-tailwind/react";
 
+import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceActionComponent";
 import { useGetPostPlacesAndCategoriesQuery } from "@/graphql/gen/graphql";
 import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
@@ -54,7 +55,7 @@ export const PostPlaceListComponent: FC = () => {
                 />
                 <Button
                   variant="filled"
-                  loading={loading}
+                  disabled={loading}
                   className="w-[150px]"
                   onClick={onClickFilter}
                   color="light-blue"
@@ -98,6 +99,13 @@ export const PostPlaceListComponent: FC = () => {
                               )
                               .join("、")}
                           </div>
+                        </div>
+                        <div className="mt-4">
+                          <PostPlaceActionComponent
+                            place={place}
+                            actionType="update"
+                            refetchPlaceFunc={refetch}
+                          />
                         </div>
                       </div>
                     );
