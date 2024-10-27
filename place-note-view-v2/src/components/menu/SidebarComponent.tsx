@@ -31,6 +31,7 @@ export const SidebarComponent: FC = ({}) => {
         onClose={() => {
           setIsOpenSidebar(false);
         }}
+        overlay={false}
       >
         <Card
           color="transparent"
