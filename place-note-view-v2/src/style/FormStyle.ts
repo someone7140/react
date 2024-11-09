@@ -9,7 +9,7 @@ export const formSubmitAreaStyle = tv({
 });
 
 export const formLabelStyle = tv({
-  base: "text-stone-500 mb-1",
+  base: "text-stone-500 mb-1 font-semibold",
   variants: {
     type: {
       required: "after:content-['*'] after:ml-0.5 after:text-red-500",

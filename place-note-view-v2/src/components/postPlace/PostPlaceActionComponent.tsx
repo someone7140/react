@@ -10,13 +10,13 @@ import { PostPlaceDeleteDialogComponent } from "@/components/postPlace/dialog/Po
 
 type Props = {
   place: PostPlaceResponse;
-  actionType: "update" | "select";
   refetchPlaceFunc?: () => void;
+  selectAction?: (place: PostPlaceResponse) => void;
 };
 
 export const PostPlaceActionComponent: FC<Props> = ({
   place,
-  actionType,
+  selectAction,
   refetchPlaceFunc,
 }) => {
   const router = useRouter();
@@ -24,12 +24,17 @@ export const PostPlaceActionComponent: FC<Props> = ({
 
   return (
     <div className="flex w-[100%] gap-5 justify-center">
-      {actionType === "select" && (
-        <Button color="orange" onClick={() => {}}>
+      {selectAction && (
+        <Button
+          color="orange"
+          onClick={() => {
+            selectAction(place);
+          }}
+        >
           選択
         </Button>
       )}
-      {actionType === "update" && (
+      {!selectAction && (
         <>
           <div>
             <Button

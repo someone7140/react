@@ -4,12 +4,20 @@ import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Input, Spinner } from "@material-tailwind/react";
 
+import { SelectPostPlaceAndCategories } from "@/components/post/input/PostInputComponent";
 import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceActionComponent";
-import { useGetPostPlacesAndCategoriesQuery } from "@/graphql/gen/graphql";
+import {
+  PostPlaceResponse,
+  useGetPostPlacesAndCategoriesQuery,
+} from "@/graphql/gen/graphql";
 import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
 
-export const PostPlaceListComponent: FC = () => {
+type Props = {
+  selectAction?: (placeAndCategories: SelectPostPlaceAndCategories) => void;
+};
+
+export const PostPlaceListComponent: FC<Props> = ({ selectAction }) => {
   const { data, loading, refetch } = useGetPostPlacesAndCategoriesQuery({
     variables: { idFilter: null, nameFilter: null, categoryFilter: null },
     fetchPolicy: "network-only",
@@ -103,8 +111,17 @@ export const PostPlaceListComponent: FC = () => {
                         <div className="mt-4">
                           <PostPlaceActionComponent
                             place={place}
-                            actionType="update"
                             refetchPlaceFunc={refetch}
+                            selectAction={
+                              selectAction
+                                ? (postPlace: PostPlaceResponse) => {
+                                    selectAction({
+                                      postPlace: postPlace,
+                                      categories: categoryList ?? [],
+                                    });
+                                  }
+                                : undefined
+                            }
                           />
                         </div>
                       </div>

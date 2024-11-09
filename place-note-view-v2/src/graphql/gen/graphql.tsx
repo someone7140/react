@@ -16,6 +16,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: Date; output: Date; }
   Upload: { input: File; output: File; }
 };
 
@@ -46,8 +47,9 @@ export type LatLonResponse = {
 export type PlaceNoteMutation = {
   __typename?: 'PlaceNoteMutation';
   addAccountUserByGoogle: FieldWrapper<AccountUserResponse>;
+  addPost: FieldWrapper<Scalars['Boolean']['output']>;
   addPostCategory: FieldWrapper<Scalars['Boolean']['output']>;
-  addPostPlace: FieldWrapper<Scalars['Boolean']['output']>;
+  addPostPlace: FieldWrapper<Scalars['String']['output']>;
   deletePostCategory: FieldWrapper<Scalars['Boolean']['output']>;
   deletePostPlace: FieldWrapper<Scalars['Boolean']['output']>;
   editAccountUser: FieldWrapper<AccountUserResponse>;
@@ -63,6 +65,17 @@ export type PlaceNoteMutationAddAccountUserByGoogleArgs = {
   imageFile?: InputMaybe<Scalars['Upload']['input']>;
   name: Scalars['String']['input'];
   userSettingId: Scalars['String']['input'];
+};
+
+
+export type PlaceNoteMutationAddPostArgs = {
+  categoryIdList: Array<Scalars['String']['input']>;
+  detail?: InputMaybe<Scalars['String']['input']>;
+  isOpen: Scalars['Boolean']['input'];
+  placeId: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+  urlList: Array<Scalars['String']['input']>;
+  visitedDate: Scalars['DateTime']['input'];
 };
 
 
@@ -281,7 +294,7 @@ export type AddPostPlaceMutationVariables = Exact<{
 }>;
 
 
-export type AddPostPlaceMutation = { __typename?: 'PlaceNoteMutation', addPostPlace: boolean };
+export type AddPostPlaceMutation = { __typename?: 'PlaceNoteMutation', addPostPlace: string };
 
 export type GetLatLonFromAddressQueryVariables = Exact<{
   address: Scalars['String']['input'];
@@ -319,6 +332,19 @@ export type DeletePostPlaceMutationVariables = Exact<{
 
 
 export type DeletePostPlaceMutation = { __typename?: 'PlaceNoteMutation', deletePostPlace: boolean };
+
+export type AddPostMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+  placeId: Scalars['String']['input'];
+  visitedDate: Scalars['DateTime']['input'];
+  isOpen: Scalars['Boolean']['input'];
+  categoryIdList: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  detail?: InputMaybe<Scalars['String']['input']>;
+  urlList: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type AddPostMutation = { __typename?: 'PlaceNoteMutation', addPost: boolean };
 
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on AccountUserResponse {
@@ -934,3 +960,48 @@ export function useDeletePostPlaceMutation(baseOptions?: Apollo.MutationHookOpti
 export type DeletePostPlaceMutationHookResult = ReturnType<typeof useDeletePostPlaceMutation>;
 export type DeletePostPlaceMutationResult = Apollo.MutationResult<DeletePostPlaceMutation>;
 export type DeletePostPlaceMutationOptions = Apollo.BaseMutationOptions<DeletePostPlaceMutation, DeletePostPlaceMutationVariables>;
+export const AddPostDocument = gql`
+    mutation AddPost($title: String!, $placeId: String!, $visitedDate: DateTime!, $isOpen: Boolean!, $categoryIdList: [String!]!, $detail: String, $urlList: [String!]!) {
+  addPost(
+    title: $title
+    placeId: $placeId
+    visitedDate: $visitedDate
+    isOpen: $isOpen
+    categoryIdList: $categoryIdList
+    detail: $detail
+    urlList: $urlList
+  )
+}
+    `;
+export type AddPostMutationFn = Apollo.MutationFunction<AddPostMutation, AddPostMutationVariables>;
+
+/**
+ * __useAddPostMutation__
+ *
+ * To run a mutation, you first call `useAddPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPostMutation, { data, loading, error }] = useAddPostMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      placeId: // value for 'placeId'
+ *      visitedDate: // value for 'visitedDate'
+ *      isOpen: // value for 'isOpen'
+ *      categoryIdList: // value for 'categoryIdList'
+ *      detail: // value for 'detail'
+ *      urlList: // value for 'urlList'
+ *   },
+ * });
+ */
+export function useAddPostMutation(baseOptions?: Apollo.MutationHookOptions<AddPostMutation, AddPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddPostMutation, AddPostMutationVariables>(AddPostDocument, options);
+      }
+export type AddPostMutationHookResult = ReturnType<typeof useAddPostMutation>;
+export type AddPostMutationResult = Apollo.MutationResult<AddPostMutation>;
+export type AddPostMutationOptions = Apollo.BaseMutationOptions<AddPostMutation, AddPostMutationVariables>;

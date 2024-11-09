@@ -4,7 +4,10 @@ import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { POST_PLACE_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import {
+  POST_ADD_PAGE_PATH,
+  POST_PLACE_LIST_PAGE_PATH,
+} from "@/components/menu/constants/MenuPathConstants";
 import {
   PostPlaceInputComponent,
   PostPlaceInputFormType,
@@ -16,7 +19,11 @@ import {
 } from "@/graphql/gen/graphql";
 import { useGeolocationService } from "@/hooks/geolocation/useGeolocationService";
 
-export const PostPlaceRegisterComponent: FC = () => {
+type Props = {
+  isFromPost?: boolean;
+};
+
+export const PostPlaceRegisterComponent: FC<Props> = ({ isFromPost }) => {
   const [addPostPlace, { loading: addPostPlaceLoading }] =
     useAddPostPlaceMutation();
   const { getAddressInfo } = useGeolocationService();
@@ -58,7 +65,11 @@ export const PostPlaceRegisterComponent: FC = () => {
       toast.error("登録に失敗しました");
     } else {
       toast("場所を登録しました");
-      router.push(POST_PLACE_LIST_PAGE_PATH);
+      if (isFromPost) {
+        router.push(`${POST_ADD_PAGE_PATH}?placeId=${addPostPlaceResult}`);
+      } else {
+        router.push(POST_PLACE_LIST_PAGE_PATH);
+      }
     }
   };
 
