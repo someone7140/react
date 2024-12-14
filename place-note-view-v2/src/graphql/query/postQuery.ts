@@ -21,3 +21,46 @@ export const addPostMutationDocument = gql`
     )
   }
 `;
+
+export const getMyPostsQueryDocument = gql`
+  query GetMyPosts(
+    $idFilter: String
+    $categoryIdsFilter: [String!]
+    $placeIdFilter: String
+  ) {
+    getMyPosts(
+      idFilter: $idFilter
+      categoryIdsFilter: $categoryIdsFilter
+      placeIdFilter: $placeIdFilter
+    ) {
+      id
+      userSettingId
+      title
+      visitedDateStr
+      isOpen
+      postPlace {
+        id
+        name
+        prefectureCode
+        url
+        address
+        latLon {
+          lat
+          lon
+        }
+      }
+      categoryIdList
+      urlList {
+        url
+        urlType
+        urlInfo {
+          title
+          imageUrl
+          siteName
+        }
+        embedHtml
+      }
+      detail
+    }
+  }
+`;

@@ -65,7 +65,10 @@ export const UserAccountInputComponent: FC<Props> = ({
           userSettingId: editUser.userSettingId,
           name: editUser.name,
         }
-      : {}) as UserAccountInputFormType,
+      : {
+          userSettingId: "",
+          name: "",
+        }) as UserAccountInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },

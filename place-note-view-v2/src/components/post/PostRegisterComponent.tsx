@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button, Spinner } from "@material-tailwind/react";
@@ -8,13 +8,12 @@ import { Button, Spinner } from "@material-tailwind/react";
 import {
   POST_LIST_PAGE_PATH,
   POST_PLACE_ADD_PAGE_PATH,
+  POST_PLACE_LIST_PAGE_PATH,
 } from "@/components/menu/constants/MenuPathConstants";
 import {
   PostInputComponent,
   PostInputFormType,
-  SelectPostPlaceAndCategories,
 } from "@/components/post/input/PostInputComponent";
-import { PostPlaceListComponent } from "@/components/postPlace/PostPlaceListComponent";
 import {
   useAddPostMutation,
   useGetPostPlacesAndCategoriesQuery,
@@ -27,10 +26,6 @@ type Props = {
 
 export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
   const router = useRouter();
-  const [isSelectedPlaceMethod, setIsSelectedPlaceMethod] =
-    useState<boolean>(false);
-  const [selectPostPlaceAndCategories, setSelectPostPlaceAndCategories] =
-    useState<SelectPostPlaceAndCategories | undefined>(undefined);
   const [addPost, { loading: addPostLoading }] = useAddPostMutation();
 
   const { data, loading } = useGetPostPlacesAndCategoriesQuery({
@@ -43,13 +38,11 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
       variables: {
         title: formData.title,
         visitedDate: formData.visitedDate,
-        placeId: placeId
-          ? placeId
-          : selectPostPlaceAndCategories?.postPlace.id ?? "",
+        placeId: placeId ? placeId : "",
         categoryIdList: formData.categoryIdList,
         isOpen: formData.isOpen,
         detail: formData.detail ?? null,
-        urlList: formData.urlList,
+        urlList: formData.urlList.filter((url) => !!url),
       },
     });
 
@@ -63,17 +56,11 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
   };
 
   const onClickPlaceSelect = () => {
-    setIsSelectedPlaceMethod(true);
+    router.push(`${POST_PLACE_LIST_PAGE_PATH}`);
   };
 
   const onClickAddPlace = () => {
     router.push(`${POST_PLACE_ADD_PAGE_PATH}?isFromPost=true`);
-  };
-
-  const selectPlaceAction = (
-    postPlaceAndCategories: SelectPostPlaceAndCategories
-  ) => {
-    setSelectPostPlaceAndCategories(postPlaceAndCategories);
   };
 
   if (loading) {
@@ -99,55 +86,23 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
       )}
       {!placeId && (
         <>
-          <div className={pageTitleStyle()}>
-            {selectPostPlaceAndCategories
-              ? `「${selectPostPlaceAndCategories.postPlace.name}」で投稿`
-              : "投稿する場所"}
+          <div className={pageTitleStyle()}>投稿する場所</div>
+          <div className="flex flex-col gap-6 items-center mt-6">
+            <Button
+              color="indigo"
+              onClick={onClickPlaceSelect}
+              className="w-[180px]"
+            >
+              登録済みの場所を選択
+            </Button>
+            <Button
+              color="indigo"
+              onClick={onClickAddPlace}
+              className="w-[180px]"
+            >
+              新規に場所を追加
+            </Button>
           </div>
-          {!isSelectedPlaceMethod && (
-            <div className="flex flex-col gap-6 items-center mt-6">
-              <Button
-                color="indigo"
-                onClick={onClickPlaceSelect}
-                className="w-[180px]"
-              >
-                登録済みの場所を選択
-              </Button>
-              <Button
-                color="indigo"
-                onClick={onClickAddPlace}
-                className="w-[180px]"
-              >
-                新規に場所を追加
-              </Button>
-            </div>
-          )}
-          {isSelectedPlaceMethod && (
-            <>
-              {!selectPostPlaceAndCategories && (
-                <>
-                  <PostPlaceListComponent selectAction={selectPlaceAction} />
-                  <div className="flex mt-4 justify-center">
-                    <Button
-                      color="blue-gray"
-                      onClick={() => {
-                        setIsSelectedPlaceMethod(false);
-                      }}
-                    >
-                      選択へ戻る
-                    </Button>
-                  </div>
-                </>
-              )}
-              {selectPostPlaceAndCategories && (
-                <PostInputComponent
-                  execSubmit={execSubmit}
-                  disabledFlag={addPostLoading}
-                  selectPostPlaceAndCategories={selectPostPlaceAndCategories}
-                />
-              )}
-            </>
-          )}
         </>
       )}
     </>

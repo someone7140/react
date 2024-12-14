@@ -5,9 +5,9 @@ import {
   ApolloNextAppProvider,
   InMemoryCache,
 } from "@apollo/experimental-nextjs-app-support";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 import { useAuthManagement } from "@/hooks/useAuthManagement";
-import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 function makeClient(authToken?: string) {
   let headers: Record<string, string> = {};

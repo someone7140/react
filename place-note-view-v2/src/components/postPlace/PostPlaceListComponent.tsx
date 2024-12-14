@@ -2,9 +2,10 @@
 
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button, Input, Spinner } from "@material-tailwind/react";
 
-import { SelectPostPlaceAndCategories } from "@/components/post/input/PostInputComponent";
+import { POST_ADD_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceActionComponent";
 import {
   PostPlaceResponse,
@@ -13,11 +14,8 @@ import {
 import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
 
-type Props = {
-  selectAction?: (placeAndCategories: SelectPostPlaceAndCategories) => void;
-};
-
-export const PostPlaceListComponent: FC<Props> = ({ selectAction }) => {
+export const PostPlaceListComponent: FC = ({}) => {
+  const router = useRouter();
   const { data, loading, refetch } = useGetPostPlacesAndCategoriesQuery({
     variables: { idFilter: null, nameFilter: null, categoryFilter: null },
     fetchPolicy: "network-only",
@@ -31,6 +29,10 @@ export const PostPlaceListComponent: FC<Props> = ({ selectAction }) => {
 
   const onClickFilter = () => {
     refetch({ nameFilter: nameFilter ? nameFilter : null });
+  };
+
+  const selectAction = (place: PostPlaceResponse) => {
+    router.push(`${POST_ADD_PAGE_PATH}?placeId=${place.id}`);
   };
 
   useEffect(() => {
@@ -112,16 +114,9 @@ export const PostPlaceListComponent: FC<Props> = ({ selectAction }) => {
                           <PostPlaceActionComponent
                             place={place}
                             refetchPlaceFunc={refetch}
-                            selectAction={
-                              selectAction
-                                ? (postPlace: PostPlaceResponse) => {
-                                    selectAction({
-                                      postPlace: postPlace,
-                                      categories: categoryList ?? [],
-                                    });
-                                  }
-                                : undefined
-                            }
+                            selectAction={(postPlace: PostPlaceResponse) => {
+                              selectAction(postPlace);
+                            }}
                           />
                         </div>
                       </div>

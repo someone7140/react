@@ -85,11 +85,16 @@ export const PostCategoryInputComponent: FC<Props> = ({
     defaultValues: (registeredCategory
       ? {
           name: registeredCategory.name,
-          parentCategoryId: registeredCategory.parentCategoryId ?? undefined,
-          displayOrder: registeredCategory.displayOrder ?? undefined,
-          detail: registeredCategory.detail ?? undefined,
+          parentCategoryId: registeredCategory.parentCategoryId ?? "",
+          displayOrder: registeredCategory.displayOrder ?? "",
+          detail: registeredCategory.detail ?? "",
         }
-      : {}) as PostCategoryInputFormType,
+      : {
+          name: "",
+          parentCategoryId: "",
+          displayOrder: "",
+          detail: "",
+        }) as PostCategoryInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },

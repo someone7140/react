@@ -75,6 +75,8 @@ export const PostInputComponent: FC<Props> = ({
       onSubmit: postInputFormSchema,
     },
     defaultValues: {
+      title: "",
+      detail: "",
       isOpen: false,
       visitedDate: new Date(),
       categoryIdList: selectPostPlaceAndCategories.postPlace.categoryIdList,
@@ -281,7 +283,7 @@ export const PostInputComponent: FC<Props> = ({
             router.push(POST_PLACE_LIST_PAGE_PATH);
           }}
         >
-          一覧へ
+          場所を再選択
         </Button>
       </div>
     </form>

@@ -69,7 +69,11 @@ export const PostPlaceInputComponent: FC<Props> = ({
           url: registeredPlace.url ?? undefined,
         }
       : {
+          name: "",
+          address: "",
           categoryIdList: [] as string[],
+          detail: "",
+          url: "",
         }) as PostPlaceInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);

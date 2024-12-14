@@ -24,47 +24,45 @@ export const PostPlaceActionComponent: FC<Props> = ({
 
   return (
     <div className="flex w-[100%] gap-5 justify-center">
-      {selectAction && (
+      <div>
         <Button
           color="orange"
           onClick={() => {
-            selectAction(place);
+            router.push(`${POST_PLACE_EDIT_PAGE_PATH}?id=${place.id}`);
           }}
         >
-          選択
+          編集
         </Button>
-      )}
-      {!selectAction && (
-        <>
-          <div>
-            <Button
-              color="orange"
-              onClick={() => {
-                router.push(`${POST_PLACE_EDIT_PAGE_PATH}?id=${place.id}`);
-              }}
-            >
-              編集
-            </Button>
-          </div>
-          <div>
-            <Button
-              color="blue-gray"
-              onClick={() => {
-                setIsOpenDelete(true);
-              }}
-            >
-              削除
-            </Button>
-          </div>
-          <PostPlaceDeleteDialogComponent
-            isOpen={isOpenDelete}
-            closeDialog={() => {
-              setIsOpenDelete(false);
+      </div>
+      <div>
+        <Button
+          color="blue-gray"
+          onClick={() => {
+            setIsOpenDelete(true);
+          }}
+        >
+          削除
+        </Button>
+        <PostPlaceDeleteDialogComponent
+          isOpen={isOpenDelete}
+          closeDialog={() => {
+            setIsOpenDelete(false);
+          }}
+          place={place}
+          refetchPlaceFunc={refetchPlaceFunc}
+        />
+      </div>
+      {selectAction && (
+        <div>
+          <Button
+            color="teal"
+            onClick={() => {
+              selectAction(place);
             }}
-            place={place}
-            refetchPlaceFunc={refetchPlaceFunc}
-          />
-        </>
+          >
+            投稿へ進む
+          </Button>
+        </div>
       )}
     </div>
   );
