@@ -18,7 +18,7 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import { POST_PLACE_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
-import { PostCategoryResponse, PostPlaceResponse } from "@/graphql/gen/graphql";
+import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
 import {
   formItemAreaStyle,
   formLabelStyle,
@@ -27,8 +27,8 @@ import {
   inputTextStyle,
 } from "@/style/FormStyle";
 
-export type SelectPostPlaceAndCategories = {
-  postPlace: PostPlaceResponse;
+export type SelectPostCategories = {
+  selectCategoriesDefault: string[];
   categories: PostCategoryResponse[];
 };
 
@@ -53,14 +53,16 @@ export type PostInputFormType = z.infer<typeof postInputFormSchema>;
 
 type Props = {
   execSubmit: (form: PostInputFormType) => void;
+  postCategories: SelectPostCategories;
   disabledFlag?: boolean;
-  selectPostPlaceAndCategories: SelectPostPlaceAndCategories;
+  editPostData?: PostResponse;
 };
 
 export const PostInputComponent: FC<Props> = ({
   execSubmit,
+  postCategories,
   disabledFlag,
-  selectPostPlaceAndCategories,
+  editPostData,
 }) => {
   const router = useRouter();
   const [categorySelectDialogOpen, setCategorySelectDialogOpen] =
@@ -75,19 +77,21 @@ export const PostInputComponent: FC<Props> = ({
       onSubmit: postInputFormSchema,
     },
     defaultValues: {
-      title: "",
-      detail: "",
-      isOpen: false,
-      visitedDate: new Date(),
-      categoryIdList: selectPostPlaceAndCategories.postPlace.categoryIdList,
-      urlList: [""],
+      title: editPostData?.title ?? "",
+      detail: editPostData?.detail ?? "",
+      isOpen: editPostData?.isOpen ?? false,
+      visitedDate: editPostData?.visitedDateStr
+        ? new Date(editPostData.visitedDateStr)
+        : new Date(),
+      categoryIdList: postCategories.selectCategoriesDefault,
+      urlList: editPostData?.urlList.map((url) => url.url) ?? [""],
     } as PostInputFormType,
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
   });
 
-  const categoryList = selectPostPlaceAndCategories.categories;
+  const categoryList = postCategories.categories;
 
   return (
     <form className="max-w-[95%]">
@@ -144,6 +148,7 @@ export const PostInputComponent: FC<Props> = ({
             <div className="flex gap-5 items-center">
               <Switch
                 color="blue"
+                checked={field.state.value}
                 onChange={(e) => field.handleChange(e.target.checked)}
                 crossOrigin={undefined}
               />
@@ -275,12 +280,15 @@ export const PostInputComponent: FC<Props> = ({
       </Field>
       <div className={formSubmitAreaStyle()}>
         <Button color="indigo" disabled={disabledFlag} onClick={handleSubmit}>
-          登録
+          {editPostData ? "編集" : "登録"}
         </Button>
         <Button
           color="blue-gray"
           onClick={() => {
-            router.push(POST_PLACE_LIST_PAGE_PATH);
+            const listPath = editPostData
+              ? `${POST_PLACE_LIST_PAGE_PATH}?editPostId=${editPostData.id}`
+              : POST_PLACE_LIST_PAGE_PATH;
+            router.push(listPath);
           }}
         >
           場所を再選択

@@ -77,8 +77,8 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
           <PostInputComponent
             execSubmit={execSubmit}
             disabledFlag={addPostLoading}
-            selectPostPlaceAndCategories={{
-              postPlace: data.getPostPlaces[0],
+            postCategories={{
+              selectCategoriesDefault: data.getPostPlaces[0].categoryIdList,
               categories: data.getMyPostCategories,
             }}
           />

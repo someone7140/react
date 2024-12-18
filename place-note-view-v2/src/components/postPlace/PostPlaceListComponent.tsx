@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Input, Spinner } from "@material-tailwind/react";
 
-import { POST_ADD_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import {
+  POST_ADD_PAGE_PATH,
+  POST_EDIT_PAGE_PATH,
+} from "@/components/menu/constants/MenuPathConstants";
 import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceActionComponent";
 import {
   PostPlaceResponse,
@@ -14,7 +17,11 @@ import {
 import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
 
-export const PostPlaceListComponent: FC = ({}) => {
+type Props = {
+  editPostId?: string;
+};
+
+export const PostPlaceListComponent: FC<Props> = ({ editPostId }) => {
   const router = useRouter();
   const { data, loading, refetch } = useGetPostPlacesAndCategoriesQuery({
     variables: { idFilter: null, nameFilter: null, categoryFilter: null },
@@ -32,7 +39,13 @@ export const PostPlaceListComponent: FC = ({}) => {
   };
 
   const selectAction = (place: PostPlaceResponse) => {
-    router.push(`${POST_ADD_PAGE_PATH}?placeId=${place.id}`);
+    if (editPostId) {
+      router.push(
+        `${POST_EDIT_PAGE_PATH}?id=${editPostId}&placeId=${place.id}`
+      );
+    } else {
+      router.push(`${POST_ADD_PAGE_PATH}?placeId=${place.id}`);
+    }
   };
 
   useEffect(() => {

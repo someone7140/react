@@ -4,14 +4,13 @@ import React, { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@material-tailwind/react";
 
-import { PostRefComponent } from "@/components/post/ref/PostRefComponent";
+import { MyPostRefComponent } from "@/components/post/ref/MyPostRefComponent";
 import {
   useGetMyPostCategoriesQuery,
   useGetMyPostsQuery,
 } from "@/graphql/gen/graphql";
 
 export const PostListComponent: FC = ({}) => {
-  const router = useRouter();
   const { data, loading, refetch } = useGetMyPostsQuery({
     variables: { idFilter: null, placeIdFilter: null, categoryIdsFilter: null },
     fetchPolicy: "network-only",
@@ -49,11 +48,12 @@ export const PostListComponent: FC = ({}) => {
                 <div className="flex flex-col gap-5 max-w-[340px]">
                   {postList.map((post) => {
                     return (
-                      <PostRefComponent
+                      <MyPostRefComponent
                         key={post.id}
                         post={post}
                         categoryData={categoryData?.getMyPostCategories}
-                      ></PostRefComponent>
+                        refetchData={refetch}
+                      />
                     );
                   })}
                 </div>

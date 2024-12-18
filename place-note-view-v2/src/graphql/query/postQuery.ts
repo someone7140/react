@@ -64,3 +64,33 @@ export const getMyPostsQueryDocument = gql`
     }
   }
 `;
+
+export const editPostMutationDocument = gql`
+  mutation EditPost(
+    $id: String!
+    $title: String!
+    $placeId: String!
+    $visitedDate: DateTime!
+    $isOpen: Boolean!
+    $categoryIdList: [String!]!
+    $detail: String
+    $urlList: [String!]!
+  ) {
+    editPost(
+      id: $id
+      title: $title
+      placeId: $placeId
+      visitedDate: $visitedDate
+      isOpen: $isOpen
+      categoryIdList: $categoryIdList
+      detail: $detail
+      urlList: $urlList
+    )
+  }
+`;
+
+export const deletePostMutationDocument = gql`
+  mutation DeletePost($id: String!) {
+    deletePost(id: $id)
+  }
+`;
