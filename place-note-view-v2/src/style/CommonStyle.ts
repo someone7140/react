@@ -5,5 +5,10 @@ export const pageTitleStyle = tv({
 });
 
 export const dialogBoxStyle = tv({
-  base: "flex flex-col items-center p-3 max-h-[40rem] overflow-scroll",
+  base: "flex flex-col items-center p-3",
+  variants: {
+    type: {
+      scroll: "overflow-scroll",
+    },
+  },
 });

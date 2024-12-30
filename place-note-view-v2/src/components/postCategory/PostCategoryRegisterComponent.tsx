@@ -4,7 +4,7 @@ import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { POST_CATEGORY_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { POST_CATEGORY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   PostCategoryInputComponent,
   PostCategoryInputFormType,

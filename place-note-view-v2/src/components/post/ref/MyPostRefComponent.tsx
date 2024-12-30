@@ -5,9 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@material-tailwind/react";
 
+import { WebNoInfoComponent } from "./WebNoInfoComponent";
 import { PostDeleteDialogComponent } from "../dialog/PostDeleteDialogComponent";
-import { POST_EDIT_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
-import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
+import { POST_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
+import {
+  PostCategoryResponse,
+  PostPlaceInfo,
+  PostResponse,
+} from "@/graphql/gen/graphql";
 import { detailTextStyle } from "@/style/PostStyle";
 
 type Props = {
@@ -73,6 +78,11 @@ export const MyPostRefComponent: FC<Props> = ({
         </div>
       </div>
       <div className={`${detailTextStyle()}`}>{post.detail}</div>
+      <div className="flex flex-col gap-3 mt-2">
+        {post.urlList.map((url, i) => {
+          return <WebNoInfoComponent key={i} url={url} />;
+        })}
+      </div>
       <div className={"flex gap-3 mt-2 justify-center"}>
         <Button
           color="orange"

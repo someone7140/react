@@ -5,18 +5,18 @@ import { useRouter } from "next/navigation";
 import { Button } from "@material-tailwind/react";
 
 import { PostPlaceResponse } from "@/graphql/gen/graphql";
-import { POST_PLACE_EDIT_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
 import { PostPlaceDeleteDialogComponent } from "@/components/postPlace/dialog/PostPlaceDeleteDialogComponent";
+import { POST_PLACE_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 
 type Props = {
   place: PostPlaceResponse;
   refetchPlaceFunc?: () => void;
-  selectAction?: (place: PostPlaceResponse) => void;
+  selectActionForPost?: (place: PostPlaceResponse) => void;
 };
 
 export const PostPlaceActionComponent: FC<Props> = ({
   place,
-  selectAction,
+  selectActionForPost,
   refetchPlaceFunc,
 }) => {
   const router = useRouter();
@@ -52,12 +52,12 @@ export const PostPlaceActionComponent: FC<Props> = ({
           refetchPlaceFunc={refetchPlaceFunc}
         />
       </div>
-      {selectAction && (
+      {selectActionForPost && (
         <div>
           <Button
             color="teal"
             onClick={() => {
-              selectAction(place);
+              selectActionForPost(place);
             }}
           >
             投稿へ進む

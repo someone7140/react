@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 
-import { POST_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { POST_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   PostInputComponent,
   PostInputFormType,

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import {
   POST_ADD_PAGE_PATH,
   POST_PLACE_LIST_PAGE_PATH,
-} from "@/components/menu/constants/MenuPathConstants";
+} from "@/constants/MenuPathConstants";
 import {
   PostPlaceInputComponent,
   PostPlaceInputFormType,

@@ -24,8 +24,8 @@ export const PostCategorySelectDialogComponent: FC<Props> = ({
 }) => {
   return (
     <Dialog open={isOpen} handler={closeDialog}>
-      <div className={`${dialogBoxStyle()}`}>
-        <div className="flex justify-start mb-3">
+      <div className={`${dialogBoxStyle({ type: "scroll" })} max-h-[75vh]`}>
+        <div className="flex justify-start mb-3 w-[99%]">
           <PostCategoryDisplayComponent
             categories={categories}
             updateCategoryIdsFunc={updateCategoryIdsFunc}
@@ -33,6 +33,8 @@ export const PostCategorySelectDialogComponent: FC<Props> = ({
             checkedCategoryIds={selectedIds}
           />
         </div>
+      </div>
+      <div className="flex justify-center mt-3 mb-3">
         <Button color="blue-gray" onClick={closeDialog}>
           閉じる
         </Button>

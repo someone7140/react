@@ -9,6 +9,7 @@ import { PostCategoryItemComponent } from "./PostCategoryItemComponent";
 type Props = {
   categories: PostCategoryResponse[];
   displayActionButton?: boolean;
+  displaySelectButton?: boolean;
   displayCheck?: boolean;
   checkedCategoryIds?: string[];
   updateCategoryIdsFunc?: (id: string) => void;
@@ -18,13 +19,14 @@ type Props = {
 export const PostCategoryDisplayComponent: FC<Props> = ({
   categories,
   displayActionButton,
+  displaySelectButton,
   displayCheck,
   checkedCategoryIds = [],
   updateCategoryIdsFunc,
   refetchCategoryFunc,
 }) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 w-[100%]">
       {getRootCategoryList(categories).map((parentCategory) => {
         return (
           <div key={parentCategory.id}>
@@ -32,6 +34,7 @@ export const PostCategoryDisplayComponent: FC<Props> = ({
               {...{
                 category: parentCategory,
                 displayActionButton,
+                displaySelectButton,
                 displayCheck,
                 checkedCategoryIds,
                 updateCategoryIdsFunc,
@@ -47,6 +50,7 @@ export const PostCategoryDisplayComponent: FC<Props> = ({
                       {...{
                         category: childCategory,
                         displayActionButton,
+                        displaySelectButton,
                         displayCheck,
                         checkedCategoryIds,
                         updateCategoryIdsFunc,

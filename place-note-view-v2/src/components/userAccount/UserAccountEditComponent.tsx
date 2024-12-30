@@ -3,7 +3,7 @@
 import React, { FC } from "react";
 import { toast } from "react-toastify";
 
-import { TOP_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   UserAccountInputComponent,
   UserAccountInputFormType,

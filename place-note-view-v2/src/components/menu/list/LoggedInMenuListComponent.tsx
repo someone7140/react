@@ -33,7 +33,7 @@ import {
   POST_PLACE_LIST_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_EDIT_PAGE_PATH,
-} from "@/components/menu/constants/MenuPathConstants";
+} from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 type Props = {

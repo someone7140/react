@@ -8,7 +8,7 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
-import { POST_CATEGORY_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { POST_CATEGORY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
 import {
   PostCategoryResponse,

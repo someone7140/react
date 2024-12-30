@@ -9,7 +9,7 @@ import {
   POST_LIST_PAGE_PATH,
   POST_PLACE_ADD_PAGE_PATH,
   POST_PLACE_LIST_PAGE_PATH,
-} from "@/components/menu/constants/MenuPathConstants";
+} from "@/constants/MenuPathConstants";
 import {
   PostInputComponent,
   PostInputFormType,

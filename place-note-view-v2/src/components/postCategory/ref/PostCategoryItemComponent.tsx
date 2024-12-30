@@ -4,7 +4,7 @@ import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox } from "@material-tailwind/react";
 
-import { POST_CATEGORY_EDIT_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { POST_CATEGORY_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategoryDeleteDialogComponent } from "@/components/postCategory/dialog/PostCategoryDeleteDialogComponent";
 import { PostCategoryResponse } from "@/graphql/gen/graphql";
 import { formSubmitAreaStyle } from "@/style/FormStyle";
@@ -13,6 +13,7 @@ import { detailTextStyle } from "@/style/PostStyle";
 type Props = {
   category: PostCategoryResponse;
   displayActionButton?: boolean;
+  displaySelectButton?: boolean;
   displayCheck?: boolean;
   checkedCategoryIds: string[];
   updateCategoryIdsFunc?: (id: string) => void;
@@ -22,6 +23,7 @@ type Props = {
 export const PostCategoryItemComponent: FC<Props> = ({
   category,
   displayActionButton,
+  displaySelectButton,
   displayCheck,
   checkedCategoryIds = [],
   updateCategoryIdsFunc,
@@ -32,8 +34,8 @@ export const PostCategoryItemComponent: FC<Props> = ({
   const router = useRouter();
 
   return (
-    <>
-      <div className="flex justify-start items-center min-w-[300px]">
+    <div className="w-[100%]">
+      <div className="flex flex-row justify-start items-center w-[100%]">
         {displayCheck && (
           <Checkbox
             checked={checkedCategoryIds.some((id) => id === category.id)}
@@ -86,6 +88,18 @@ export const PostCategoryItemComponent: FC<Props> = ({
           />
         </div>
       )}
-    </>
+      {displaySelectButton && (
+        <div className={formSubmitAreaStyle()}>
+          <Button
+            color="orange"
+            onClick={() => {
+              updateCategoryIdsFunc?.(category.id);
+            }}
+          >
+            選択
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };

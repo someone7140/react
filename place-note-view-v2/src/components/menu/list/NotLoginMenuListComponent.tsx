@@ -12,7 +12,7 @@ import {
   LOGIN_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
-} from "@/components/menu/constants/MenuPathConstants";
+} from "@/constants/MenuPathConstants";
 
 type Props = {
   onCLickMenu: (path: string, reloadFlag?: boolean) => void;

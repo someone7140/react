@@ -16,7 +16,7 @@ import { useForm, Validator } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
-import { POST_PLACE_LIST_PAGE_PATH } from "@/components/menu/constants/MenuPathConstants";
+import { POST_PLACE_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
 import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
 import {
