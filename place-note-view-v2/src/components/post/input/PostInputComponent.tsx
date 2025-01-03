@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { z } from "zod";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverHandler,
   Switch,
   Textarea,
   Typography,
@@ -67,6 +71,12 @@ export const PostInputComponent: FC<Props> = ({
   const router = useRouter();
   const [categorySelectDialogOpen, setCategorySelectDialogOpen] =
     useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
+
+  const popoverTriggers = {
+    onMouseEnter: () => setOpenPopover(true),
+    onMouseLeave: () => setOpenPopover(false),
+  };
 
   const { Field, handleSubmit } = useForm<
     PostInputFormType,
@@ -212,14 +222,27 @@ export const PostInputComponent: FC<Props> = ({
       <Field name="urlList">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <div className="flex gap-4 items-center">
+            <div className="flex items-center">
               <Typography className={formLabelStyle()}>URL</Typography>
+              <Popover
+                placement="top"
+                open={openPopover}
+                handler={setOpenPopover}
+              >
+                <PopoverHandler {...popoverTriggers}>
+                  <InformationCircleIcon className="w-5 h-5 text-gray-400 mb-1 ml-1" />
+                </PopoverHandler>
+                <PopoverContent>
+                  <span>投稿に関連するSNSやブログ等のURLを入力</span>
+                </PopoverContent>
+              </Popover>
               <Button
                 color="light-green"
                 disabled={!categoryList || categoryList.length === 0}
                 onClick={() => {
                   field.pushValue("");
                 }}
+                className="ml-6"
               >
                 追加
               </Button>

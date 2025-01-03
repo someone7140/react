@@ -39,7 +39,7 @@ export const SidebarComponent: FC = ({}) => {
           className="h-[calc(100vh-2rem)] w-full p-4"
         >
           <div className="flex items-center justify-between">
-            <Typography variant="h5">メニュー</Typography>
+            <Typography variant="h5">Menu</Typography>
             <IconButton
               variant="text"
               size="lg"

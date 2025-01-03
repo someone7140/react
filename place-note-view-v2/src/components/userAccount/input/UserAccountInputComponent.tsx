@@ -7,7 +7,7 @@ import { useForm, Validator } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button, Input, Typography } from "@material-tailwind/react";
 
-import { halfSizeRegex } from "@/constants/ValidationConsntants";
+import { halfSizeRegex } from "@/constants/ValidationConstants";
 import {
   formItemAreaStyle,
   formLabelStyle,

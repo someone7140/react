@@ -251,7 +251,6 @@ export type PostResponse = {
 
 export type PostUrl = {
   __typename?: 'PostUrl';
-  embedHtml?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   url: FieldWrapper<Scalars['String']['output']>;
   urlInfo?: Maybe<FieldWrapper<PostUrlInfo>>;
   urlType: FieldWrapper<Scalars['String']['output']>;
@@ -418,7 +417,7 @@ export type GetMyPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetMyPostsQuery = { __typename?: 'PlaceNoteQuery', getMyPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, embedHtml?: string | null, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
+export type GetMyPostsQuery = { __typename?: 'PlaceNoteQuery', getMyPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
 
 export type EditPostMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1132,7 +1131,6 @@ export const GetMyPostsDocument = gql`
         imageUrl
         siteName
       }
-      embedHtml
     }
     detail
   }

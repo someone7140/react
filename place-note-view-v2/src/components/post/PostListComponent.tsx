@@ -7,7 +7,6 @@ import { PostFilterDialogComponent } from "./dialog/PostFilterDialogComponent";
 import {
   PostCategoryResponse,
   PostPlaceResponse,
-  useGetMyPostCategoriesQuery,
   useGetMyPostsQuery,
   useGetPostPlacesAndCategoriesQuery,
 } from "@/graphql/gen/graphql";
@@ -56,6 +55,11 @@ export const PostListComponent: FC = ({}) => {
     }
   }, [data, allPostLength]);
 
+  const refetchPost = () => {
+    setAllPostLength(undefined);
+    setPostFilter(undefined);
+    refetch();
+  };
   if (loading || allPostLength == null) {
     return <Spinner />;
   }
@@ -124,7 +128,7 @@ export const PostListComponent: FC = ({}) => {
                 <PostListDisplayComponent
                   postList={postList}
                   categoryList={placeAndCategories?.getMyPostCategories ?? []}
-                  refetch={refetch}
+                  refetch={refetchPost}
                 />
               )}
             </div>

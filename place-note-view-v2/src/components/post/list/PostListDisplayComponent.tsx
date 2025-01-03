@@ -1,16 +1,15 @@
 "use client";
 
-import React, { FC, useRef, useState } from "react";
-import { useInfiniteScroll } from "ahooks";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { useAsyncEffect, useInfiniteScroll } from "ahooks";
 import { Data } from "ahooks/lib/useInfiniteScroll/types";
 
 import { MyPostRefComponent } from "@/components/post/ref/MyPostRefComponent";
 import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
-import { Props } from "ahooks/lib/useControllableValue";
 
-export type PostListFilter = {
+export type Props = {
   postList: PostResponse[];
-  categoryList: PostCategoryResponse;
+  categoryList: PostCategoryResponse[];
   refetch: () => void;
 };
 

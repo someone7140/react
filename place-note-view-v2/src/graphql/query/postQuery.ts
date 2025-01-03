@@ -58,7 +58,6 @@ export const getMyPostsQueryDocument = gql`
           imageUrl
           siteName
         }
-        embedHtml
       }
       detail
     }
