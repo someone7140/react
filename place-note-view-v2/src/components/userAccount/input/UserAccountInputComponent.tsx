@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import Image from "next/image";
 import { z } from "zod";
 import { useForm, Validator } from "@tanstack/react-form";
@@ -73,6 +73,7 @@ export const UserAccountInputComponent: FC<Props> = ({
       execSubmit(value);
     },
   });
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   return (
     <form>
@@ -123,19 +124,43 @@ export const UserAccountInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle()}>アイコン画像</Typography>
-            <input
-              type="file"
-              name={field.name}
-              onChange={(e) => {
-                setFieldValue("imageFile", e.target.files?.[0]);
-              }}
-            />
+            <label>
+              <div>
+                <Button
+                  variant="filled"
+                  color="light-blue"
+                  onClick={() => {
+                    inputFileRef?.current?.click();
+                  }}
+                >
+                  画像ファイル選択
+                </Button>
+              </div>
+              <input
+                ref={inputFileRef}
+                type="file"
+                name={field.name}
+                className="hidden"
+                onChange={(e) => {
+                  setFieldValue("imageFile", e.target.files?.[0]);
+                }}
+              />
+            </label>
             {editUser?.imageUrl && !field.state.value && (
               <Image
                 src={editUser.imageUrl}
                 width={150}
                 height={150}
                 alt={editUser.name}
+                className="mt-2"
+              />
+            )}
+            {field.state.value && (
+              <Image
+                src={URL.createObjectURL(field.state.value)}
+                width={150}
+                height={150}
+                alt="image"
                 className="mt-2"
               />
             )}

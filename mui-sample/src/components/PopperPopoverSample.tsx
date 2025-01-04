@@ -49,7 +49,7 @@ export const PopperPopoverSample: FC = () => {
       >
         <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
       </Popover>
-      <div style={{ marginTop: 200, height: 900 }}>
+      <div style={{ marginTop: 50, height: 50 }}>
         <ClickAwayListener onClickAway={clickAwayPopperHandler}>
           <div>
             <button type="button" onClick={handlePopperClick}>
