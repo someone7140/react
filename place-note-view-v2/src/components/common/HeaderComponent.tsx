@@ -14,7 +14,7 @@ export const HeaderComponent: FC = ({}) => {
 
   return (
     <>
-      <Navbar className="sticky top-0 z-10 h-[10vh] max-w-full rounded-none bg-cyan-50 px-3 py-3">
+      <Navbar className="sticky top-0 z-10 h-[70px] max-w-full rounded-none bg-cyan-50 px-3 py-3">
         <div className="flex items-center justify-between text-blue-gray-900">
           <div className="flex items-center gap-4">
             <IconButton

@@ -3,8 +3,7 @@
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { useForm, Validator } from "@tanstack/react-form";
-import { zodValidator } from "@tanstack/zod-form-adapter";
+import { useForm } from "@tanstack/react-form";
 import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
@@ -52,11 +51,7 @@ export const PostPlaceInputComponent: FC<Props> = ({
   const [categorySelectDialogOpen, setCategorySelectDialogOpen] =
     useState(false);
 
-  const { Field, handleSubmit } = useForm<
-    PostPlaceInputFormType,
-    Validator<PostPlaceInputFormType>
-  >({
-    validatorAdapter: zodValidator(),
+  const { Field, handleSubmit } = useForm<PostPlaceInputFormType>({
     validators: {
       onSubmit: postPlaceInputFormSchema,
     },

@@ -6,12 +6,12 @@ import {
   MagnifyingGlassPlusIcon,
 } from "@heroicons/react/24/outline";
 import {
-  ChevronDownIcon,
   DocumentIcon,
   DocumentPlusIcon,
   FolderIcon,
   FolderPlusIcon,
   HomeIcon,
+  IdentificationIcon,
   PencilIcon,
   PowerIcon,
   RectangleStackIcon,
@@ -20,7 +20,6 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
   Typography,
 } from "@material-tailwind/react";
 
@@ -33,6 +32,7 @@ import {
   POST_PLACE_LIST_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_EDIT_PAGE_PATH,
+  USER_ACCOUNT_PROFILE,
 } from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
@@ -41,10 +41,11 @@ type Props = {
 };
 
 export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
+  const { userAccount } = useAuthManagement();
   const { removeAuthInfo } = useAuthManagement();
 
   return (
-    <List className="gap-2 mt-2">
+    <List className="mt-2">
       <ListItem
         onClick={() => {
           onCLickMenu(TOP_PAGE_PATH);
@@ -62,9 +63,6 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
         <Typography color="blue-gray" className="mr-auto font-normal">
           投稿管理
         </Typography>
-        <ListItemSuffix>
-          <ChevronDownIcon className="h-5 w-5" />
-        </ListItemSuffix>
       </ListItem>
       <div className="ml-4">
         <ListItem
@@ -140,16 +138,38 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           </Typography>
         </ListItem>
       </div>
-      <ListItem
-        onClick={() => {
-          onCLickMenu(USER_ACCOUNT_EDIT_PAGE_PATH);
-        }}
-      >
+      <ListItem className="cursor-default hover:bg-white">
         <ListItemPrefix>
-          <PencilIcon className="h-5 w-5" />
+          <RectangleStackIcon className="h-5 w-5" />
         </ListItemPrefix>
-        ユーザ情報編集
+        <Typography color="blue-gray" className="mr-auto font-normal">
+          プロフィール管理
+        </Typography>
       </ListItem>
+      <div className="ml-4">
+        <ListItem
+          onClick={() => {
+            onCLickMenu(
+              `${USER_ACCOUNT_PROFILE}?userSettingId=${userAccount?.userSettingId}`
+            );
+          }}
+        >
+          <ListItemPrefix>
+            <IdentificationIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          公開プロフィール
+        </ListItem>
+        <ListItem
+          onClick={() => {
+            onCLickMenu(USER_ACCOUNT_EDIT_PAGE_PATH);
+          }}
+        >
+          <ListItemPrefix>
+            <PencilIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          プロフィール情報編集
+        </ListItem>
+      </div>
       <ListItem
         onClick={() => {
           removeAuthInfo();

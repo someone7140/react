@@ -36,10 +36,10 @@ export const SidebarComponent: FC = ({}) => {
         <Card
           color="transparent"
           shadow={false}
-          className="h-[calc(100vh-2rem)] w-full p-4"
+          className="h-[calc(100vh-2rem)] w-full pl-4 pr-4 pt-2"
         >
           <div className="flex items-center justify-between">
-            <Typography variant="h5">Menu</Typography>
+            <Typography variant="h4">Menu</Typography>
             <IconButton
               variant="text"
               size="lg"
@@ -47,7 +47,7 @@ export const SidebarComponent: FC = ({}) => {
                 setIsOpenSidebar(false);
               }}
             >
-              <XMarkIcon className="h-8 w-8 stroke-2" />
+              <XMarkIcon className="h-7 w-7 stroke-2" />
             </IconButton>
           </div>
 

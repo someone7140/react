@@ -1,5 +1,37 @@
 import { gql } from "@apollo/client/core";
 
+export const postResponseFragment = gql`
+  fragment PostObj on PostResponse {
+    id
+    userSettingId
+    title
+    visitedDateStr
+    isOpen
+    postPlace {
+      id
+      name
+      prefectureCode
+      url
+      address
+      latLon {
+        lat
+        lon
+      }
+    }
+    categoryIdList
+    urlList {
+      url
+      urlType
+      urlInfo {
+        title
+        imageUrl
+        siteName
+      }
+    }
+    detail
+  }
+`;
+
 export const addPostMutationDocument = gql`
   mutation AddPost(
     $title: String!
@@ -19,48 +51,6 @@ export const addPostMutationDocument = gql`
       detail: $detail
       urlList: $urlList
     )
-  }
-`;
-
-export const getMyPostsQueryDocument = gql`
-  query GetMyPosts(
-    $idFilter: String
-    $categoryIdsFilter: [String!]
-    $placeIdFilter: String
-  ) {
-    getMyPosts(
-      idFilter: $idFilter
-      categoryIdsFilter: $categoryIdsFilter
-      placeIdFilter: $placeIdFilter
-    ) {
-      id
-      userSettingId
-      title
-      visitedDateStr
-      isOpen
-      postPlace {
-        id
-        name
-        prefectureCode
-        url
-        address
-        latLon {
-          lat
-          lon
-        }
-      }
-      categoryIdList
-      urlList {
-        url
-        urlType
-        urlInfo {
-          title
-          imageUrl
-          siteName
-        }
-      }
-      detail
-    }
   }
 `;
 
@@ -91,5 +81,38 @@ export const editPostMutationDocument = gql`
 export const deletePostMutationDocument = gql`
   mutation DeletePost($id: String!) {
     deletePost(id: $id)
+  }
+`;
+
+export const getMyPostsQueryDocument = gql`
+  query GetMyPosts(
+    $idFilter: String
+    $categoryIdsFilter: [String!]
+    $placeIdFilter: String
+    $isOrderPostDate: Boolean!
+  ) {
+    getMyPosts(
+      idFilter: $idFilter
+      categoryIdsFilter: $categoryIdsFilter
+      placeIdFilter: $placeIdFilter
+      isOrderPostDate: $isOrderPostDate
+    ) {
+      ...PostObj
+    }
+  }
+`;
+
+export const getOpenPostsWithAccountInfoQueryDocument = gql`
+  query GetOpenPostsWithAccountInfo($userSettingId: String!) {
+    getOpenPosts(userSettingId: $userSettingId) {
+      ...PostObj
+    }
+    getAccountUserByUserSettingId(userSettingId: $userSettingId) {
+      userSettingId
+      name
+      urlList
+      detail
+      imageUrl
+    }
   }
 `;

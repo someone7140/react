@@ -16,8 +16,7 @@ import {
   Textarea,
   Typography,
 } from "@material-tailwind/react";
-import { useForm, Validator } from "@tanstack/react-form";
-import { zodValidator } from "@tanstack/zod-form-adapter";
+import { useForm } from "@tanstack/react-form";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import { POST_PLACE_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
@@ -78,11 +77,7 @@ export const PostInputComponent: FC<Props> = ({
     onMouseLeave: () => setOpenPopover(false),
   };
 
-  const { Field, handleSubmit } = useForm<
-    PostInputFormType,
-    Validator<PostInputFormType>
-  >({
-    validatorAdapter: zodValidator(),
+  const { Field, handleSubmit } = useForm<PostInputFormType>({
     validators: {
       onSubmit: postInputFormSchema,
     },
@@ -238,7 +233,6 @@ export const PostInputComponent: FC<Props> = ({
               </Popover>
               <Button
                 color="light-green"
-                disabled={!categoryList || categoryList.length === 0}
                 onClick={() => {
                   field.pushValue("");
                 }}

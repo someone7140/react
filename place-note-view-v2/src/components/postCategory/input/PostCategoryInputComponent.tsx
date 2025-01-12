@@ -4,7 +4,6 @@ import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm, Validator } from "@tanstack/react-form";
-import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
@@ -78,7 +77,6 @@ export const PostCategoryInputComponent: FC<Props> = ({
     PostCategoryInputFormType,
     Validator<PostCategoryInputFormType>
   >({
-    validatorAdapter: zodValidator(),
     validators: {
       onSubmit: postCategoryInputFormSchema,
     },

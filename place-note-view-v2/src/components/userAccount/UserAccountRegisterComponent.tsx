@@ -52,6 +52,8 @@ export const UserAccountRegisterComponent: FC = () => {
         userSettingId: formData.userSettingId,
         name: formData.name,
         file: formData.imageFile ?? null,
+        detail: formData.detail,
+        urlList: formData.urlList.filter((url) => !!url),
       },
     });
 

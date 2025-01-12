@@ -22,9 +22,20 @@ export type Scalars = {
 
 export type AccountUserResponse = {
   __typename?: 'AccountUserResponse';
+  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   name: FieldWrapper<Scalars['String']['output']>;
   token: FieldWrapper<Scalars['String']['output']>;
+  urlList: Array<FieldWrapper<Scalars['String']['output']>>;
+  userSettingId: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type AccountUserResponseRef = {
+  __typename?: 'AccountUserResponseRef';
+  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  name: FieldWrapper<Scalars['String']['output']>;
+  urlList: Array<FieldWrapper<Scalars['String']['output']>>;
   userSettingId: FieldWrapper<Scalars['String']['output']>;
 };
 
@@ -64,8 +75,10 @@ export type PlaceNoteMutation = {
 
 export type PlaceNoteMutationAddAccountUserByGoogleArgs = {
   authToken: Scalars['String']['input'];
+  detail?: InputMaybe<Scalars['String']['input']>;
   imageFile?: InputMaybe<Scalars['Upload']['input']>;
   name: Scalars['String']['input'];
+  urlList: Array<Scalars['String']['input']>;
   userSettingId: Scalars['String']['input'];
 };
 
@@ -116,8 +129,10 @@ export type PlaceNoteMutationDeletePostPlaceArgs = {
 
 
 export type PlaceNoteMutationEditAccountUserArgs = {
+  detail?: InputMaybe<Scalars['String']['input']>;
   imageFile?: InputMaybe<Scalars['Upload']['input']>;
   name: Scalars['String']['input'];
+  urlList: Array<Scalars['String']['input']>;
   userSettingId: Scalars['String']['input'];
 };
 
@@ -167,11 +182,18 @@ export type PlaceNoteMutationLoginByGoogleAuthCodeArgs = {
 export type PlaceNoteQuery = {
   __typename?: 'PlaceNoteQuery';
   getAccountUserByToken: FieldWrapper<AccountUserResponse>;
+  getAccountUserByUserSettingId: FieldWrapper<AccountUserResponseRef>;
   getLatLonFromAddress?: Maybe<FieldWrapper<LatLonResponse>>;
   getMyPostCategories: Array<FieldWrapper<PostCategoryResponse>>;
   getMyPostCategoryById: FieldWrapper<PostCategoryResponse>;
   getMyPosts: Array<FieldWrapper<PostResponse>>;
+  getOpenPosts: Array<FieldWrapper<PostResponse>>;
   getPostPlaces: Array<FieldWrapper<PostPlaceResponse>>;
+};
+
+
+export type PlaceNoteQueryGetAccountUserByUserSettingIdArgs = {
+  userSettingId: Scalars['String']['input'];
 };
 
 
@@ -193,7 +215,13 @@ export type PlaceNoteQueryGetMyPostCategoryByIdArgs = {
 export type PlaceNoteQueryGetMyPostsArgs = {
   categoryIdsFilter?: InputMaybe<Array<Scalars['String']['input']>>;
   idFilter?: InputMaybe<Scalars['String']['input']>;
+  isOrderPostDate: Scalars['Boolean']['input'];
   placeIdFilter?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type PlaceNoteQueryGetOpenPostsArgs = {
+  userSettingId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -263,7 +291,7 @@ export type PostUrlInfo = {
   title: FieldWrapper<Scalars['String']['output']>;
 };
 
-export type AccountUserObjFragment = { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null };
+export type AccountUserObjFragment = { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null };
 
 export type GoogleAuthCodeVerifyMutationVariables = Exact<{
   authCode: Scalars['String']['input'];
@@ -277,31 +305,35 @@ export type LoginByGoogleAuthCodeMutationVariables = Exact<{
 }>;
 
 
-export type LoginByGoogleAuthCodeMutation = { __typename?: 'PlaceNoteMutation', loginByGoogleAuthCode: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type LoginByGoogleAuthCodeMutation = { __typename?: 'PlaceNoteMutation', loginByGoogleAuthCode: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
 
 export type AddAccountUserByGoogleMutationVariables = Exact<{
   authToken: Scalars['String']['input'];
   userSettingId: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  urlList: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  detail?: InputMaybe<Scalars['String']['input']>;
   file?: InputMaybe<Scalars['Upload']['input']>;
 }>;
 
 
-export type AddAccountUserByGoogleMutation = { __typename?: 'PlaceNoteMutation', addAccountUserByGoogle: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type AddAccountUserByGoogleMutation = { __typename?: 'PlaceNoteMutation', addAccountUserByGoogle: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
 
 export type EditAccountUserMutationVariables = Exact<{
   userSettingId: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  urlList: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  detail?: InputMaybe<Scalars['String']['input']>;
   file?: InputMaybe<Scalars['Upload']['input']>;
 }>;
 
 
-export type EditAccountUserMutation = { __typename?: 'PlaceNoteMutation', editAccountUser: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type EditAccountUserMutation = { __typename?: 'PlaceNoteMutation', editAccountUser: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
 
 export type GetAccountUserByTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAccountUserByTokenQuery = { __typename?: 'PlaceNoteQuery', getAccountUserByToken: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type GetAccountUserByTokenQuery = { __typename?: 'PlaceNoteQuery', getAccountUserByToken: { __typename?: 'AccountUserResponse', token: string, userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
 
 export type PostCategoryObjFragment = { __typename?: 'PostCategoryResponse', id: string, userSettingId: string, name: string, parentCategoryId?: string | null, displayOrder?: number | null, detail?: string | null };
 
@@ -397,6 +429,8 @@ export type DeletePostPlaceMutationVariables = Exact<{
 
 export type DeletePostPlaceMutation = { __typename?: 'PlaceNoteMutation', deletePostPlace: boolean };
 
+export type PostObjFragment = { __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> };
+
 export type AddPostMutationVariables = Exact<{
   title: Scalars['String']['input'];
   placeId: Scalars['String']['input'];
@@ -409,15 +443,6 @@ export type AddPostMutationVariables = Exact<{
 
 
 export type AddPostMutation = { __typename?: 'PlaceNoteMutation', addPost: boolean };
-
-export type GetMyPostsQueryVariables = Exact<{
-  idFilter?: InputMaybe<Scalars['String']['input']>;
-  categoryIdsFilter?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  placeIdFilter?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GetMyPostsQuery = { __typename?: 'PlaceNoteQuery', getMyPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
 
 export type EditPostMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -440,11 +465,30 @@ export type DeletePostMutationVariables = Exact<{
 
 export type DeletePostMutation = { __typename?: 'PlaceNoteMutation', deletePost: boolean };
 
+export type GetMyPostsQueryVariables = Exact<{
+  idFilter?: InputMaybe<Scalars['String']['input']>;
+  categoryIdsFilter?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  placeIdFilter?: InputMaybe<Scalars['String']['input']>;
+  isOrderPostDate: Scalars['Boolean']['input'];
+}>;
+
+
+export type GetMyPostsQuery = { __typename?: 'PlaceNoteQuery', getMyPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
+
+export type GetOpenPostsWithAccountInfoQueryVariables = Exact<{
+  userSettingId: Scalars['String']['input'];
+}>;
+
+
+export type GetOpenPostsWithAccountInfoQuery = { __typename?: 'PlaceNoteQuery', getOpenPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }>, getAccountUserByUserSettingId: { __typename?: 'AccountUserResponseRef', userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
+
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on AccountUserResponse {
   token
   userSettingId
   name
+  urlList
+  detail
   imageUrl
 }
     `;
@@ -455,6 +499,37 @@ export const PostCategoryObjFragmentDoc = gql`
   name
   parentCategoryId
   displayOrder
+  detail
+}
+    `;
+export const PostObjFragmentDoc = gql`
+    fragment PostObj on PostResponse {
+  id
+  userSettingId
+  title
+  visitedDateStr
+  isOpen
+  postPlace {
+    id
+    name
+    prefectureCode
+    url
+    address
+    latLon {
+      lat
+      lon
+    }
+  }
+  categoryIdList
+  urlList {
+    url
+    urlType
+    urlInfo {
+      title
+      imageUrl
+      siteName
+    }
+  }
   detail
 }
     `;
@@ -525,11 +600,13 @@ export type LoginByGoogleAuthCodeMutationHookResult = ReturnType<typeof useLogin
 export type LoginByGoogleAuthCodeMutationResult = Apollo.MutationResult<LoginByGoogleAuthCodeMutation>;
 export type LoginByGoogleAuthCodeMutationOptions = Apollo.BaseMutationOptions<LoginByGoogleAuthCodeMutation, LoginByGoogleAuthCodeMutationVariables>;
 export const AddAccountUserByGoogleDocument = gql`
-    mutation AddAccountUserByGoogle($authToken: String!, $userSettingId: String!, $name: String!, $file: Upload) {
+    mutation AddAccountUserByGoogle($authToken: String!, $userSettingId: String!, $name: String!, $urlList: [String!]!, $detail: String, $file: Upload) {
   addAccountUserByGoogle(
     authToken: $authToken
     userSettingId: $userSettingId
     name: $name
+    urlList: $urlList
+    detail: $detail
     imageFile: $file
   ) {
     ...AccountUserObj
@@ -554,6 +631,8 @@ export type AddAccountUserByGoogleMutationFn = Apollo.MutationFunction<AddAccoun
  *      authToken: // value for 'authToken'
  *      userSettingId: // value for 'userSettingId'
  *      name: // value for 'name'
+ *      urlList: // value for 'urlList'
+ *      detail: // value for 'detail'
  *      file: // value for 'file'
  *   },
  * });
@@ -566,8 +645,14 @@ export type AddAccountUserByGoogleMutationHookResult = ReturnType<typeof useAddA
 export type AddAccountUserByGoogleMutationResult = Apollo.MutationResult<AddAccountUserByGoogleMutation>;
 export type AddAccountUserByGoogleMutationOptions = Apollo.BaseMutationOptions<AddAccountUserByGoogleMutation, AddAccountUserByGoogleMutationVariables>;
 export const EditAccountUserDocument = gql`
-    mutation EditAccountUser($userSettingId: String!, $name: String!, $file: Upload) {
-  editAccountUser(userSettingId: $userSettingId, name: $name, imageFile: $file) {
+    mutation EditAccountUser($userSettingId: String!, $name: String!, $urlList: [String!]!, $detail: String, $file: Upload) {
+  editAccountUser(
+    userSettingId: $userSettingId
+    name: $name
+    urlList: $urlList
+    detail: $detail
+    imageFile: $file
+  ) {
     ...AccountUserObj
   }
 }
@@ -589,6 +674,8 @@ export type EditAccountUserMutationFn = Apollo.MutationFunction<EditAccountUserM
  *   variables: {
  *      userSettingId: // value for 'userSettingId'
  *      name: // value for 'name'
+ *      urlList: // value for 'urlList'
+ *      detail: // value for 'detail'
  *      file: // value for 'file'
  *   },
  * });
@@ -1099,78 +1186,6 @@ export function useAddPostMutation(baseOptions?: Apollo.MutationHookOptions<AddP
 export type AddPostMutationHookResult = ReturnType<typeof useAddPostMutation>;
 export type AddPostMutationResult = Apollo.MutationResult<AddPostMutation>;
 export type AddPostMutationOptions = Apollo.BaseMutationOptions<AddPostMutation, AddPostMutationVariables>;
-export const GetMyPostsDocument = gql`
-    query GetMyPosts($idFilter: String, $categoryIdsFilter: [String!], $placeIdFilter: String) {
-  getMyPosts(
-    idFilter: $idFilter
-    categoryIdsFilter: $categoryIdsFilter
-    placeIdFilter: $placeIdFilter
-  ) {
-    id
-    userSettingId
-    title
-    visitedDateStr
-    isOpen
-    postPlace {
-      id
-      name
-      prefectureCode
-      url
-      address
-      latLon {
-        lat
-        lon
-      }
-    }
-    categoryIdList
-    urlList {
-      url
-      urlType
-      urlInfo {
-        title
-        imageUrl
-        siteName
-      }
-    }
-    detail
-  }
-}
-    `;
-
-/**
- * __useGetMyPostsQuery__
- *
- * To run a query within a React component, call `useGetMyPostsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMyPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMyPostsQuery({
- *   variables: {
- *      idFilter: // value for 'idFilter'
- *      categoryIdsFilter: // value for 'categoryIdsFilter'
- *      placeIdFilter: // value for 'placeIdFilter'
- *   },
- * });
- */
-export function useGetMyPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyPostsQuery, GetMyPostsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(GetMyPostsDocument, options);
-      }
-export function useGetMyPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyPostsQuery, GetMyPostsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(GetMyPostsDocument, options);
-        }
-export function useGetMyPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyPostsQuery, GetMyPostsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(GetMyPostsDocument, options);
-        }
-export type GetMyPostsQueryHookResult = ReturnType<typeof useGetMyPostsQuery>;
-export type GetMyPostsLazyQueryHookResult = ReturnType<typeof useGetMyPostsLazyQuery>;
-export type GetMyPostsSuspenseQueryHookResult = ReturnType<typeof useGetMyPostsSuspenseQuery>;
-export type GetMyPostsQueryResult = Apollo.QueryResult<GetMyPostsQuery, GetMyPostsQueryVariables>;
 export const EditPostDocument = gql`
     mutation EditPost($id: String!, $title: String!, $placeId: String!, $visitedDate: DateTime!, $isOpen: Boolean!, $categoryIdList: [String!]!, $detail: String, $urlList: [String!]!) {
   editPost(
@@ -1249,3 +1264,98 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
+export const GetMyPostsDocument = gql`
+    query GetMyPosts($idFilter: String, $categoryIdsFilter: [String!], $placeIdFilter: String, $isOrderPostDate: Boolean!) {
+  getMyPosts(
+    idFilter: $idFilter
+    categoryIdsFilter: $categoryIdsFilter
+    placeIdFilter: $placeIdFilter
+    isOrderPostDate: $isOrderPostDate
+  ) {
+    ...PostObj
+  }
+}
+    ${PostObjFragmentDoc}`;
+
+/**
+ * __useGetMyPostsQuery__
+ *
+ * To run a query within a React component, call `useGetMyPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyPostsQuery({
+ *   variables: {
+ *      idFilter: // value for 'idFilter'
+ *      categoryIdsFilter: // value for 'categoryIdsFilter'
+ *      placeIdFilter: // value for 'placeIdFilter'
+ *      isOrderPostDate: // value for 'isOrderPostDate'
+ *   },
+ * });
+ */
+export function useGetMyPostsQuery(baseOptions: Apollo.QueryHookOptions<GetMyPostsQuery, GetMyPostsQueryVariables> & ({ variables: GetMyPostsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(GetMyPostsDocument, options);
+      }
+export function useGetMyPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyPostsQuery, GetMyPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(GetMyPostsDocument, options);
+        }
+export function useGetMyPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyPostsQuery, GetMyPostsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyPostsQuery, GetMyPostsQueryVariables>(GetMyPostsDocument, options);
+        }
+export type GetMyPostsQueryHookResult = ReturnType<typeof useGetMyPostsQuery>;
+export type GetMyPostsLazyQueryHookResult = ReturnType<typeof useGetMyPostsLazyQuery>;
+export type GetMyPostsSuspenseQueryHookResult = ReturnType<typeof useGetMyPostsSuspenseQuery>;
+export type GetMyPostsQueryResult = Apollo.QueryResult<GetMyPostsQuery, GetMyPostsQueryVariables>;
+export const GetOpenPostsWithAccountInfoDocument = gql`
+    query GetOpenPostsWithAccountInfo($userSettingId: String!) {
+  getOpenPosts(userSettingId: $userSettingId) {
+    ...PostObj
+  }
+  getAccountUserByUserSettingId(userSettingId: $userSettingId) {
+    userSettingId
+    name
+    urlList
+    detail
+    imageUrl
+  }
+}
+    ${PostObjFragmentDoc}`;
+
+/**
+ * __useGetOpenPostsWithAccountInfoQuery__
+ *
+ * To run a query within a React component, call `useGetOpenPostsWithAccountInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOpenPostsWithAccountInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOpenPostsWithAccountInfoQuery({
+ *   variables: {
+ *      userSettingId: // value for 'userSettingId'
+ *   },
+ * });
+ */
+export function useGetOpenPostsWithAccountInfoQuery(baseOptions: Apollo.QueryHookOptions<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables> & ({ variables: GetOpenPostsWithAccountInfoQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>(GetOpenPostsWithAccountInfoDocument, options);
+      }
+export function useGetOpenPostsWithAccountInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>(GetOpenPostsWithAccountInfoDocument, options);
+        }
+export function useGetOpenPostsWithAccountInfoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>(GetOpenPostsWithAccountInfoDocument, options);
+        }
+export type GetOpenPostsWithAccountInfoQueryHookResult = ReturnType<typeof useGetOpenPostsWithAccountInfoQuery>;
+export type GetOpenPostsWithAccountInfoLazyQueryHookResult = ReturnType<typeof useGetOpenPostsWithAccountInfoLazyQuery>;
+export type GetOpenPostsWithAccountInfoSuspenseQueryHookResult = ReturnType<typeof useGetOpenPostsWithAccountInfoSuspenseQuery>;
+export type GetOpenPostsWithAccountInfoQueryResult = Apollo.QueryResult<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>;

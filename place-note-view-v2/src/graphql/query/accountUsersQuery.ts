@@ -5,6 +5,8 @@ export const accountUserResponseFragment = gql`
     token
     userSettingId
     name
+    urlList
+    detail
     imageUrl
   }
 `;
@@ -30,12 +32,16 @@ export const addAccountUserByGoogleMutationDocument = gql`
     $authToken: String!
     $userSettingId: String!
     $name: String!
+    $urlList: [String!]!
+    $detail: String
     $file: Upload
   ) {
     addAccountUserByGoogle(
       authToken: $authToken
       userSettingId: $userSettingId
       name: $name
+      urlList: $urlList
+      detail: $detail
       imageFile: $file
     ) {
       ...AccountUserObj
@@ -47,11 +53,15 @@ export const editAccountUserMutationDocument = gql`
   mutation EditAccountUser(
     $userSettingId: String!
     $name: String!
+    $urlList: [String!]!
+    $detail: String
     $file: Upload
   ) {
     editAccountUser(
       userSettingId: $userSettingId
       name: $name
+      urlList: $urlList
+      detail: $detail
       imageFile: $file
     ) {
       ...AccountUserObj

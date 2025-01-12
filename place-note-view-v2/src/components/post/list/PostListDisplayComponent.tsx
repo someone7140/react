@@ -1,22 +1,27 @@
 "use client";
 
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useAsyncEffect, useInfiniteScroll } from "ahooks";
+import React, { FC, useRef, useState } from "react";
+import { useInfiniteScroll } from "ahooks";
 import { Data } from "ahooks/lib/useInfiniteScroll/types";
 
-import { MyPostRefComponent } from "@/components/post/ref/MyPostRefComponent";
+import { MyPostRefComponent } from "../ref/MyPostRefComponent";
+import { OpenPostRefComponent } from "../ref/OpenPostRefComponent";
 import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
+import { postListStyle } from "@/style/PostStyle";
 
 export type Props = {
   postList: PostResponse[];
   categoryList: PostCategoryResponse[];
-  refetch: () => void;
+  refetch?: () => void;
+  isOpenOnly?: boolean;
+  isDisplayUserInfo?: boolean;
 };
 
 export const PostListDisplayComponent: FC<Props> = ({
   postList,
   categoryList,
   refetch,
+  isOpenOnly,
 }) => {
   const [displayLength, setDisplayLength] = useState<number>(0);
   const listRef = useRef<HTMLDivElement>(null);
@@ -47,17 +52,22 @@ export const PostListDisplayComponent: FC<Props> = ({
 
   return (
     <div
-      className="flex flex-col gap-5 max-w-[340px] max-h-[69vh] overflow-auto"
+      className={postListStyle({ type: isOpenOnly ? "open" : "myPost" })}
       ref={listRef}
     >
       {displayPost?.list.map((post: PostResponse) => {
         return (
-          <MyPostRefComponent
-            key={post.id}
-            post={post}
-            categoryData={categoryList}
-            refetchData={refetch}
-          />
+          <React.Fragment key={post.id}>
+            {isOpenOnly ? (
+              <OpenPostRefComponent post={post} />
+            ) : (
+              <MyPostRefComponent
+                post={post}
+                categoryData={categoryList}
+                refetchData={refetch}
+              />
+            )}
+          </React.Fragment>
         );
       })}
     </div>
