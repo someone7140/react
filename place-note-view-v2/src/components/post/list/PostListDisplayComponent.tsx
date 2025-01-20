@@ -22,6 +22,7 @@ export const PostListDisplayComponent: FC<Props> = ({
   categoryList,
   refetch,
   isOpenOnly,
+  isDisplayUserInfo,
 }) => {
   const [displayLength, setDisplayLength] = useState<number>(0);
   const listRef = useRef<HTMLDivElement>(null);
@@ -59,7 +60,10 @@ export const PostListDisplayComponent: FC<Props> = ({
         return (
           <React.Fragment key={post.id}>
             {isOpenOnly ? (
-              <OpenPostRefComponent post={post} />
+              <OpenPostRefComponent
+                post={post}
+                isDisplayUserInfo={isDisplayUserInfo}
+              />
             ) : (
               <MyPostRefComponent
                 post={post}

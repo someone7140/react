@@ -1,56 +1,7 @@
+"use client";
+
+import { TopComponent } from "@/components/common/TopComponent";
+
 export default function Home() {
-  return (
-    <div>
-      top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br /> top
-      <br />
-    </div>
-  );
+  return <TopComponent />;
 }

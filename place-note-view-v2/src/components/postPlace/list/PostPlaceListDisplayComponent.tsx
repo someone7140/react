@@ -8,6 +8,7 @@ import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceAction
 import { PostCategoryResponse, PostPlaceResponse } from "@/graphql/gen/graphql";
 import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
+import { linkStyle } from "@/style/CommonStyle";
 
 type Props = {
   placeList: PostPlaceResponse[];
@@ -65,7 +66,7 @@ export const PostPlaceListDisplayComponent: FC<Props> = ({
                     href={place.url}
                     rel="noopener noreferrer"
                     target="_blank"
-                    className="text-wrap break-all text-xl underline text-blue-600 hover:text-blue-800"
+                    className={`text-wrap break-all text-xl ${linkStyle()}`}
                   >
                     {place.name}
                   </Link>

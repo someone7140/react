@@ -4,6 +4,8 @@ export const postResponseFragment = gql`
   fragment PostObj on PostResponse {
     id
     userSettingId
+    userName
+    userImageUrl
     title
     visitedDateStr
     isOpen
@@ -97,6 +99,14 @@ export const getMyPostsQueryDocument = gql`
       placeIdFilter: $placeIdFilter
       isOrderPostDate: $isOrderPostDate
     ) {
+      ...PostObj
+    }
+  }
+`;
+
+export const getOpenPostsQueryDocument = gql`
+  query GetOpenPosts {
+    getOpenPosts(userSettingId: null) {
       ...PostObj
     }
   }

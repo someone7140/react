@@ -56,13 +56,11 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
         </ListItemPrefix>
         Top
       </ListItem>
-      <ListItem className="cursor-default hover:bg-white">
+      <ListItem className="cursor-default hover:bg-white pb-1">
         <ListItemPrefix>
           <RectangleStackIcon className="h-5 w-5" />
         </ListItemPrefix>
-        <Typography color="blue-gray" className="mr-auto font-normal">
-          投稿管理
-        </Typography>
+        投稿管理
       </ListItem>
       <div className="ml-4">
         <ListItem
@@ -73,9 +71,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <ListItemPrefix>
             <DocumentIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Typography color="blue-gray" className="mr-auto font-normal">
-            投稿一覧
-          </Typography>
+          投稿一覧
         </ListItem>
         <ListItem
           onClick={() => {
@@ -85,9 +81,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <ListItemPrefix>
             <DocumentPlusIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Typography color="blue-gray" className="mr-auto font-normal">
-            投稿追加
-          </Typography>
+          投稿追加
         </ListItem>
         <ListItem
           onClick={() => {
@@ -97,9 +91,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <ListItemPrefix>
             <FolderIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Typography color="blue-gray" className="mr-auto font-normal">
-            カテゴリー一覧
-          </Typography>
+          カテゴリー一覧
         </ListItem>
         <ListItem
           onClick={() => {
@@ -109,9 +101,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <ListItemPrefix>
             <FolderPlusIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Typography color="blue-gray" className="mr-auto font-normal">
-            カテゴリー追加
-          </Typography>
+          カテゴリー追加
         </ListItem>
         <ListItem
           onClick={() => {
@@ -121,9 +111,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <ListItemPrefix>
             <MagnifyingGlassIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Typography color="blue-gray" className="mr-auto font-normal">
-            場所一覧
-          </Typography>
+          場所一覧
         </ListItem>
         <ListItem
           onClick={() => {
@@ -133,18 +121,14 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <ListItemPrefix>
             <MagnifyingGlassPlusIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Typography color="blue-gray" className="mr-auto font-normal">
-            場所追加
-          </Typography>
+          場所追加
         </ListItem>
       </div>
-      <ListItem className="cursor-default hover:bg-white">
+      <ListItem className="cursor-default hover:bg-white pb-1">
         <ListItemPrefix>
           <RectangleStackIcon className="h-5 w-5" />
         </ListItemPrefix>
-        <Typography color="blue-gray" className="mr-auto font-normal">
-          プロフィール管理
-        </Typography>
+        プロフィール管理
       </ListItem>
       <div className="ml-4">
         <ListItem

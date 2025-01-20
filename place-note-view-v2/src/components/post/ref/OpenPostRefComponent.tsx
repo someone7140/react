@@ -2,11 +2,14 @@
 
 import React, { FC } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { UserIcon } from "@heroicons/react/24/solid";
 
 import { InstagramComponent } from "./InstagramComponent";
 import { WebNoInfoComponent } from "./WebNoInfoComponent";
 import { WebWithInfoComponent } from "./WebWithInfoComponent";
 import { XContentsComponent } from "./XContentsComponent";
+import { USER_ACCOUNT_PROFILE } from "@/constants/MenuPathConstants";
 import {
   URL_TYPE_INSTAGRAM,
   URL_TYPE_WEB_WITH_INFO,
@@ -14,18 +17,48 @@ import {
 } from "@/constants/UrlConstants";
 import { PostResponse } from "@/graphql/gen/graphql";
 import { detailTextStyle } from "@/style/PostStyle";
+import { linkStyle } from "@/style/CommonStyle";
 
 type Props = {
   post: PostResponse;
   isDisplayUserInfo?: boolean;
 };
 
-export const OpenPostRefComponent: FC<Props> = ({ post }) => {
+export const OpenPostRefComponent: FC<Props> = ({
+  post,
+  isDisplayUserInfo,
+}) => {
   return (
     <div className="min-w-[300px] border p-3">
       <div className={"text-wrap break-all text-black text-2xl"}>
         {post.title}
       </div>
+      {isDisplayUserInfo && (
+        <div className={"flex gap-2 items-center mb-2"}>
+          <div>
+            {post.userImageUrl ? (
+              <Image
+                src={post.userImageUrl}
+                width={35}
+                height={35}
+                alt={post.userName}
+              />
+            ) : (
+              <UserIcon className="mr-3 w-[35px] h-[35px]" />
+            )}
+          </div>
+          <div>
+            <Link
+              href={`${USER_ACCOUNT_PROFILE}?userSettingId=${post.userSettingId}`}
+              rel="noopener noreferrer"
+              target="_blank"
+              className={`w-[98%] text-wrap break-all ${linkStyle()}`}
+            >
+              {post.userName}
+            </Link>
+          </div>
+        </div>
+      )}
       <div className={"flex gap-2"}>
         <div>場所:</div>
         {!post.postPlace.url && <div>{post.postPlace.name}</div>}
@@ -35,7 +68,7 @@ export const OpenPostRefComponent: FC<Props> = ({ post }) => {
               href={post.postPlace.url}
               rel="noopener noreferrer"
               target="_blank"
-              className="underline text-blue-600 hover:text-blue-800"
+              className={linkStyle()}
             >
               {post.postPlace.name}
             </Link>

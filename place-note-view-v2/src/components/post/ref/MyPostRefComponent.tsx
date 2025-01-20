@@ -18,6 +18,7 @@ import {
 } from "@/constants/UrlConstants";
 import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
 import { detailTextStyle } from "@/style/PostStyle";
+import { linkStyle } from "@/style/CommonStyle";
 
 type Props = {
   post: PostResponse;
@@ -47,7 +48,7 @@ export const MyPostRefComponent: FC<Props> = ({
               href={post.postPlace.url}
               rel="noopener noreferrer"
               target="_blank"
-              className="underline text-blue-600 hover:text-blue-800"
+              className={linkStyle()}
             >
               {post.postPlace.name}
             </Link>

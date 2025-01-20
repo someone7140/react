@@ -10,6 +10,7 @@ import { LinkIcon, UserIcon } from "@heroicons/react/24/solid";
 import { PostListDisplayComponent } from "@/components/post/list/PostListDisplayComponent";
 import { useGetOpenPostsWithAccountInfoQuery } from "@/graphql/gen/graphql";
 import { detailTextStyle } from "@/style/PostStyle";
+import { linkStyle } from "@/style/CommonStyle";
 
 type Props = {
   userSettingId: string;
@@ -67,7 +68,7 @@ export const UserAccountProfileComponent: FC<Props> = ({ userSettingId }) => {
                 href={url}
                 rel="noopener noreferrer"
                 target="_blank"
-                className="truncate underline text-blue-600 hover:text-blue-600"
+                className={`truncate ${linkStyle()}`}
               >
                 <div className="flex items-center gap-1">
                   <LinkIcon className="w-[14px] h-[14px]" />

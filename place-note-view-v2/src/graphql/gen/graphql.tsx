@@ -273,6 +273,8 @@ export type PostResponse = {
   postPlace: FieldWrapper<PostPlaceInfo>;
   title: FieldWrapper<Scalars['String']['output']>;
   urlList: Array<FieldWrapper<PostUrl>>;
+  userImageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  userName: FieldWrapper<Scalars['String']['output']>;
   userSettingId: FieldWrapper<Scalars['String']['output']>;
   visitedDateStr: FieldWrapper<Scalars['String']['output']>;
 };
@@ -429,7 +431,7 @@ export type DeletePostPlaceMutationVariables = Exact<{
 
 export type DeletePostPlaceMutation = { __typename?: 'PlaceNoteMutation', deletePostPlace: boolean };
 
-export type PostObjFragment = { __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> };
+export type PostObjFragment = { __typename?: 'PostResponse', id: string, userSettingId: string, userName: string, userImageUrl?: string | null, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> };
 
 export type AddPostMutationVariables = Exact<{
   title: Scalars['String']['input'];
@@ -473,14 +475,19 @@ export type GetMyPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetMyPostsQuery = { __typename?: 'PlaceNoteQuery', getMyPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
+export type GetMyPostsQuery = { __typename?: 'PlaceNoteQuery', getMyPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, userName: string, userImageUrl?: string | null, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
+
+export type GetOpenPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOpenPostsQuery = { __typename?: 'PlaceNoteQuery', getOpenPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, userName: string, userImageUrl?: string | null, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
 
 export type GetOpenPostsWithAccountInfoQueryVariables = Exact<{
   userSettingId: Scalars['String']['input'];
 }>;
 
 
-export type GetOpenPostsWithAccountInfoQuery = { __typename?: 'PlaceNoteQuery', getOpenPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }>, getAccountUserByUserSettingId: { __typename?: 'AccountUserResponseRef', userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
+export type GetOpenPostsWithAccountInfoQuery = { __typename?: 'PlaceNoteQuery', getOpenPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, userName: string, userImageUrl?: string | null, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }>, getAccountUserByUserSettingId: { __typename?: 'AccountUserResponseRef', userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
 
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on AccountUserResponse {
@@ -506,6 +513,8 @@ export const PostObjFragmentDoc = gql`
     fragment PostObj on PostResponse {
   id
   userSettingId
+  userName
+  userImageUrl
   title
   visitedDateStr
   isOpen
@@ -1312,6 +1321,45 @@ export type GetMyPostsQueryHookResult = ReturnType<typeof useGetMyPostsQuery>;
 export type GetMyPostsLazyQueryHookResult = ReturnType<typeof useGetMyPostsLazyQuery>;
 export type GetMyPostsSuspenseQueryHookResult = ReturnType<typeof useGetMyPostsSuspenseQuery>;
 export type GetMyPostsQueryResult = Apollo.QueryResult<GetMyPostsQuery, GetMyPostsQueryVariables>;
+export const GetOpenPostsDocument = gql`
+    query GetOpenPosts {
+  getOpenPosts(userSettingId: null) {
+    ...PostObj
+  }
+}
+    ${PostObjFragmentDoc}`;
+
+/**
+ * __useGetOpenPostsQuery__
+ *
+ * To run a query within a React component, call `useGetOpenPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOpenPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOpenPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOpenPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetOpenPostsQuery, GetOpenPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOpenPostsQuery, GetOpenPostsQueryVariables>(GetOpenPostsDocument, options);
+      }
+export function useGetOpenPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOpenPostsQuery, GetOpenPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOpenPostsQuery, GetOpenPostsQueryVariables>(GetOpenPostsDocument, options);
+        }
+export function useGetOpenPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetOpenPostsQuery, GetOpenPostsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOpenPostsQuery, GetOpenPostsQueryVariables>(GetOpenPostsDocument, options);
+        }
+export type GetOpenPostsQueryHookResult = ReturnType<typeof useGetOpenPostsQuery>;
+export type GetOpenPostsLazyQueryHookResult = ReturnType<typeof useGetOpenPostsLazyQuery>;
+export type GetOpenPostsSuspenseQueryHookResult = ReturnType<typeof useGetOpenPostsSuspenseQuery>;
+export type GetOpenPostsQueryResult = Apollo.QueryResult<GetOpenPostsQuery, GetOpenPostsQueryVariables>;
 export const GetOpenPostsWithAccountInfoDocument = gql`
     query GetOpenPostsWithAccountInfo($userSettingId: String!) {
   getOpenPosts(userSettingId: $userSettingId) {
