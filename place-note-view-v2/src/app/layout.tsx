@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import ogImage from "./ogp-image.png";
+import { GoogleAnalyticsComponent } from "@/components/common/GoogleAnalyticsComponent";
 import { HeaderComponent } from "@/components/common/HeaderComponent";
 import { SidebarComponent } from "@/components/menu/SidebarComponent";
 import { ApiProvider } from "@/provider/ApiProvider";
@@ -23,6 +25,18 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Placeノート",
   description: "訪れた場所を記録するツール",
+  openGraph: {
+    title: "Placeノート",
+    description: "Placeノートは、訪れた場所のメモや共有ができるサービスです",
+    siteName: "Placeノート",
+    images: [ogImage.src],
+  },
+  twitter: {
+    card: "summary",
+    title: "Placeノート",
+    description: "Placeノートは、訪れた場所のメモや共有ができるサービスです",
+    images: [ogImage.src],
+  },
 };
 
 export default function RootLayout({
@@ -32,6 +46,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <GoogleAnalyticsComponent />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

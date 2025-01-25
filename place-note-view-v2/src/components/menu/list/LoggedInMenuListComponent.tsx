@@ -8,6 +8,7 @@ import {
 import {
   DocumentIcon,
   DocumentPlusIcon,
+  EnvelopeIcon,
   FolderIcon,
   FolderPlusIcon,
   HomeIcon,
@@ -16,14 +17,10 @@ import {
   PowerIcon,
   RectangleStackIcon,
 } from "@heroicons/react/24/solid";
-import {
-  List,
-  ListItem,
-  ListItemPrefix,
-  Typography,
-} from "@material-tailwind/react";
+import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 
 import {
+  INQUIRY_AND_OTHERS,
   POST_ADD_PAGE_PATH,
   POST_CATEGORY_ADD_PAGE_PATH,
   POST_CATEGORY_LIST_PAGE_PATH,
@@ -164,6 +161,16 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <PowerIcon className="h-5 w-5" />
         </ListItemPrefix>
         ログアウト
+      </ListItem>
+      <ListItem
+        onClick={() => {
+          onCLickMenu(INQUIRY_AND_OTHERS);
+        }}
+      >
+        <ListItemPrefix>
+          <EnvelopeIcon className="h-5 w-5" />
+        </ListItemPrefix>
+        問い合わせ等
       </ListItem>
     </List>
   );

@@ -5,10 +5,12 @@ import {
   ArrowRightEndOnRectangleIcon,
   HomeIcon,
   UserPlusIcon,
+  EnvelopeIcon,
 } from "@heroicons/react/24/solid";
 import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 
 import {
+  INQUIRY_AND_OTHERS,
   LOGIN_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
@@ -50,6 +52,16 @@ export const NotLoginMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           <UserPlusIcon className="h-5 w-5" />
         </ListItemPrefix>
         ユーザ登録
+      </ListItem>
+      <ListItem
+        onClick={() => {
+          onCLickMenu(INQUIRY_AND_OTHERS);
+        }}
+      >
+        <ListItemPrefix>
+          <EnvelopeIcon className="h-5 w-5" />
+        </ListItemPrefix>
+        問い合わせ等
       </ListItem>
     </List>
   );
