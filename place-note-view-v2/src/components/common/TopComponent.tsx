@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import {
   LOGIN_PAGE_PATH,
+  UPDATE_INFO_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
@@ -36,6 +37,9 @@ export const TopComponent: FC = ({}) => {
           を行なって投稿してみましょう。
         </div>
       )}
+      <Link href={UPDATE_INFO_PATH} className={linkStyle()}>
+        機能等の更新履歴
+      </Link>
       <div className={pageTitleStyle()}>最近公開された投稿</div>
       <div className="flex justify-center">
         {loading && <Spinner />}

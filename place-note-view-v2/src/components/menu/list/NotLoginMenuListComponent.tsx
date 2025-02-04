@@ -10,7 +10,7 @@ import {
 import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 
 import {
-  INQUIRY_AND_OTHERS,
+  INQUIRY_AND_OTHERS_PATH,
   LOGIN_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
@@ -55,7 +55,7 @@ export const NotLoginMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
       </ListItem>
       <ListItem
         onClick={() => {
-          onCLickMenu(INQUIRY_AND_OTHERS);
+          onCLickMenu(INQUIRY_AND_OTHERS_PATH);
         }}
       >
         <ListItemPrefix>

@@ -28,7 +28,12 @@ export const PostEditComponent: FC<Props> = ({ id, placeId }) => {
   const [editPost, { loading: editPostLoading }] = useEditPostMutation();
 
   const { data: postData, loading: postLoading } = useGetMyPostsQuery({
-    variables: { idFilter: id, placeIdFilter: null, categoryIdsFilter: null },
+    variables: {
+      idFilter: id,
+      placeIdFilter: null,
+      categoryIdsFilter: null,
+      isOrderPostDate: false,
+    },
     fetchPolicy: "network-only",
   });
 

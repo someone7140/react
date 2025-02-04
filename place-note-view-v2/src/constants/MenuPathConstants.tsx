@@ -15,4 +15,5 @@ export const POST_PLACE_LIST_PAGE_PATH = "/postPlace/list";
 export const POST_PLACE_ADD_PAGE_PATH = "/postPlace/add";
 export const POST_PLACE_EDIT_PAGE_PATH = "/postPlace/edit";
 
-export const INQUIRY_AND_OTHERS = "/inquiryAndOthers";
+export const INQUIRY_AND_OTHERS_PATH = "/inquiryAndOthers";
+export const UPDATE_INFO_PATH = "/updateInfo";
