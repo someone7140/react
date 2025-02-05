@@ -141,6 +141,7 @@ export const PostInputComponent: FC<Props> = ({
                   crossOrigin={undefined}
                 />
               }
+              popperClassName="!z-20"
             />
             <FormErrorMessageComponent errors={field.state.meta.errors} />
           </div>
