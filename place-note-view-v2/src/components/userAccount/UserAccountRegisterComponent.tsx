@@ -4,15 +4,16 @@ import React, { FC, useState } from "react";
 import { toast } from "react-toastify";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
+import { UserAccountInputComponent } from "@/components/userAccount/input/UserAccountInputComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
-import {
-  UserAccountInputComponent,
-  UserAccountInputFormType,
-} from "@/components/userAccount/input/UserAccountInputComponent";
 import {
   useAddAccountUserByGoogleMutation,
   useGoogleAuthCodeVerifyMutation,
 } from "@/graphql/gen/graphql";
+import {
+  UserAccountInputFormType,
+  useUserAccountInputSessionStore,
+} from "@/hooks/inputSessionStore/useUserAccountInputSessionStore";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 export const UserAccountRegisterComponent: FC = () => {
@@ -21,8 +22,10 @@ export const UserAccountRegisterComponent: FC = () => {
   const [googleAuthCodeVerify, { loading: googleAuthCodeVerifyLoading }] =
     useGoogleAuthCodeVerifyMutation();
   const { updateAuthInfo } = useAuthManagement();
+  const { userAccountInputSession, updateUserAccountInputSession } =
+    useUserAccountInputSessionStore();
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
-    undefined
+    userAccountInputSession?.authToken
   );
 
   const onAuthGoogle = async (authCode: string) => {
@@ -51,7 +54,7 @@ export const UserAccountRegisterComponent: FC = () => {
         authToken: googleAuthToken ?? "",
         userSettingId: formData.userSettingId,
         name: formData.name,
-        file: formData.imageFile ?? null,
+        file: formData.imageFile?.name ? formData.imageFile : null,
         detail: formData.detail,
         urlList: formData.urlList.filter((url) => !!url),
       },
@@ -64,6 +67,7 @@ export const UserAccountRegisterComponent: FC = () => {
       );
     } else {
       updateAuthInfo(accountData);
+      updateUserAccountInputSession(undefined);
       window.location.href = TOP_PAGE_PATH;
     }
   };
@@ -80,6 +84,7 @@ export const UserAccountRegisterComponent: FC = () => {
         <UserAccountInputComponent
           execSubmit={execSubmit}
           disabledFlag={addAccountUserByGoogleLoading}
+          authToken={googleAuthToken}
         />
       )}
     </>

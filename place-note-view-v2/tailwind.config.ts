@@ -12,6 +12,7 @@ module.exports = withMT({
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        noix: " #7E5324",
       },
     },
   },

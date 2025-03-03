@@ -2,7 +2,6 @@
 
 import React, { FC, useRef, useState } from "react";
 import Image from "next/image";
-import { z } from "zod";
 import { useForm } from "@tanstack/react-form";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
@@ -15,7 +14,13 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import { halfSizeRegex } from "@/constants/ValidationConstants";
+import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
+import {
+  userAccountInputFormSchema,
+  UserAccountInputFormType,
+  useUserAccountInputSessionStore,
+} from "@/hooks/inputSessionStore/useUserAccountInputSessionStore";
+import { AccountUserResponse } from "@/graphql/gen/graphql";
 import {
   formItemAreaStyle,
   formLabelStyle,
@@ -23,67 +28,46 @@ import {
   inputTextLabelStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
-import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
-import { AccountUserResponse } from "@/graphql/gen/graphql";
 
 type Props = {
   execSubmit: (form: UserAccountInputFormType) => void;
   disabledFlag?: boolean;
   editUser?: AccountUserResponse;
+  authToken?: string;
 };
-
-export const userAccountInputFormSchema = z.object({
-  userSettingId: z
-    .string({
-      required_error: "ユーザIDは必須です",
-    })
-    .min(1, {
-      message: "ユーザIDは必須です",
-    })
-    .regex(halfSizeRegex, "半角文字で入力してください"),
-  name: z
-    .string({
-      required_error: "名前は必須です",
-    })
-    .min(1, {
-      message: "名前は必須です",
-    }),
-  urlList: z.array(z.string()),
-  detail: z.string().optional(),
-  imageFile: z.custom<File>().optional(),
-});
-
-export type UserAccountInputFormType = z.infer<
-  typeof userAccountInputFormSchema
->;
 
 export const UserAccountInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
   editUser,
+  authToken,
 }) => {
-  const { Field, handleSubmit, setFieldValue } =
-    useForm<UserAccountInputFormType>({
-      validators: {
-        onSubmit: userAccountInputFormSchema,
-      },
-      defaultValues: editUser
-        ? {
-            userSettingId: editUser.userSettingId,
-            name: editUser.name,
-            detail: editUser.detail ?? "",
-            urlList: editUser.urlList.length === 0 ? [""] : editUser.urlList,
-          }
-        : {
-            userSettingId: "",
-            name: "",
-            detail: "",
-            urlList: [""],
-          },
-      onSubmit: async ({ value }) => {
-        execSubmit(value);
-      },
-    });
+  const { userAccountInputSession, updateUserAccountInputSession } =
+    useUserAccountInputSessionStore();
+  const form = useForm<UserAccountInputFormType>({
+    validators: {
+      onSubmit: userAccountInputFormSchema,
+    },
+    defaultValues: userAccountInputSession
+      ? userAccountInputSession
+      : editUser
+      ? {
+          userSettingId: editUser.userSettingId,
+          name: editUser.name,
+          detail: editUser.detail ?? "",
+          urlList: editUser.urlList.length === 0 ? [""] : editUser.urlList,
+        }
+      : {
+          userSettingId: "",
+          name: "",
+          detail: "",
+          urlList: [""],
+          authToken: authToken,
+        },
+    onSubmit: async ({ value }) => {
+      execSubmit(value);
+    },
+  });
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [openPopover, setOpenPopover] = useState(false);
 
@@ -94,7 +78,7 @@ export const UserAccountInputComponent: FC<Props> = ({
 
   return (
     <form>
-      <Field name="userSettingId">
+      <form.Field name="userSettingId">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle({ type: "required" })}>
@@ -109,14 +93,19 @@ export const UserAccountInputComponent: FC<Props> = ({
               labelProps={{
                 className: inputTextLabelStyle(),
               }}
-              onChange={(e) => field.handleChange(e.target.value)}
+              onChange={(e) => {
+                {
+                  field.handleChange(e.target.value);
+                  updateUserAccountInputSession(form.state.values);
+                }
+              }}
               crossOrigin={undefined}
             />
             <FormErrorMessageComponent errors={field.state.meta.errors} />
           </div>
         )}
-      </Field>
-      <Field name="name">
+      </form.Field>
+      <form.Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle({ type: "required" })}>
@@ -130,14 +119,19 @@ export const UserAccountInputComponent: FC<Props> = ({
               labelProps={{
                 className: inputTextLabelStyle(),
               }}
-              onChange={(e) => field.handleChange(e.target.value)}
+              onChange={(e) => {
+                {
+                  field.handleChange(e.target.value);
+                  updateUserAccountInputSession(form.state.values);
+                }
+              }}
               crossOrigin={undefined}
             />
             <FormErrorMessageComponent errors={field.state.meta.errors} />
           </div>
         )}
-      </Field>
-      <Field name="detail">
+      </form.Field>
+      <form.Field name="detail">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle()}>
@@ -148,15 +142,18 @@ export const UserAccountInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              onChange={(e) => field.handleChange(e.target.value)}
+              onChange={(e) => {
+                field.handleChange(e.target.value);
+                updateUserAccountInputSession(form.state.values);
+              }}
               labelProps={{
                 className: inputTextLabelStyle(),
               }}
             />
           </div>
         )}
-      </Field>
-      <Field name="urlList">
+      </form.Field>
+      <form.Field name="urlList">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex items-center">
@@ -177,6 +174,7 @@ export const UserAccountInputComponent: FC<Props> = ({
                 color="light-green"
                 onClick={() => {
                   field.pushValue("");
+                  updateUserAccountInputSession(form.state.values);
                 }}
                 className="ml-6"
               >
@@ -185,7 +183,7 @@ export const UserAccountInputComponent: FC<Props> = ({
             </div>
             {field.state.value.map((_, i) => {
               return (
-                <Field key={i} name={`urlList[${i}]`}>
+                <form.Field key={i} name={`urlList[${i}]`}>
                   {(subField) => {
                     return (
                       <div className="flex gap-2 items-center mt-2">
@@ -197,9 +195,10 @@ export const UserAccountInputComponent: FC<Props> = ({
                           labelProps={{
                             className: inputTextLabelStyle(),
                           }}
-                          onChange={(e) =>
-                            subField.handleChange(e.target.value)
-                          }
+                          onChange={(e) => {
+                            subField.handleChange(e.target.value);
+                            updateUserAccountInputSession(form.state.values);
+                          }}
                           crossOrigin={undefined}
                         />
                         <Button
@@ -207,6 +206,7 @@ export const UserAccountInputComponent: FC<Props> = ({
                           className={`min-w-[80px]`}
                           onClick={() => {
                             field.removeValue(i);
+                            updateUserAccountInputSession(form.state.values);
                           }}
                         >
                           削除
@@ -214,13 +214,13 @@ export const UserAccountInputComponent: FC<Props> = ({
                       </div>
                     );
                   }}
-                </Field>
+                </form.Field>
               );
             })}
           </div>
         )}
-      </Field>
-      <Field name="imageFile">
+      </form.Field>
+      <form.Field name="imageFile">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle()}>アイコン画像</Typography>
@@ -242,7 +242,8 @@ export const UserAccountInputComponent: FC<Props> = ({
                 name={field.name}
                 className="hidden"
                 onChange={(e) => {
-                  setFieldValue("imageFile", e.target.files?.[0]);
+                  form.setFieldValue("imageFile", e.target.files?.[0]);
+                  updateUserAccountInputSession(form.state.values);
                 }}
               />
             </label>
@@ -255,7 +256,7 @@ export const UserAccountInputComponent: FC<Props> = ({
                 className="mt-2"
               />
             )}
-            {field.state.value && (
+            {field.state.value?.name && (
               <Image
                 src={URL.createObjectURL(field.state.value)}
                 width={150}
@@ -266,9 +267,13 @@ export const UserAccountInputComponent: FC<Props> = ({
             )}
           </div>
         )}
-      </Field>
+      </form.Field>
       <div className={formSubmitAreaStyle()}>
-        <Button color="indigo" disabled={disabledFlag} onClick={handleSubmit}>
+        <Button
+          color="indigo"
+          disabled={disabledFlag}
+          onClick={form.handleSubmit}
+        >
           登録
         </Button>
       </div>

@@ -4,7 +4,6 @@ import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { z } from "zod";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
@@ -19,8 +18,13 @@ import {
 import { useForm } from "@tanstack/react-form";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
-import { POST_PLACE_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
+import { POST_PLACE_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
+import {
+  postInputFormSchema,
+  PostInputFormType,
+  usePostInputSessionStore,
+} from "@/hooks/inputSessionStore/usePostSessionStore";
 import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
 import {
   formItemAreaStyle,
@@ -34,25 +38,6 @@ export type SelectPostCategories = {
   selectCategoriesDefault: string[];
   categories: PostCategoryResponse[];
 };
-
-export const postInputFormSchema = z.object({
-  title: z
-    .string({
-      required_error: "タイトルは必須です",
-    })
-    .min(1, {
-      message: "タイトルは必須です",
-    }),
-  visitedDate: z.date({
-    required_error: "訪問日は必須です",
-  }),
-  isOpen: z.boolean(),
-  categoryIdList: z.array(z.string()),
-  detail: z.string().optional(),
-  urlList: z.array(z.string()),
-});
-
-export type PostInputFormType = z.infer<typeof postInputFormSchema>;
 
 type Props = {
   execSubmit: (form: PostInputFormType) => void;
@@ -71,26 +56,30 @@ export const PostInputComponent: FC<Props> = ({
   const [categorySelectDialogOpen, setCategorySelectDialogOpen] =
     useState(false);
   const [openPopover, setOpenPopover] = useState(false);
+  const { postInputSession, updatePostInputSession } =
+    usePostInputSessionStore();
 
   const popoverTriggers = {
     onMouseEnter: () => setOpenPopover(true),
     onMouseLeave: () => setOpenPopover(false),
   };
 
-  const { Field, handleSubmit } = useForm<PostInputFormType>({
+  const form = useForm({
     validators: {
       onSubmit: postInputFormSchema,
     },
-    defaultValues: {
-      title: editPostData?.title ?? "",
-      detail: editPostData?.detail ?? "",
-      isOpen: editPostData?.isOpen ?? false,
-      visitedDate: editPostData?.visitedDateStr
-        ? new Date(editPostData.visitedDateStr)
-        : new Date(),
-      categoryIdList: postCategories.selectCategoriesDefault,
-      urlList: editPostData?.urlList.map((url) => url.url) ?? [""],
-    } as PostInputFormType,
+    defaultValues: postInputSession
+      ? postInputSession
+      : ({
+          title: editPostData?.title ?? "",
+          detail: editPostData?.detail ?? "",
+          isOpen: editPostData?.isOpen ?? false,
+          visitedDate: editPostData?.visitedDateStr
+            ? new Date(editPostData.visitedDateStr)
+            : new Date(),
+          categoryIdList: postCategories.selectCategoriesDefault,
+          urlList: editPostData?.urlList.map((url) => url.url) ?? [""],
+        } as PostInputFormType),
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
@@ -100,7 +89,7 @@ export const PostInputComponent: FC<Props> = ({
 
   return (
     <form className="max-w-[95%]">
-      <Field name="title">
+      <form.Field name="title">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle({ type: "required" })}>
@@ -114,14 +103,19 @@ export const PostInputComponent: FC<Props> = ({
               labelProps={{
                 className: inputTextLabelStyle(),
               }}
-              onChange={(e) => field.handleChange(e.target.value)}
+              onChange={(e) => {
+                {
+                  field.handleChange(e.target.value);
+                  updatePostInputSession(form.state.values);
+                }
+              }}
               crossOrigin={undefined}
             />
             <FormErrorMessageComponent errors={field.state.meta.errors} />
           </div>
         )}
-      </Field>
-      <Field name="visitedDate">
+      </form.Field>
+      <form.Field name="visitedDate">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle({ type: "required" })}>
@@ -129,7 +123,11 @@ export const PostInputComponent: FC<Props> = ({
             </Typography>
             <DatePicker
               selected={field.state.value}
-              onChange={(date) => field.setValue(date ?? field.state.value)}
+              onChange={(date) => {
+                const updateValue = date ?? field.state.value;
+                field.setValue(updateValue);
+                updatePostInputSession(form.state.values);
+              }}
               dateFormat="yyyy/MM/dd"
               popperPlacement="bottom-start"
               customInput={
@@ -146,8 +144,8 @@ export const PostInputComponent: FC<Props> = ({
             <FormErrorMessageComponent errors={field.state.meta.errors} />
           </div>
         )}
-      </Field>
-      <Field name="isOpen">
+      </form.Field>
+      <form.Field name="isOpen">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle()}>公開設定</Typography>
@@ -155,15 +153,20 @@ export const PostInputComponent: FC<Props> = ({
               <Switch
                 color="blue"
                 checked={field.state.value}
-                onChange={(e) => field.handleChange(e.target.checked)}
+                onChange={(e) => {
+                  {
+                    field.handleChange(e.target.checked);
+                    updatePostInputSession(form.state.values);
+                  }
+                }}
                 crossOrigin={undefined}
               />
               <div>{field.state.value ? "公開" : "非公開"}</div>
             </div>
           </div>
         )}
-      </Field>
-      <Field name="categoryIdList">
+      </form.Field>
+      <form.Field name="categoryIdList">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex gap-4 items-center">
@@ -207,6 +210,7 @@ export const PostInputComponent: FC<Props> = ({
                     } else {
                       field.setValue([...field.state.value, selectId]);
                     }
+                    updatePostInputSession(form.state.values);
                   }}
                   selectedIds={field.state.value}
                 />
@@ -214,8 +218,8 @@ export const PostInputComponent: FC<Props> = ({
             )}
           </div>
         )}
-      </Field>
-      <Field name="urlList">
+      </form.Field>
+      <form.Field name="urlList">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex items-center">
@@ -236,6 +240,7 @@ export const PostInputComponent: FC<Props> = ({
                 color="light-green"
                 onClick={() => {
                   field.pushValue("");
+                  updatePostInputSession(form.state.values);
                 }}
                 className="ml-6"
               >
@@ -244,7 +249,7 @@ export const PostInputComponent: FC<Props> = ({
             </div>
             {field.state.value.map((_, i) => {
               return (
-                <Field key={i} name={`urlList[${i}]`}>
+                <form.Field key={i} name={`urlList[${i}]`}>
                   {(subField) => {
                     return (
                       <div className="flex gap-2 items-center mt-2">
@@ -256,9 +261,12 @@ export const PostInputComponent: FC<Props> = ({
                           labelProps={{
                             className: inputTextLabelStyle(),
                           }}
-                          onChange={(e) =>
-                            subField.handleChange(e.target.value)
-                          }
+                          onChange={(e) => {
+                            {
+                              subField.handleChange(e.target.value);
+                              updatePostInputSession(form.state.values);
+                            }
+                          }}
                           crossOrigin={undefined}
                         />
                         <Button
@@ -266,6 +274,7 @@ export const PostInputComponent: FC<Props> = ({
                           className={`min-w-[80px]`}
                           onClick={() => {
                             field.removeValue(i);
+                            updatePostInputSession(form.state.values);
                           }}
                         >
                           削除
@@ -273,13 +282,13 @@ export const PostInputComponent: FC<Props> = ({
                       </div>
                     );
                   }}
-                </Field>
+                </form.Field>
               );
             })}
           </div>
         )}
-      </Field>
-      <Field name="detail">
+      </form.Field>
+      <form.Field name="detail">
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Typography className={formLabelStyle()}>詳細など</Typography>
@@ -288,16 +297,25 @@ export const PostInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              onChange={(e) => field.handleChange(e.target.value)}
+              onChange={(e) => {
+                {
+                  field.handleChange(e.target.value);
+                  updatePostInputSession(form.state.values);
+                }
+              }}
               labelProps={{
                 className: inputTextLabelStyle(),
               }}
             />
           </div>
         )}
-      </Field>
+      </form.Field>
       <div className={formSubmitAreaStyle()}>
-        <Button color="indigo" disabled={disabledFlag} onClick={handleSubmit}>
+        <Button
+          color="indigo"
+          disabled={disabledFlag}
+          onClick={form.handleSubmit}
+        >
           {editPostData ? "編集" : "登録"}
         </Button>
         <Button

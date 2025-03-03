@@ -10,12 +10,15 @@ import { WebNoInfoComponent } from "./WebNoInfoComponent";
 import { WebWithInfoComponent } from "./WebWithInfoComponent";
 import { XContentsComponent } from "./XContentsComponent";
 import { PostDeleteDialogComponent } from "../dialog/PostDeleteDialogComponent";
+import { MapModalByLatLonComponent } from "@/components/map/MapModalByLatLonComponent";
 import { POST_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   URL_TYPE_INSTAGRAM,
   URL_TYPE_WEB_WITH_INFO,
   URL_TYPE_X,
 } from "@/constants/UrlConstants";
+import { usePostInputSessionStore } from "@/hooks/inputSessionStore/usePostSessionStore";
+import { useGeolocationService } from "@/hooks/geolocation/useGeolocationService";
 import { PostCategoryResponse, PostResponse } from "@/graphql/gen/graphql";
 import { detailTextStyle } from "@/style/PostStyle";
 import { linkStyle } from "@/style/CommonStyle";
@@ -32,7 +35,9 @@ export const MyPostRefComponent: FC<Props> = ({
   refetchData,
 }) => {
   const router = useRouter();
+  const { prefectureMap } = useGeolocationService();
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+  const { updatePostInputSession } = usePostInputSessionStore();
 
   return (
     <div className="min-w-[300px] border p-3">
@@ -55,6 +60,16 @@ export const MyPostRefComponent: FC<Props> = ({
           </div>
         )}
       </div>
+      {post.postPlace.prefectureCode && (
+        <div className={"flex gap-2 items-center"}>
+          <div>
+            都道府県/位置: {prefectureMap.get(post.postPlace.prefectureCode)}
+          </div>
+          {post.postPlace.latLon && (
+            <MapModalByLatLonComponent latLon={post.postPlace.latLon} />
+          )}
+        </div>
+      )}
       <div className={"flex gap-2"}>
         <div>訪問日:</div>
         <div>
@@ -101,6 +116,7 @@ export const MyPostRefComponent: FC<Props> = ({
         <Button
           color="orange"
           onClick={() => {
+            updatePostInputSession(undefined);
             router.push(`${POST_EDIT_PAGE_PATH}?id=${post.id}`);
           }}
         >

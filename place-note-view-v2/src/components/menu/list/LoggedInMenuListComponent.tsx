@@ -32,6 +32,10 @@ import {
   USER_ACCOUNT_PROFILE,
 } from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
+import { usePostPlaceInputSessionStore } from "@/hooks/inputSessionStore/usePostPlaceInputSessionStore";
+import { usePostCategoryInputSessionStore } from "@/hooks/inputSessionStore/usePostCategoryInputSessionStore";
+import { usePostInputSessionStore } from "@/hooks/inputSessionStore/usePostSessionStore";
+import { useUserAccountInputSessionStore } from "@/hooks/inputSessionStore/useUserAccountInputSessionStore";
 
 type Props = {
   onCLickMenu: (path: string, reloadFlag?: boolean) => void;
@@ -40,6 +44,10 @@ type Props = {
 export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
   const { userAccount } = useAuthManagement();
   const { removeAuthInfo } = useAuthManagement();
+  const { updatePostPlaceInputSession } = usePostPlaceInputSessionStore();
+  const { updatePostCategoryInputSession } = usePostCategoryInputSessionStore();
+  const { updatePostInputSession } = usePostInputSessionStore();
+  const { updateUserAccountInputSession } = useUserAccountInputSessionStore();
 
   return (
     <List className="mt-2">
@@ -72,6 +80,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
         </ListItem>
         <ListItem
           onClick={() => {
+            updatePostInputSession(undefined);
             onCLickMenu(POST_ADD_PAGE_PATH);
           }}
         >
@@ -92,6 +101,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
         </ListItem>
         <ListItem
           onClick={() => {
+            updatePostCategoryInputSession(undefined);
             onCLickMenu(POST_CATEGORY_ADD_PAGE_PATH);
           }}
         >
@@ -112,6 +122,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
         </ListItem>
         <ListItem
           onClick={() => {
+            updatePostPlaceInputSession(undefined);
             onCLickMenu(POST_PLACE_ADD_PAGE_PATH);
           }}
         >
@@ -130,6 +141,7 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
       <div className="ml-4">
         <ListItem
           onClick={() => {
+            updateUserAccountInputSession(undefined);
             onCLickMenu(
               `${USER_ACCOUNT_PROFILE}?userSettingId=${userAccount?.userSettingId}`
             );

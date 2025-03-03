@@ -15,12 +15,15 @@ import {
   TOP_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
+import { useUserAccountInputSessionStore } from "@/hooks/inputSessionStore/useUserAccountInputSessionStore";
 
 type Props = {
   onCLickMenu: (path: string, reloadFlag?: boolean) => void;
 };
 
 export const NotLoginMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
+  const { updateUserAccountInputSession } = useUserAccountInputSessionStore();
+
   return (
     <List className="gap-4 mt-2">
       <ListItem
@@ -45,6 +48,7 @@ export const NotLoginMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
       </ListItem>
       <ListItem
         onClick={() => {
+          updateUserAccountInputSession(undefined);
           onCLickMenu(USER_ACCOUNT_REGISTER_PAGE_PATH);
         }}
       >

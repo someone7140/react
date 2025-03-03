@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { POST_CATEGORY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
-import {
-  PostCategoryInputComponent,
-  PostCategoryInputFormType,
-} from "@/components/postCategory/input/PostCategoryInputComponent";
+import { PostCategoryInputComponent } from "@/components/postCategory/input/PostCategoryInputComponent";
+import { PostCategoryInputFormType } from "@/hooks/inputSessionStore/usePostCategoryInputSessionStore";
 import { useAddPostCategoryMutation } from "@/graphql/gen/graphql";
 
 export const PostCategoryRegisterComponent: FC = () => {

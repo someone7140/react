@@ -6,10 +6,8 @@ import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 
 import { POST_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
-import {
-  PostInputComponent,
-  PostInputFormType,
-} from "@/components/post/input/PostInputComponent";
+import { PostInputComponent } from "@/components/post/input/PostInputComponent";
+import { PostInputFormType } from "@/hooks/inputSessionStore/usePostSessionStore";
 import {
   useEditPostMutation,
   useGetMyPostCategoriesQuery,

@@ -10,14 +10,13 @@ import {
   POST_PLACE_ADD_PAGE_PATH,
   POST_PLACE_LIST_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
-import {
-  PostInputComponent,
-  PostInputFormType,
-} from "@/components/post/input/PostInputComponent";
+import { PostInputComponent } from "@/components/post/input/PostInputComponent";
+import { usePostPlaceInputSessionStore } from "@/hooks/inputSessionStore/usePostPlaceInputSessionStore";
 import {
   useAddPostMutation,
   useGetPostPlacesAndCategoriesQuery,
 } from "@/graphql/gen/graphql";
+import { PostInputFormType } from "@/hooks/inputSessionStore/usePostSessionStore";
 import { pageTitleStyle } from "@/style/CommonStyle";
 
 type Props = {
@@ -27,6 +26,7 @@ type Props = {
 export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
   const router = useRouter();
   const [addPost, { loading: addPostLoading }] = useAddPostMutation();
+  const { updatePostPlaceInputSession } = usePostPlaceInputSessionStore();
 
   const { data, loading } = useGetPostPlacesAndCategoriesQuery({
     variables: { idFilter: placeId, nameFilter: null, categoryFilter: null },
@@ -60,6 +60,7 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
   };
 
   const onClickAddPlace = () => {
+    updatePostPlaceInputSession(undefined);
     router.push(`${POST_PLACE_ADD_PAGE_PATH}?isFromPost=true`);
   };
 

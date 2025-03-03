@@ -9,12 +9,14 @@ import { InstagramComponent } from "./InstagramComponent";
 import { WebNoInfoComponent } from "./WebNoInfoComponent";
 import { WebWithInfoComponent } from "./WebWithInfoComponent";
 import { XContentsComponent } from "./XContentsComponent";
+import { MapModalByLatLonComponent } from "@/components/map/MapModalByLatLonComponent";
 import { USER_ACCOUNT_PROFILE } from "@/constants/MenuPathConstants";
 import {
   URL_TYPE_INSTAGRAM,
   URL_TYPE_WEB_WITH_INFO,
   URL_TYPE_X,
 } from "@/constants/UrlConstants";
+import { useGeolocationService } from "@/hooks/geolocation/useGeolocationService";
 import { PostResponse } from "@/graphql/gen/graphql";
 import { detailTextStyle } from "@/style/PostStyle";
 import { linkStyle } from "@/style/CommonStyle";
@@ -28,6 +30,8 @@ export const OpenPostRefComponent: FC<Props> = ({
   post,
   isDisplayUserInfo,
 }) => {
+  const { prefectureMap } = useGeolocationService();
+
   return (
     <div className="min-w-[300px] border p-3">
       <div className={"text-wrap break-all text-black text-2xl"}>
@@ -75,6 +79,16 @@ export const OpenPostRefComponent: FC<Props> = ({
           </div>
         )}
       </div>
+      {post.postPlace.prefectureCode && (
+        <div className={"flex gap-2"}>
+          <div>
+            都道府県/位置: {prefectureMap.get(post.postPlace.prefectureCode)}
+          </div>
+          {post.postPlace.latLon && (
+            <MapModalByLatLonComponent latLon={post.postPlace.latLon} />
+          )}
+        </div>
+      )}
       <div className={"flex gap-2"}>
         <div>訪問日:</div>
         <div>

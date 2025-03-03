@@ -1,21 +1,22 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 
 import { POST_PLACE_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
-import {
-  PostPlaceInputComponent,
-  PostPlaceInputFormType,
-} from "@/components/postPlace/input/PostPlaceInputComponent";
+import { PostPlaceInputComponent } from "@/components/postPlace/input/PostPlaceInputComponent";
 import {
   LatLon,
   useEditPostPlaceMutation,
   useGetPostPlacesAndCategoriesQuery,
 } from "@/graphql/gen/graphql";
 import { useGeolocationService } from "@/hooks/geolocation/useGeolocationService";
+import {
+  PostPlaceInputFormType,
+  usePostPlaceInputSessionStore,
+} from "@/hooks/inputSessionStore/usePostPlaceInputSessionStore";
 
 type Props = {
   placeId: string;
@@ -26,12 +27,14 @@ export const PostPlaceEditComponent: FC<Props> = ({ placeId }) => {
     variables: { idFilter: placeId, nameFilter: null, categoryFilter: null },
     fetchPolicy: "network-only",
   });
-  const [editPostPlace, { loading: editPostPlaceLoading }] =
-    useEditPostPlaceMutation();
+  const [editPostPlace] = useEditPostPlaceMutation();
+  const [editPostPlaceLoading, setEditPostPlaceLoading] = useState(false);
   const { getAddressInfo } = useGeolocationService();
   const router = useRouter();
+  const { updatePostPlaceInputSession } = usePostPlaceInputSessionStore();
 
   const execSubmit = async (formData: PostPlaceInputFormType) => {
+    setEditPostPlaceLoading(true);
     // 住所から緯度経度と都道府県コードを取得
     let latLon: LatLon | undefined = undefined;
     let prefectureCode: string | undefined = undefined;
@@ -62,8 +65,10 @@ export const PostPlaceEditComponent: FC<Props> = ({ placeId }) => {
     const editPostPlaceResult = result.data?.editPostPlace;
     if (result.errors || !editPostPlaceResult) {
       toast.error("更新に失敗しました");
+      setEditPostPlaceLoading(false);
     } else {
       toast("場所を更新しました");
+      updatePostPlaceInputSession(undefined);
       router.push(POST_PLACE_LIST_PAGE_PATH);
     }
   };

@@ -10,6 +10,7 @@ import {
   POST_ADD_PAGE_PATH,
   POST_EDIT_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
+import { usePostInputSessionStore } from "@/hooks/inputSessionStore/usePostSessionStore";
 import {
   PostPlaceResponse,
   useGetPostPlacesAndCategoriesQuery,
@@ -31,12 +32,14 @@ export const PostPlaceListComponent: FC<Props> = ({ editPostId }) => {
   const [nameFilter, setNameFilter] = useState<string>("");
   const placeList = data?.getPostPlaces ?? [];
   const categoryList = data?.getMyPostCategories ?? [];
+  const { updatePostInputSession } = usePostInputSessionStore();
 
   const onClickFilter = () => {
     refetch({ nameFilter: nameFilter ? nameFilter : null });
   };
 
   const selectActionForPost = (place: PostPlaceResponse) => {
+    updatePostInputSession(undefined);
     if (editPostId) {
       router.push(
         `${POST_EDIT_PAGE_PATH}?id=${editPostId}&placeId=${place.id}`

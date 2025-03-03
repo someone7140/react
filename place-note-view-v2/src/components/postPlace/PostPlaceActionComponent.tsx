@@ -7,6 +7,7 @@ import { Button } from "@material-tailwind/react";
 import { PostPlaceResponse } from "@/graphql/gen/graphql";
 import { PostPlaceDeleteDialogComponent } from "@/components/postPlace/dialog/PostPlaceDeleteDialogComponent";
 import { POST_PLACE_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
+import { usePostPlaceInputSessionStore } from "@/hooks/inputSessionStore/usePostPlaceInputSessionStore";
 
 type Props = {
   place: PostPlaceResponse;
@@ -21,6 +22,7 @@ export const PostPlaceActionComponent: FC<Props> = ({
 }) => {
   const router = useRouter();
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const { updatePostPlaceInputSession } = usePostPlaceInputSessionStore();
 
   return (
     <div className="flex w-[100%] gap-5 justify-center">
@@ -28,6 +30,8 @@ export const PostPlaceActionComponent: FC<Props> = ({
         <Button
           color="orange"
           onClick={() => {
+            // 遷移前に入力のセッションをクリアする
+            updatePostPlaceInputSession(undefined);
             router.push(`${POST_PLACE_EDIT_PAGE_PATH}?id=${place.id}`);
           }}
         >

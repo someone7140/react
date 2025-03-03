@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import Link from "next/link";
 import { Button, Input } from "@material-tailwind/react";
 
+import { MapModalByLatLonComponent } from "@/components/map/MapModalByLatLonComponent";
 import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceActionComponent";
 import { PostCategoryResponse, PostPlaceResponse } from "@/graphql/gen/graphql";
 import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
@@ -78,8 +79,13 @@ export const PostPlaceListDisplayComponent: FC<Props> = ({
                 )}
                 <div className="ml-2 mt-1">
                   <div className={`${detailTextStyle()}`}>{place.detail}</div>
-                  <div className="text-wrap break-all">{place?.address}</div>
-                  <div className="text-wrap break-all">
+                  <div className="flex gap-2 items-center">
+                    <div className="text-wrap break-all">{place?.address}</div>
+                    {place?.latLon && (
+                      <MapModalByLatLonComponent latLon={place.latLon} />
+                    )}
+                  </div>
+                  <div className="text-wrap break-all text-noix">
                     {place.categoryIdList
                       .map((id) => categoryList.find((c) => c.id === id)?.name)
                       .join("、")}

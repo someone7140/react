@@ -8,6 +8,12 @@ export default function Home() {
   const TABLE_HEAD = ["日時", "タイトル", "詳細"];
   const TABLE_ROWS = [
     {
+      date: "2025/03/03",
+      title: "各種改修",
+      detail:
+        "都道府県の追加、位置情報の追加、リロード時の編集内容保持、その他細かい修正",
+    },
+    {
       date: "2025/02/04",
       title: "リリース",
       detail: "サイトをリリース",
@@ -17,7 +23,7 @@ export default function Home() {
   return (
     <>
       <div className={pageTitleStyle()}>機能等の更新履歴</div>
-      <Card>
+      <Card className=" max-w-[97%]">
         <table className="table-auto text-left">
           <thead>
             <tr>
@@ -64,7 +70,7 @@ export default function Home() {
                       {date}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className={`${classes} min-w-[90px]`}>
                     <Typography
                       variant="small"
                       color="blue-gray"

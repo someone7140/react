@@ -6,6 +6,7 @@ import { Button, Checkbox } from "@material-tailwind/react";
 
 import { POST_CATEGORY_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategoryDeleteDialogComponent } from "@/components/postCategory/dialog/PostCategoryDeleteDialogComponent";
+import { usePostCategoryInputSessionStore } from "@/hooks/inputSessionStore/usePostCategoryInputSessionStore";
 import { PostCategoryResponse } from "@/graphql/gen/graphql";
 import { formSubmitAreaStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
@@ -30,8 +31,9 @@ export const PostCategoryItemComponent: FC<Props> = ({
   refetchCategoryFunc,
 }) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
-  const isParent = !category.parentCategoryId;
+  const { updatePostCategoryInputSession } = usePostCategoryInputSessionStore();
   const router = useRouter();
+  const isParent = !category.parentCategoryId;
 
   return (
     <div className="w-[100%]">
@@ -65,6 +67,7 @@ export const PostCategoryItemComponent: FC<Props> = ({
           <Button
             color="orange"
             onClick={() => {
+              updatePostCategoryInputSession(undefined);
               router.push(`${POST_CATEGORY_EDIT_PAGE_PATH}?id=${category.id}`);
             }}
           >

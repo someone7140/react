@@ -6,10 +6,8 @@ import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 
 import { POST_CATEGORY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
-import {
-  PostCategoryInputComponent,
-  PostCategoryInputFormType,
-} from "@/components/postCategory/input/PostCategoryInputComponent";
+import { PostCategoryInputComponent } from "@/components/postCategory/input/PostCategoryInputComponent";
+import { PostCategoryInputFormType } from "@/hooks/inputSessionStore/usePostCategoryInputSessionStore";
 import {
   useEditPostCategoryMutation,
   useGetMyPostCategoryByIdQuery,
