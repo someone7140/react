@@ -3,6 +3,8 @@
 import React, { FC, useState } from "react";
 import { Button, Dialog } from "@material-tailwind/react";
 import { MapPinIcon } from "@heroicons/react/24/solid";
+import Map, { Marker } from "react-map-gl/mapbox";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 import { LatLonResponse } from "@/graphql/gen/graphql";
 import { dialogBoxStyle } from "@/style/CommonStyle";
@@ -28,11 +30,22 @@ export const MapModalByLatLonComponent: FC<Props> = ({ latLon }) => {
       />
       <Dialog open={isDialogOpen} handler={closeDialog}>
         <div className={`${dialogBoxStyle()}`}>
-          <iframe
-            src={`http://maps.google.co.jp/maps?q=${latLon.lat},${latLon.lon}&output=embed&t=m&z=16&hl=ja`}
-            loading="lazy"
-            className="w-[99%] h-[280px]"
-          ></iframe>
+          <Map
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            initialViewState={{
+              longitude: latLon.lon,
+              latitude: latLon.lat,
+              zoom: 13.5,
+            }}
+            style={{ width: "99%", height: 280 }}
+            mapStyle="mapbox://styles/someone7140/cm804bvgs00ef01ssgki6acs1"
+          >
+            <Marker
+              longitude={latLon.lon}
+              latitude={latLon.lat}
+              anchor="bottom"
+            ></Marker>
+          </Map>
         </div>
         <div className="flex justify-center mt-3 mb-3">
           <Button color="blue-gray" onClick={closeDialog}>
