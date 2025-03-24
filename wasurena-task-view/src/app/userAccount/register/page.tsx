@@ -1,10 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { UserAccountLineAuthComponent } from "@/components/userAccount/UserAccountLineAuthComponent";
 import { UserAccountRegisterComponent } from "@/components/userAccount/UserAccountRegisterComponent";
-import { useEffect, useState } from "react";
+import { pageTitleStyle } from "@/style/CommonStyle";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -18,6 +19,7 @@ export default function Home() {
 
   return (
     <div>
+      <div className={pageTitleStyle()}>会員登録</div>
       {!authCode && redirectUrl && (
         <UserAccountLineAuthComponent redirectUrl={redirectUrl} />
       )}

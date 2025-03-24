@@ -1,0 +1,71 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+scalar Map
+
+type Todo {
+  id: ID!
+  text: String!
+  done: Boolean!
+  user: User!
+}
+
+type User {
+  id: ID!
+  name: String!
+}
+
+input NewCategory {
+  name: String!
+  displayOrder: Int
+}
+
+enum DeadLineCheck {
+  DailyOnce
+  DailyHour
+  WeeklyDay
+  WeeklyDayInterval
+  MonthOnce
+  MonthDate
+  YearOnceDate
+}
+
+input NewTask {
+  title: String!
+  displayFlag: Boolean!
+  notificationFlag: Boolean!
+  categoryId: String
+  deadLineCheck: DeadLineCheck
+  deadLineCheckSubSetting: Map
+  detail: String
+}
+
+input NewTaskExecute {
+  taskDefinitionId: String!
+  memo: String
+}
+
+input NewUserAccount {
+  authToken: String!
+  userSettingId: String!
+  userName: String!
+}
+
+type CreateUserRegisterTokenResponse {
+  token: String!
+  lineName: String!
+}
+
+type Query {
+  todos: [Todo!]!
+  getUserRegisterToken(lineAuthCode: String!): CreateUserRegisterTokenResponse
+}
+
+type Mutation {
+  executeScheduleCheckBatch(token: String!): Boolean!
+  createCategory(input: NewCategory!): Boolean!
+  createTask(input: NewTask!): Boolean!
+  createTaskExecute(input: NewTaskExecute!): Boolean!
+  createUserAccount(input: NewUserAccount!): Boolean!
+}
