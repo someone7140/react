@@ -1,4 +1,10 @@
-import { cacheExchange, createClient, fetchExchange, ssrExchange } from "urql";
+import {
+  cacheExchange,
+  CombinedError,
+  createClient,
+  fetchExchange,
+  ssrExchange,
+} from "urql";
 
 export const useApiManagement = () => {
   // SSR exchangeを作成
@@ -24,5 +30,15 @@ export const useApiManagement = () => {
     });
   };
 
-  return { ssrCache, createUrqlClient };
+  // urqlのgraohqlエラーからコードを取得
+  const getErrorCodeFromGraphQLError = (error: CombinedError): number => {
+    // graphqlErrorsの配列が空の場合は500固定
+    if (error.graphQLErrors.length === 0) {
+      return 500;
+    }
+    // エラーの配列の一つ目にエラーコードが入る前提
+    return error.graphQLErrors[0].extensions.code as number;
+  };
+
+  return { ssrCache, createUrqlClient, getErrorCodeFromGraphQLError };
 };

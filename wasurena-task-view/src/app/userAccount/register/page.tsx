@@ -5,17 +5,17 @@ import { useSearchParams } from "next/navigation";
 
 import { UserAccountLineAuthComponent } from "@/components/userAccount/UserAccountLineAuthComponent";
 import { UserAccountRegisterComponent } from "@/components/userAccount/UserAccountRegisterComponent";
-import { pageTitleStyle } from "@/style/CommonStyle";
+import { pageTitleStyle } from "@/style/commonStyle";
 
 export default function Home() {
   const searchParams = useSearchParams();
-  // リダイレクトした時にパラメータが入る
-  const authCode = searchParams.get("code") ?? undefined;
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
+  const [authCode, setAuthCode] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    setAuthCode(searchParams.get("code") ?? undefined);
     setRedirectUrl(window.location.href);
-  }, []);
+  }, [searchParams]);
 
   return (
     <div>

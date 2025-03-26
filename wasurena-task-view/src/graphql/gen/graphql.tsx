@@ -40,7 +40,7 @@ export type Mutation = {
   createCategory: FieldWrapper<Scalars['Boolean']['output']>;
   createTask: FieldWrapper<Scalars['Boolean']['output']>;
   createTaskExecute: FieldWrapper<Scalars['Boolean']['output']>;
-  createUserAccount: FieldWrapper<Scalars['Boolean']['output']>;
+  createUserAccount?: Maybe<FieldWrapper<UserAccountResponse>>;
   executeScheduleCheckBatch: FieldWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -120,12 +120,30 @@ export type User = {
   name: FieldWrapper<Scalars['String']['output']>;
 };
 
+export type UserAccountResponse = {
+  __typename?: 'UserAccountResponse';
+  imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  isLineBotFollow: FieldWrapper<Scalars['Boolean']['output']>;
+  token: FieldWrapper<Scalars['String']['output']>;
+  userName: FieldWrapper<Scalars['String']['output']>;
+  userSettingId: FieldWrapper<Scalars['String']['output']>;
+};
+
 export type GetUserRegisterTokenQueryVariables = Exact<{
   authCode: Scalars['String']['input'];
 }>;
 
 
 export type GetUserRegisterTokenQuery = { __typename?: 'Query', getUserRegisterToken?: { __typename?: 'CreateUserRegisterTokenResponse', token: string, lineName: string } | null };
+
+export type CreateUserAccountMutationVariables = Exact<{
+  authToken: Scalars['String']['input'];
+  userName: Scalars['String']['input'];
+  userSettingId: Scalars['String']['input'];
+}>;
+
+
+export type CreateUserAccountMutation = { __typename?: 'Mutation', createUserAccount?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
 
 
 export const GetUserRegisterTokenDocument = gql`
@@ -139,4 +157,21 @@ export const GetUserRegisterTokenDocument = gql`
 
 export function useGetUserRegisterTokenQuery(options: Omit<Urql.UseQueryArgs<GetUserRegisterTokenQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserRegisterTokenQuery, GetUserRegisterTokenQueryVariables>({ query: GetUserRegisterTokenDocument, ...options });
+};
+export const CreateUserAccountDocument = gql`
+    mutation CreateUserAccount($authToken: String!, $userName: String!, $userSettingId: String!) {
+  createUserAccount(
+    input: {authToken: $authToken, userName: $userName, userSettingId: $userSettingId}
+  ) {
+    token
+    userName
+    userSettingId
+    imageUrl
+    isLineBotFollow
+  }
+}
+    `;
+
+export function useCreateUserAccountMutation() {
+  return Urql.useMutation<CreateUserAccountMutation, CreateUserAccountMutationVariables>(CreateUserAccountDocument);
 };
