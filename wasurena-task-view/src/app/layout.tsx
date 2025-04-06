@@ -10,6 +10,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { HeaderComponent } from "@/components/common/HeaderComponent";
 import { ApiProvider } from "@/provider/ApiProvider";
+import { AuthProvider } from "@/provider/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,14 +48,16 @@ export default function RootLayout({
         <MantineProvider>
           <Notifications />
           <ApiProvider>
-            <HeaderComponent />
-            <div className="flex justify-center">
-              <div className="max-w-[95%] min-w-[300px]">
-                <div className="flex justify-start w-[100%] ml-3 mb-4">
-                  <div>{children}</div>
+            <AuthProvider>
+              <HeaderComponent />
+              <div className="flex justify-center">
+                <div className="max-w-[95%] min-w-[300px]">
+                  <div className="flex justify-start w-[100%] ml-3 mb-4">
+                    <div>{children}</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </AuthProvider>
           </ApiProvider>
         </MantineProvider>
       </body>

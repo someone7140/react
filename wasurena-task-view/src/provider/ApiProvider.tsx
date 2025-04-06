@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Client, Provider } from "urql";
+import { useLocalStorage } from "@mantine/hooks";
 
 import { useApiManagement } from "@/hooks/useApiManagement";
 
@@ -17,6 +18,10 @@ export const ApiProvider = ({
   initialState?: any;
 }) => {
   const [client, setClient] = useState<Client | undefined>(undefined);
+  const [authTokenLocalStorage] = useLocalStorage<string | undefined>({
+    key: "authToken",
+    defaultValue: undefined,
+  });
   const { ssrCache, createUrqlClient } = useApiManagement();
 
   useEffect(() => {
@@ -25,9 +30,9 @@ export const ApiProvider = ({
       ssrCache.restoreData(initialState);
     }
     // クライアントを設定
-    setClient(createUrqlClient());
+    setClient(createUrqlClient(authTokenLocalStorage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialState, serverToken]);
+  }, [initialState, serverToken, authTokenLocalStorage]);
 
   // クライアントが初期化されるまでの間、または初期SSRレンダリングのためのクライアント
   const urqlClient = client || createUrqlClient(serverToken);

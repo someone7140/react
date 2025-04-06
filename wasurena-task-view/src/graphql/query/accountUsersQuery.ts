@@ -1,5 +1,15 @@
 import { gql } from "urql";
 
+export const accountUserResponseFragment = gql`
+  fragment AccountUserObj on UserAccountResponse {
+    token
+    userName
+    userSettingId
+    imageUrl
+    isLineBotFollow
+  }
+`;
+
 export const getUserRegisterTokenQueryDocument = gql`
   query GetUserRegisterToken($authCode: String!) {
     getUserRegisterToken(lineAuthCode: $authCode) {
@@ -22,11 +32,23 @@ export const createUserAccountMutationDocument = gql`
         userSettingId: $userSettingId
       }
     ) {
-      token
-      userName
-      userSettingId
-      imageUrl
-      isLineBotFollow
+      ...AccountUserObj
+    }
+  }
+`;
+
+export const getUserAccountFromAuthHeaderQueryDocument = gql`
+  query GetUserAccountFromAuthHeader {
+    getUserAccountFromAuthHeader {
+      ...AccountUserObj
+    }
+  }
+`;
+
+export const getRegisteredUserQueryDocument = gql`
+  query GetRegisteredUser($authCode: String!) {
+    getRegisteredUser(lineAuthCode: $authCode) {
+      ...AccountUserObj
     }
   }
 `;

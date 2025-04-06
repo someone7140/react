@@ -97,8 +97,15 @@ export type NewUserAccount = {
 
 export type Query = {
   __typename?: 'Query';
+  getRegisteredUser?: Maybe<FieldWrapper<UserAccountResponse>>;
+  getUserAccountFromAuthHeader?: Maybe<FieldWrapper<UserAccountResponse>>;
   getUserRegisterToken?: Maybe<FieldWrapper<CreateUserRegisterTokenResponse>>;
   todos: Array<FieldWrapper<Todo>>;
+};
+
+
+export type QueryGetRegisteredUserArgs = {
+  lineAuthCode: Scalars['String']['input'];
 };
 
 
@@ -129,6 +136,8 @@ export type UserAccountResponse = {
   userSettingId: FieldWrapper<Scalars['String']['output']>;
 };
 
+export type AccountUserObjFragment = { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean };
+
 export type GetUserRegisterTokenQueryVariables = Exact<{
   authCode: Scalars['String']['input'];
 }>;
@@ -145,7 +154,27 @@ export type CreateUserAccountMutationVariables = Exact<{
 
 export type CreateUserAccountMutation = { __typename?: 'Mutation', createUserAccount?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
 
+export type GetUserAccountFromAuthHeaderQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type GetUserAccountFromAuthHeaderQuery = { __typename?: 'Query', getUserAccountFromAuthHeader?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
+
+export type GetRegisteredUserQueryVariables = Exact<{
+  authCode: Scalars['String']['input'];
+}>;
+
+
+export type GetRegisteredUserQuery = { __typename?: 'Query', getRegisteredUser?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
+
+export const AccountUserObjFragmentDoc = gql`
+    fragment AccountUserObj on UserAccountResponse {
+  token
+  userName
+  userSettingId
+  imageUrl
+  isLineBotFollow
+}
+    `;
 export const GetUserRegisterTokenDocument = gql`
     query GetUserRegisterToken($authCode: String!) {
   getUserRegisterToken(lineAuthCode: $authCode) {
@@ -163,15 +192,33 @@ export const CreateUserAccountDocument = gql`
   createUserAccount(
     input: {authToken: $authToken, userName: $userName, userSettingId: $userSettingId}
   ) {
-    token
-    userName
-    userSettingId
-    imageUrl
-    isLineBotFollow
+    ...AccountUserObj
   }
 }
-    `;
+    ${AccountUserObjFragmentDoc}`;
 
 export function useCreateUserAccountMutation() {
   return Urql.useMutation<CreateUserAccountMutation, CreateUserAccountMutationVariables>(CreateUserAccountDocument);
+};
+export const GetUserAccountFromAuthHeaderDocument = gql`
+    query GetUserAccountFromAuthHeader {
+  getUserAccountFromAuthHeader {
+    ...AccountUserObj
+  }
+}
+    ${AccountUserObjFragmentDoc}`;
+
+export function useGetUserAccountFromAuthHeaderQuery(options?: Omit<Urql.UseQueryArgs<GetUserAccountFromAuthHeaderQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserAccountFromAuthHeaderQuery, GetUserAccountFromAuthHeaderQueryVariables>({ query: GetUserAccountFromAuthHeaderDocument, ...options });
+};
+export const GetRegisteredUserDocument = gql`
+    query GetRegisteredUser($authCode: String!) {
+  getRegisteredUser(lineAuthCode: $authCode) {
+    ...AccountUserObj
+  }
+}
+    ${AccountUserObjFragmentDoc}`;
+
+export function useGetRegisteredUserQuery(options: Omit<Urql.UseQueryArgs<GetRegisteredUserQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetRegisteredUserQuery, GetRegisteredUserQueryVariables>({ query: GetRegisteredUserDocument, ...options });
 };

@@ -9,12 +9,16 @@ import {
   UserAccountInputComponent,
   UserAccountInputFormValues,
 } from "./input/UserAccountInputComponent";
-import { USER_ACCOUNT_REGISTER_PAGE_PATH } from "@/constants/MenuPathConstants";
+import {
+  TOP_PAGE_PATH,
+  USER_ACCOUNT_REGISTER_PAGE_PATH,
+} from "@/constants/MenuPathConstants";
 import {
   useCreateUserAccountMutation,
   useGetUserRegisterTokenQuery,
 } from "@/graphql/gen/graphql";
 import { useApiManagement } from "@/hooks/useApiManagement";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 type Props = {
   authCode: string;
@@ -29,6 +33,7 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
     useCreateUserAccountMutation();
   const { getErrorCodeFromGraphQLError } = useApiManagement();
   const router = useRouter();
+  const { updateUserAccountState } = useAuthManagement();
 
   const submitRegisterUser = async (formValues: UserAccountInputFormValues) => {
     const result = await createUserAccountMutation({
@@ -36,10 +41,10 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
       userSettingId: formValues.userSettingId,
       userName: formValues.userName,
     });
-    if (result.error) {
+    if (!result?.data?.createUserAccount || result.error) {
       const errorCode = getErrorCodeFromGraphQLError(result.error);
       notifications.show({
-        id: "submitRegister-success",
+        id: "submitRegister-error",
         position: "top-center",
         withCloseButton: true,
         autoClose: 5000,
@@ -48,12 +53,14 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
           errorCode == 400
             ? "ユーザーIDが重複しています。再度入力の上登録お願いします。"
             : errorCode == 403
-            ? "登録ずみのLINEユーザーです。ログインを行ってください。"
+            ? "登録済みのLINEアカウントです。ログインから認証してください。"
             : "会員登録でエラーが起きました。",
         color: "red",
         loading: false,
       });
     } else {
+      router.push(`${TOP_PAGE_PATH}`);
+      updateUserAccountState(result.data.createUserAccount);
       notifications.show({
         id: "submitRegister-success",
         position: "top-center",
@@ -69,13 +76,17 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
 
   useEffect(() => {
     if (tokenError) {
+      const errorCode = getErrorCodeFromGraphQLError(tokenError);
       notifications.show({
         id: "authCode-error",
         position: "top-center",
         withCloseButton: true,
         autoClose: 5000,
         title: "認証情報取得エラー",
-        message: "LINE認証情報の取得に失敗しました。再度の認証をお願いします。",
+        message:
+          errorCode === 403
+            ? "登録済みのLINEアカウントです。ログインから認証してください。"
+            : "LINE認証情報の取得に失敗しました。再度の認証をお願いします。",
         color: "red",
         loading: false,
       });

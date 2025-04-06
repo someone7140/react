@@ -30,10 +30,10 @@ export const useApiManagement = () => {
     });
   };
 
-  // urqlのgraohqlエラーからコードを取得
-  const getErrorCodeFromGraphQLError = (error: CombinedError): number => {
-    // graphqlErrorsの配列が空の場合は500固定
-    if (error.graphQLErrors.length === 0) {
+  // urqlのgraphqlエラーからコードを取得
+  const getErrorCodeFromGraphQLError = (error?: CombinedError): number => {
+    // errorが空もしくはgraphqlErrorsの配列が空の場合は500固定
+    if (!error || error.graphQLErrors.length === 0) {
       return 500;
     }
     // エラーの配列の一つ目にエラーコードが入る前提

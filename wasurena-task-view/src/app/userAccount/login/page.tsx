@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { UserAccountLineAuthComponent } from "@/components/userAccount/UserAccountLineAuthComponent";
-import { UserAccountRegisterComponent } from "@/components/userAccount/UserAccountRegisterComponent";
+import { UserAccountLoginComponent } from "@/components/userAccount/UserAccountLoginComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { pageTitleStyle } from "@/style/commonStyle";
 
@@ -26,11 +26,11 @@ export default function Home() {
 
   return (
     <div>
-      <div className={pageTitleStyle()}>会員登録</div>
+      <div className={pageTitleStyle()}>ログイン</div>
       {!authCode && redirectUrl && (
         <UserAccountLineAuthComponent redirectUrl={redirectUrl} />
       )}
-      {authCode && <UserAccountRegisterComponent authCode={authCode} />}
+      {authCode && <UserAccountLoginComponent authCode={authCode} />}
     </div>
   );
 }
