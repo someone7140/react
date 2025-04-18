@@ -33,14 +33,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [userAccountState, authTokenLocalStorage]);
 
   useEffect(() => {
-    console.log(pauseFlag);
     if (!pauseFlag) {
       if (!fetching) {
-        console.log(error);
         if (error) {
           clearUserAccountState();
         }
-        console.log(data?.getUserAccountFromAuthHeader);
         if (data?.getUserAccountFromAuthHeader) {
           setUserAccountState(data.getUserAccountFromAuthHeader);
         }

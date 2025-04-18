@@ -11,6 +11,7 @@ import { IconMenu2 } from "@tabler/icons-react";
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import {
   LOGIN_PAGE_PATH,
+  TASK_REGISTER_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
@@ -74,6 +75,20 @@ export const MenuComponent: FC = ({}) => {
           <Menu.Item component={NextLink} href={TOP_PAGE_PATH}>
             <span className="text-lg">Top</span>
           </Menu.Item>
+          <Menu.Divider />
+          <Menu.Label>
+            <span className="text-base">タスク管理</span>
+          </Menu.Label>
+          <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>
+            <span className="text-lg">タスクチェック対象一覧</span>
+          </Menu.Item>
+          <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>
+            <span className="text-lg">タスク定義一覧</span>
+          </Menu.Item>
+          <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>
+            <span className="text-lg">タスク登録</span>
+          </Menu.Item>
+          <Menu.Divider />
           <Menu.Item onClick={onClickLogout}>
             <span className="text-lg">ログアウト</span>
           </Menu.Item>

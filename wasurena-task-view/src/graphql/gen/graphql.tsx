@@ -166,6 +166,19 @@ export type GetRegisteredUserQueryVariables = Exact<{
 
 export type GetRegisteredUserQuery = { __typename?: 'Query', getRegisteredUser?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
 
+export type CreateTaskMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+  displayFlag: Scalars['Boolean']['input'];
+  notificationFlag: Scalars['Boolean']['input'];
+  categoryId?: InputMaybe<Scalars['String']['input']>;
+  deadLineCheck?: InputMaybe<DeadLineCheck>;
+  deadLineCheckSubSetting?: InputMaybe<Scalars['Map']['input']>;
+  detail?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask: boolean };
+
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on UserAccountResponse {
   token
@@ -221,4 +234,15 @@ export const GetRegisteredUserDocument = gql`
 
 export function useGetRegisteredUserQuery(options: Omit<Urql.UseQueryArgs<GetRegisteredUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRegisteredUserQuery, GetRegisteredUserQueryVariables>({ query: GetRegisteredUserDocument, ...options });
+};
+export const CreateTaskDocument = gql`
+    mutation CreateTask($title: String!, $displayFlag: Boolean!, $notificationFlag: Boolean!, $categoryId: String, $deadLineCheck: DeadLineCheck, $deadLineCheckSubSetting: Map, $detail: String) {
+  createTask(
+    input: {title: $title, displayFlag: $displayFlag, notificationFlag: $notificationFlag, categoryId: $categoryId, deadLineCheck: $deadLineCheck, deadLineCheckSubSetting: $deadLineCheckSubSetting, detail: $detail}
+  )
+}
+    `;
+
+export function useCreateTaskMutation() {
+  return Urql.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument);
 };
