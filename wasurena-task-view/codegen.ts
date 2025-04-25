@@ -17,7 +17,7 @@ const config: CodegenConfig = {
         wrapFieldDefinitions: true,
         useTypeImports: true,
         scalars: {
-          Map: "Map<string, string>",
+          Map: "object",
         },
       },
     },

@@ -7,6 +7,8 @@ import {
 } from "urql";
 
 export const useApiManagement = () => {
+  // Mapをオブジェクトに変換
+
   // SSR exchangeを作成
   const ssrCache = ssrExchange({
     isClient: typeof window !== "undefined",

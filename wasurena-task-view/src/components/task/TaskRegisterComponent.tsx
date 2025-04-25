@@ -9,7 +9,11 @@ import {
   TaskInputFormValues,
 } from "./input/TaskInputComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
-import { DeadLineCheck, useCreateTaskMutation } from "@/graphql/gen/graphql";
+import {
+  DeadLineCheck,
+  InputMaybe,
+  useCreateTaskMutation,
+} from "@/graphql/gen/graphql";
 
 export const TaskRegisterComponent: FC = ({}) => {
   const [createTaskMutationResult, createTaskMutation] =
@@ -17,17 +21,26 @@ export const TaskRegisterComponent: FC = ({}) => {
   const router = useRouter();
 
   const submitRegisterUser = async (formValues: TaskInputFormValues) => {
+    const deadLinCheck =
+      formValues.displayFlag && formValues.deadLineCheck
+        ? (formValues.deadLineCheck as DeadLineCheck)
+        : null;
+    let deadLineCheckSubSetting: InputMaybe<object> | null = null;
+    if (
+      deadLinCheck === DeadLineCheck.DailyHour &&
+      formValues.deadLineCheckSubSettingHour != null
+    ) {
+      deadLineCheckSubSetting = {
+        hourInterval: formValues.deadLineCheckSubSettingHour,
+      };
+    }
+
     const result = await createTaskMutation({
       title: formValues.title,
       displayFlag: formValues.displayFlag,
       notificationFlag: false,
-      deadLineCheck:
-        formValues.displayFlag && formValues.deadLineCheck
-          ? (formValues.deadLineCheck as DeadLineCheck)
-          : null,
-      deadLineCheckSubSetting: formValues.displayFlag
-        ? formValues.deadLineCheckSubSetting
-        : null,
+      deadLineCheck: deadLinCheck,
+      deadLineCheckSubSetting: deadLineCheckSubSetting,
       detail: formValues.detail ?? null,
     });
     if (!result?.data?.createTask || result.error) {

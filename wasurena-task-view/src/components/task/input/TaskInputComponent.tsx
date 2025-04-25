@@ -1,7 +1,14 @@
 "use client";
 
-import React, { FC } from "react";
-import { Button, Select, Switch, Textarea, TextInput } from "@mantine/core";
+import React, { FC, useState } from "react";
+import {
+  Button,
+  NumberInput,
+  Select,
+  Switch,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { DeadLineCheck } from "@/graphql/gen/graphql";
@@ -11,7 +18,7 @@ export type TaskInputFormValues = {
   title: string;
   displayFlag: boolean;
   deadLineCheck?: string;
-  deadLineCheckSubSetting?: Map<string, string>;
+  deadLineCheckSubSettingHour?: number;
   detail?: string;
 };
 
@@ -36,6 +43,7 @@ export const TaskInputComponent: FC<Props> = ({
       title: "",
       displayFlag: true,
       deadLineCheck: "",
+      deadLineCheckSubSettingHour: undefined,
     },
 
     validate: {
@@ -45,7 +53,26 @@ export const TaskInputComponent: FC<Props> = ({
         }
         return null;
       },
+      deadLineCheckSubSettingHour: (value, values) => {
+        if (values.deadLineCheck == DeadLineCheck.DailyHour) {
+          if (value == null || !(value > 0)) {
+            return "時間を入力してください";
+          }
+        }
+        return null;
+      },
     },
+  });
+  const [deadLineCheckState, setDeadLineCheckState] = useState<
+    DeadLineCheck | undefined
+  >(undefined);
+
+  form.watch("deadLineCheck", ({ value }) => {
+    if (value) {
+      setDeadLineCheckState(value as DeadLineCheck);
+    } else {
+      setDeadLineCheckState(undefined);
+    }
   });
 
   return (
@@ -71,6 +98,16 @@ export const TaskInputComponent: FC<Props> = ({
           data={DeadLineCheckList}
           key={form.key("deadLineCheck")}
           {...form.getInputProps("deadLineCheck")}
+        />
+      )}
+      {deadLineCheckState == DeadLineCheck.DailyHour && (
+        <NumberInput
+          withAsterisk
+          hideControls
+          label="時間(hour)"
+          key={form.key("deadLineCheckSubSettingHour")}
+          {...form.getInputProps("deadLineCheckSubSettingHour")}
+          className={textInputStyle()}
         />
       )}
       <Textarea

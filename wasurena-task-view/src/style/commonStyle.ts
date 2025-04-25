@@ -3,3 +3,7 @@ import { tv } from "tailwind-variants";
 export const pageTitleStyle = tv({
   base: "mb-3 font-bold text-xl",
 });
+
+export const linkStyle = tv({
+  base: "underline text-blue-600 hover:text-blue-800",
+});

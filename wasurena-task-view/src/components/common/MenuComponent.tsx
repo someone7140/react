@@ -13,6 +13,7 @@ import {
   LOGIN_PAGE_PATH,
   TASK_REGISTER_PAGE_PATH,
   TOP_PAGE_PATH,
+  USER_ACCOUNT_NOTIFY_SETTING_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
@@ -89,6 +90,15 @@ export const MenuComponent: FC = ({}) => {
             <span className="text-lg">タスク登録</span>
           </Menu.Item>
           <Menu.Divider />
+          <Menu.Label>
+            <span className="text-base">ユーザ管理</span>
+          </Menu.Label>
+          <Menu.Item
+            component={NextLink}
+            href={USER_ACCOUNT_NOTIFY_SETTING_PAGE_PATH}
+          >
+            <span className="text-lg">LINE通知設定</span>
+          </Menu.Item>
           <Menu.Item onClick={onClickLogout}>
             <span className="text-lg">ログアウト</span>
           </Menu.Item>

@@ -16,7 +16,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  Map: { input: Map<string, string>; output: Map<string, string>; }
+  Map: { input: object; output: object; }
 };
 
 export type CreateUserRegisterTokenResponse = {
