@@ -20,7 +20,7 @@ export const TaskRegisterComponent: FC = ({}) => {
     useCreateTaskMutation();
   const router = useRouter();
 
-  const submitRegisterUser = async (formValues: TaskInputFormValues) => {
+  const submitRegisterTask = async (formValues: TaskInputFormValues) => {
     const deadLinCheck =
       formValues.displayFlag && formValues.deadLineCheck
         ? (formValues.deadLineCheck as DeadLineCheck)
@@ -72,7 +72,7 @@ export const TaskRegisterComponent: FC = ({}) => {
   return (
     <>
       <TaskInputComponent
-        submitTask={submitRegisterUser}
+        submitTask={submitRegisterTask}
         submitDisabled={createTaskMutationResult.fetching}
       />
     </>

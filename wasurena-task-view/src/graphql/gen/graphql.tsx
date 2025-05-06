@@ -41,6 +41,7 @@ export type Mutation = {
   createTask: FieldWrapper<Scalars['Boolean']['output']>;
   createTaskExecute: FieldWrapper<Scalars['Boolean']['output']>;
   createUserAccount?: Maybe<FieldWrapper<UserAccountResponse>>;
+  deleteCategory: FieldWrapper<Scalars['Boolean']['output']>;
   executeScheduleCheckBatch: FieldWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -62,6 +63,11 @@ export type MutationCreateTaskExecuteArgs = {
 
 export type MutationCreateUserAccountArgs = {
   input: NewUserAccount;
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -98,9 +104,9 @@ export type NewUserAccount = {
 export type Query = {
   __typename?: 'Query';
   getRegisteredUser?: Maybe<FieldWrapper<UserAccountResponse>>;
+  getTaskCategories?: Maybe<Array<FieldWrapper<TaskCategoryResponse>>>;
   getUserAccountFromAuthHeader?: Maybe<FieldWrapper<UserAccountResponse>>;
   getUserRegisterToken?: Maybe<FieldWrapper<CreateUserRegisterTokenResponse>>;
-  todos: Array<FieldWrapper<Todo>>;
 };
 
 
@@ -113,17 +119,10 @@ export type QueryGetUserRegisterTokenArgs = {
   lineAuthCode: Scalars['String']['input'];
 };
 
-export type Todo = {
-  __typename?: 'Todo';
-  done: FieldWrapper<Scalars['Boolean']['output']>;
-  id: FieldWrapper<Scalars['ID']['output']>;
-  text: FieldWrapper<Scalars['String']['output']>;
-  user: FieldWrapper<User>;
-};
-
-export type User = {
-  __typename?: 'User';
-  id: FieldWrapper<Scalars['ID']['output']>;
+export type TaskCategoryResponse = {
+  __typename?: 'TaskCategoryResponse';
+  displayOrder?: Maybe<FieldWrapper<Scalars['Int']['output']>>;
+  id: FieldWrapper<Scalars['String']['output']>;
   name: FieldWrapper<Scalars['String']['output']>;
 };
 
@@ -165,6 +164,26 @@ export type GetRegisteredUserQueryVariables = Exact<{
 
 
 export type GetRegisteredUserQuery = { __typename?: 'Query', getRegisteredUser?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
+
+export type CreateTaskCategoryMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CreateTaskCategoryMutation = { __typename?: 'Mutation', createCategory: boolean };
+
+export type GetTaskCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskCategoriesQuery = { __typename?: 'Query', getTaskCategories?: Array<{ __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null }> | null };
+
+export type DeleteTaskCategoryMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTaskCategoryMutation = { __typename?: 'Mutation', deleteCategory: boolean };
 
 export type CreateTaskMutationVariables = Exact<{
   title: Scalars['String']['input'];
@@ -234,6 +253,37 @@ export const GetRegisteredUserDocument = gql`
 
 export function useGetRegisteredUserQuery(options: Omit<Urql.UseQueryArgs<GetRegisteredUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRegisteredUserQuery, GetRegisteredUserQueryVariables>({ query: GetRegisteredUserDocument, ...options });
+};
+export const CreateTaskCategoryDocument = gql`
+    mutation CreateTaskCategory($name: String!, $displayOrder: Int) {
+  createCategory(input: {name: $name, displayOrder: $displayOrder})
+}
+    `;
+
+export function useCreateTaskCategoryMutation() {
+  return Urql.useMutation<CreateTaskCategoryMutation, CreateTaskCategoryMutationVariables>(CreateTaskCategoryDocument);
+};
+export const GetTaskCategoriesDocument = gql`
+    query GetTaskCategories {
+  getTaskCategories {
+    id
+    name
+    displayOrder
+  }
+}
+    `;
+
+export function useGetTaskCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCategoriesQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskCategoriesQuery, GetTaskCategoriesQueryVariables>({ query: GetTaskCategoriesDocument, ...options });
+};
+export const DeleteTaskCategoryDocument = gql`
+    mutation DeleteTaskCategory($id: String!) {
+  deleteCategory(id: $id)
+}
+    `;
+
+export function useDeleteTaskCategoryMutation() {
+  return Urql.useMutation<DeleteTaskCategoryMutation, DeleteTaskCategoryMutationVariables>(DeleteTaskCategoryDocument);
 };
 export const CreateTaskDocument = gql`
     mutation CreateTask($title: String!, $displayFlag: Boolean!, $notificationFlag: Boolean!, $categoryId: String, $deadLineCheck: DeadLineCheck, $deadLineCheckSubSetting: Map, $detail: String) {
