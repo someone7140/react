@@ -35,12 +35,14 @@ export const TaskCategoryListComponent: FC = ({}) => {
     }
   }, [error]);
 
+  const categoryList = data?.getTaskCategories;
+
   return (
     <>
       {fetching && <Loader size={30} />}
-      {!fetching && data?.getTaskCategories && (
+      {!fetching && categoryList && (
         <>
-          {data.getTaskCategories.length === 0 && (
+          {categoryList.length === 0 && (
             <div className="w-[310px]">
               カテゴリーが未登録です。
               <Link
@@ -52,19 +54,13 @@ export const TaskCategoryListComponent: FC = ({}) => {
               から登録ができます。
             </div>
           )}
-          {data.getTaskCategories.length > 0 && (
-            <div className="flex flex-col gap-5">
-              {data.getTaskCategories.map((category) => {
+          {categoryList.length > 0 && (
+            <div className="flex flex-col gap-5 min-w-[300px] max-w-[335px]">
+              {categoryList.map((category) => {
                 return (
                   <React.Fragment key={category.id}>
-                    <Card
-                      shadow="sm"
-                      padding="lg"
-                      radius="md"
-                      withBorder
-                      className="min-w-[300px]"
-                    >
-                      <div className="text-xl font-semibold">
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                      <div className="text-xl font-semibold break-all">
                         {category.name}
                       </div>
                       {category.displayOrder != null && (

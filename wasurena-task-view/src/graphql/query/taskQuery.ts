@@ -23,3 +23,19 @@ export const createTaskMutationDocument = gql`
     )
   }
 `;
+
+export const getTaskDefinitionsQueryDocument = gql`
+  query GetTaskDefinitions {
+    getTaskDefinitions {
+      id
+      title
+      displayFlag
+      notificationFlag
+      categoryId
+      categoryName
+      deadLineCheck
+      deadLineCheckSubSetting
+      detail
+    }
+  }
+`;

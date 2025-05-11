@@ -105,6 +105,7 @@ export type Query = {
   __typename?: 'Query';
   getRegisteredUser?: Maybe<FieldWrapper<UserAccountResponse>>;
   getTaskCategories?: Maybe<Array<FieldWrapper<TaskCategoryResponse>>>;
+  getTaskDefinitions?: Maybe<Array<FieldWrapper<TaskDefinitionResponse>>>;
   getUserAccountFromAuthHeader?: Maybe<FieldWrapper<UserAccountResponse>>;
   getUserRegisterToken?: Maybe<FieldWrapper<CreateUserRegisterTokenResponse>>;
 };
@@ -124,6 +125,19 @@ export type TaskCategoryResponse = {
   displayOrder?: Maybe<FieldWrapper<Scalars['Int']['output']>>;
   id: FieldWrapper<Scalars['String']['output']>;
   name: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type TaskDefinitionResponse = {
+  __typename?: 'TaskDefinitionResponse';
+  categoryId?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  categoryName?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  deadLineCheck?: Maybe<FieldWrapper<DeadLineCheck>>;
+  deadLineCheckSubSetting?: Maybe<FieldWrapper<Scalars['Map']['output']>>;
+  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  displayFlag: FieldWrapper<Scalars['Boolean']['output']>;
+  id: FieldWrapper<Scalars['String']['output']>;
+  notificationFlag: FieldWrapper<Scalars['Boolean']['output']>;
+  title: FieldWrapper<Scalars['String']['output']>;
 };
 
 export type UserAccountResponse = {
@@ -197,6 +211,11 @@ export type CreateTaskMutationVariables = Exact<{
 
 
 export type CreateTaskMutation = { __typename?: 'Mutation', createTask: boolean };
+
+export type GetTaskDefinitionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskDefinitionsQuery = { __typename?: 'Query', getTaskDefinitions?: Array<{ __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, detail?: string | null }> | null };
 
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on UserAccountResponse {
@@ -295,4 +314,23 @@ export const CreateTaskDocument = gql`
 
 export function useCreateTaskMutation() {
   return Urql.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument);
+};
+export const GetTaskDefinitionsDocument = gql`
+    query GetTaskDefinitions {
+  getTaskDefinitions {
+    id
+    title
+    displayFlag
+    notificationFlag
+    categoryId
+    categoryName
+    deadLineCheck
+    deadLineCheckSubSetting
+    detail
+  }
+}
+    `;
+
+export function useGetTaskDefinitionsQuery(options?: Omit<Urql.UseQueryArgs<GetTaskDefinitionsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskDefinitionsQuery, GetTaskDefinitionsQueryVariables>({ query: GetTaskDefinitionsDocument, ...options });
 };

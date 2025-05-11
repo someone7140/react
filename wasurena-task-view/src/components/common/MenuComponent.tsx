@@ -13,6 +13,7 @@ import {
   CATEGORY_LIST_PAGE_PATH,
   CATEGORY_REGISTER_PAGE_PATH,
   LOGIN_PAGE_PATH,
+  TASK_DEFINITION_LIST_PAGE_PATH,
   TASK_REGISTER_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_NOTIFY_SETTING_PAGE_PATH,
@@ -85,7 +86,7 @@ export const MenuComponent: FC = ({}) => {
           <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>
             <span className="text-lg">タスクチェック対象一覧</span>
           </Menu.Item>
-          <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>
+          <Menu.Item component={NextLink} href={TASK_DEFINITION_LIST_PAGE_PATH}>
             <span className="text-lg">タスク定義一覧</span>
           </Menu.Item>
           <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>

@@ -3,22 +3,30 @@
 import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
+import { useAtomValue } from "jotai";
 
 import {
   TaskInputComponent,
   TaskInputFormValues,
 } from "./input/TaskInputComponent";
+import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   DeadLineCheck,
   InputMaybe,
   useCreateTaskMutation,
+  useGetTaskCategoriesQuery,
 } from "@/graphql/gen/graphql";
+import { DeadLineSubCheckDailyHour } from "@/hooks/useTaskUtil";
 
 export const TaskRegisterComponent: FC = ({}) => {
+  const [{ data: categoryData }] = useGetTaskCategoriesQuery({
+    requestPolicy: "network-only",
+  });
   const [createTaskMutationResult, createTaskMutation] =
     useCreateTaskMutation();
   const router = useRouter();
+  const userAccountState = useAtomValue(userAccountAtom);
 
   const submitRegisterTask = async (formValues: TaskInputFormValues) => {
     const deadLinCheck =
@@ -32,13 +40,19 @@ export const TaskRegisterComponent: FC = ({}) => {
     ) {
       deadLineCheckSubSetting = {
         hourInterval: formValues.deadLineCheckSubSettingHour,
-      };
+      } as DeadLineSubCheckDailyHour;
     }
+
+    const notificationFlag =
+      formValues.displayFlag && userAccountState?.isLineBotFollow
+        ? formValues.notificationFlag
+        : false;
 
     const result = await createTaskMutation({
       title: formValues.title,
       displayFlag: formValues.displayFlag,
-      notificationFlag: false,
+      notificationFlag: notificationFlag,
+      categoryId: formValues.categoryId ?? null,
       deadLineCheck: deadLinCheck,
       deadLineCheckSubSetting: deadLineCheckSubSetting,
       detail: formValues.detail ?? null,
@@ -74,6 +88,7 @@ export const TaskRegisterComponent: FC = ({}) => {
       <TaskInputComponent
         submitTask={submitRegisterTask}
         submitDisabled={createTaskMutationResult.fetching}
+        categoriesData={categoryData?.getTaskCategories ?? undefined}
       />
     </>
   );
