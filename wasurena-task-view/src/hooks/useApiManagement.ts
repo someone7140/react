@@ -5,9 +5,20 @@ import {
   fetchExchange,
   ssrExchange,
 } from "urql";
+import customScalarsExchange from "@atmina/urql-custom-scalars-exchange";
+
+import schema from "@/graphql/gen/introspection.json";
 
 export const useApiManagement = () => {
-  // Mapをオブジェクトに変換
+  const scalarsExchange = customScalarsExchange({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    schema: schema as any, // 型エラーになるのでanyにしておく
+    scalars: {
+      Time(value) {
+        return new Date(value);
+      },
+    },
+  });
 
   // SSR exchangeを作成
   const ssrCache = ssrExchange({
@@ -23,7 +34,7 @@ export const useApiManagement = () => {
   const createUrqlClient = (token?: string) => {
     return createClient({
       url: `${process.env.NEXT_PUBLIC_API_URL}`,
-      exchanges: [cacheExchange, ssrCache, fetchExchange],
+      exchanges: [scalarsExchange, cacheExchange, ssrCache, fetchExchange],
       fetchOptions: () => ({
         headers: {
           Authorization: token ? `Bearer ${token}` : "",

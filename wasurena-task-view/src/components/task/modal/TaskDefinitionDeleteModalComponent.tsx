@@ -5,43 +5,43 @@ import { notifications } from "@mantine/notifications";
 import { Button, Modal } from "@mantine/core";
 
 import {
-  TaskCategoryResponse,
-  useDeleteTaskCategoryMutation,
+  TaskDefinitionResponse,
+  useDeleteTaskMutation,
 } from "@/graphql/gen/graphql";
 
 type Props = {
-  category?: TaskCategoryResponse;
+  task?: TaskDefinitionResponse;
   closeModal: () => void;
   refetch: () => void;
 };
 
-export const TaskCategoryDeleteModalComponent: FC<Props> = ({
-  category,
+export const TaskDefinitionDeleteModalComponent: FC<Props> = ({
+  task,
   closeModal,
   refetch,
 }) => {
-  const [deleteCategoryMutationResult, deleteCategoryMutation] =
-    useDeleteTaskCategoryMutation();
+  const [deleteTaskMutationResult, deleteTaskMutation] =
+    useDeleteTaskMutation();
 
   const onModalClose = () => {
-    if (!deleteCategoryMutationResult.fetching) {
+    if (!deleteTaskMutationResult.fetching) {
       closeModal();
     }
   };
 
   const submitDeleteCategory = async () => {
-    if (category) {
-      const result = await deleteCategoryMutation({
-        id: category.id,
+    if (task) {
+      const result = await deleteTaskMutation({
+        id: task.id,
       });
-      if (!result?.data?.deleteCategory || result.error) {
+      if (!result?.data?.deleteTask || result.error) {
         notifications.show({
           id: "submitRegister-error",
           position: "top-center",
           withCloseButton: true,
           autoClose: 5000,
           title: "削除エラー",
-          message: "カテゴリーの削除に失敗しました",
+          message: "タスクの削除に失敗しました",
           color: "red",
           loading: false,
         });
@@ -51,8 +51,8 @@ export const TaskCategoryDeleteModalComponent: FC<Props> = ({
           position: "top-center",
           withCloseButton: true,
           autoClose: 5000,
-          title: "カテゴリー削除",
-          message: "カテゴリーを削除しました。",
+          title: "タスク削除",
+          message: "タスクを削除しました。",
           color: "green",
           loading: false,
         });
@@ -64,20 +64,20 @@ export const TaskCategoryDeleteModalComponent: FC<Props> = ({
 
   return (
     <Modal
-      opened={!!category}
+      opened={!!task}
       onClose={onModalClose}
-      title="カテゴリー削除"
+      title="タスク削除"
       className="max-w-[310px] min-w-[310px]"
     >
       <div>
-        {category?.name}を削除します。よろしいですか。
+        {task?.title}を削除します。よろしいですか。
         <div className="flex justify-center mt-3">
           <Button
             color="gray"
             onClick={async () => {
               await submitDeleteCategory();
             }}
-            disabled={deleteCategoryMutationResult.fetching}
+            disabled={deleteTaskMutationResult.fetching}
           >
             削除
           </Button>

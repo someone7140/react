@@ -7,14 +7,19 @@ import { Button, Card, Loader } from "@mantine/core";
 
 import { TaskCategoryDeleteModalComponent } from "./modal/TaskCategoryDeleteModalComponent";
 import { CATEGORY_REGISTER_PAGE_PATH } from "@/constants/MenuPathConstants";
-import { useGetTaskCategoriesQuery } from "@/graphql/gen/graphql";
+import {
+  TaskCategoryResponse,
+  useGetTaskCategoriesQuery,
+} from "@/graphql/gen/graphql";
 import { linkStyle } from "@/style/commonStyle";
 
 export const TaskCategoryListComponent: FC = ({}) => {
   const [{ data, fetching, error }, reexecuteQuery] = useGetTaskCategoriesQuery(
     { requestPolicy: "network-only" }
   );
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
+  const [deleteCategory, setDeleteCategory] = useState<
+    TaskCategoryResponse | undefined
+  >(undefined);
 
   const refetchCategoryList = () => {
     reexecuteQuery({ requestPolicy: "network-only" });
@@ -71,22 +76,23 @@ export const TaskCategoryListComponent: FC = ({}) => {
                         <Button
                           color="gray"
                           onClick={() => {
-                            setIsOpenDeleteModal(true);
+                            setDeleteCategory(category);
                           }}
                         >
                           削除
                         </Button>
                       </div>
                     </Card>
-                    <TaskCategoryDeleteModalComponent
-                      category={category}
-                      isOpen={isOpenDeleteModal}
-                      setIsOpen={setIsOpenDeleteModal}
-                      refetch={refetchCategoryList}
-                    />
                   </React.Fragment>
                 );
               })}
+              <TaskCategoryDeleteModalComponent
+                category={deleteCategory}
+                closeModal={() => {
+                  setDeleteCategory(undefined);
+                }}
+                refetch={refetchCategoryList}
+              />
             </div>
           )}
         </>

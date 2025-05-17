@@ -6,16 +6,22 @@ import { notifications } from "@mantine/notifications";
 import { Button, Card, Loader } from "@mantine/core";
 import { useAtomValue } from "jotai";
 
+import { TaskDefinitionDeleteModalComponent } from "./modal/TaskDefinitionDeleteModalComponent";
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TASK_REGISTER_PAGE_PATH } from "@/constants/MenuPathConstants";
-import { useGetTaskDefinitionsQuery } from "@/graphql/gen/graphql";
+import {
+  TaskDefinitionResponse,
+  useGetTaskDefinitionsQuery,
+} from "@/graphql/gen/graphql";
 import { useTaskUtil } from "@/hooks/useTaskUtil";
 import { linkStyle } from "@/style/commonStyle";
 
 export const TaskDefinitionListComponent: FC = ({}) => {
   const [{ data, fetching, error }, reexecuteQuery] =
     useGetTaskDefinitionsQuery({ requestPolicy: "network-only" });
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
+  const [deleteTask, setDeleteTask] = useState<
+    TaskDefinitionResponse | undefined
+  >(undefined);
   const { getDeadLineCheckDisplay } = useTaskUtil();
   const userAccountState = useAtomValue(userAccountAtom);
 
@@ -99,7 +105,7 @@ export const TaskDefinitionListComponent: FC = ({}) => {
                         <Button
                           color="gray"
                           onClick={() => {
-                            setIsOpenDeleteModal(true);
+                            setDeleteTask(definition);
                           }}
                         >
                           定義削除
@@ -109,6 +115,13 @@ export const TaskDefinitionListComponent: FC = ({}) => {
                   </React.Fragment>
                 );
               })}
+              <TaskDefinitionDeleteModalComponent
+                task={deleteTask}
+                closeModal={() => {
+                  setDeleteTask(undefined);
+                }}
+                refetch={refetchDefinitionList}
+              />
             </div>
           )}
         </>

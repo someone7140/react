@@ -18,7 +18,14 @@ const config: CodegenConfig = {
         useTypeImports: true,
         scalars: {
           Map: "object",
+          Time: "Date",
         },
+      },
+    },
+    "./src/graphql/gen/introspection.json": {
+      plugins: ["introspection"],
+      config: {
+        minify: true,
       },
     },
   },

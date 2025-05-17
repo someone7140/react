@@ -17,6 +17,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   Map: { input: object; output: object; }
+  Time: { input: Date; output: Date; }
 };
 
 export type CreateUserRegisterTokenResponse = {
@@ -42,6 +43,7 @@ export type Mutation = {
   createTaskExecute: FieldWrapper<Scalars['Boolean']['output']>;
   createUserAccount?: Maybe<FieldWrapper<UserAccountResponse>>;
   deleteCategory: FieldWrapper<Scalars['Boolean']['output']>;
+  deleteTask: FieldWrapper<Scalars['Boolean']['output']>;
   executeScheduleCheckBatch: FieldWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -67,6 +69,11 @@ export type MutationCreateUserAccountArgs = {
 
 
 export type MutationDeleteCategoryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteTaskArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -105,6 +112,7 @@ export type Query = {
   __typename?: 'Query';
   getRegisteredUser?: Maybe<FieldWrapper<UserAccountResponse>>;
   getTaskCategories?: Maybe<Array<FieldWrapper<TaskCategoryResponse>>>;
+  getTaskCheckDisplayList?: Maybe<Array<FieldWrapper<TaskCheckDisplayResponse>>>;
   getTaskDefinitions?: Maybe<Array<FieldWrapper<TaskDefinitionResponse>>>;
   getUserAccountFromAuthHeader?: Maybe<FieldWrapper<UserAccountResponse>>;
   getUserRegisterToken?: Maybe<FieldWrapper<CreateUserRegisterTokenResponse>>;
@@ -125,6 +133,21 @@ export type TaskCategoryResponse = {
   displayOrder?: Maybe<FieldWrapper<Scalars['Int']['output']>>;
   id: FieldWrapper<Scalars['String']['output']>;
   name: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type TaskCheckDisplayResponse = {
+  __typename?: 'TaskCheckDisplayResponse';
+  categoryId?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  categoryName?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  deadLineCheck?: Maybe<FieldWrapper<DeadLineCheck>>;
+  deadLineCheckSubSetting?: Maybe<FieldWrapper<Scalars['Map']['output']>>;
+  detail?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  displayFlag: FieldWrapper<Scalars['Boolean']['output']>;
+  id: FieldWrapper<Scalars['String']['output']>;
+  isExceedDeadLine: FieldWrapper<Scalars['Boolean']['output']>;
+  latestExecDateTime?: Maybe<FieldWrapper<Scalars['Time']['output']>>;
+  notificationFlag: FieldWrapper<Scalars['Boolean']['output']>;
+  title: FieldWrapper<Scalars['String']['output']>;
 };
 
 export type TaskDefinitionResponse = {
@@ -199,6 +222,14 @@ export type DeleteTaskCategoryMutationVariables = Exact<{
 
 export type DeleteTaskCategoryMutation = { __typename?: 'Mutation', deleteCategory: boolean };
 
+export type CreateTaskExecuteMutationVariables = Exact<{
+  taskDefinitionId: Scalars['String']['input'];
+  memo?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateTaskExecuteMutation = { __typename?: 'Mutation', createTaskExecute: boolean };
+
 export type CreateTaskMutationVariables = Exact<{
   title: Scalars['String']['input'];
   displayFlag: Scalars['Boolean']['input'];
@@ -216,6 +247,18 @@ export type GetTaskDefinitionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTaskDefinitionsQuery = { __typename?: 'Query', getTaskDefinitions?: Array<{ __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, detail?: string | null }> | null };
+
+export type GetTaskCheckDisplayListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, latestExecDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
+
+export type DeleteTaskMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: boolean };
 
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on UserAccountResponse {
@@ -304,6 +347,15 @@ export const DeleteTaskCategoryDocument = gql`
 export function useDeleteTaskCategoryMutation() {
   return Urql.useMutation<DeleteTaskCategoryMutation, DeleteTaskCategoryMutationVariables>(DeleteTaskCategoryDocument);
 };
+export const CreateTaskExecuteDocument = gql`
+    mutation CreateTaskExecute($taskDefinitionId: String!, $memo: String) {
+  createTaskExecute(input: {taskDefinitionId: $taskDefinitionId, memo: $memo})
+}
+    `;
+
+export function useCreateTaskExecuteMutation() {
+  return Urql.useMutation<CreateTaskExecuteMutation, CreateTaskExecuteMutationVariables>(CreateTaskExecuteDocument);
+};
 export const CreateTaskDocument = gql`
     mutation CreateTask($title: String!, $displayFlag: Boolean!, $notificationFlag: Boolean!, $categoryId: String, $deadLineCheck: DeadLineCheck, $deadLineCheckSubSetting: Map, $detail: String) {
   createTask(
@@ -333,4 +385,33 @@ export const GetTaskDefinitionsDocument = gql`
 
 export function useGetTaskDefinitionsQuery(options?: Omit<Urql.UseQueryArgs<GetTaskDefinitionsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetTaskDefinitionsQuery, GetTaskDefinitionsQueryVariables>({ query: GetTaskDefinitionsDocument, ...options });
+};
+export const GetTaskCheckDisplayListDocument = gql`
+    query GetTaskCheckDisplayList {
+  getTaskCheckDisplayList {
+    id
+    title
+    displayFlag
+    notificationFlag
+    categoryId
+    categoryName
+    deadLineCheck
+    deadLineCheckSubSetting
+    latestExecDateTime
+    isExceedDeadLine
+  }
+}
+    `;
+
+export function useGetTaskCheckDisplayListQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCheckDisplayListQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskCheckDisplayListQuery, GetTaskCheckDisplayListQueryVariables>({ query: GetTaskCheckDisplayListDocument, ...options });
+};
+export const DeleteTaskDocument = gql`
+    mutation DeleteTask($id: String!) {
+  deleteTask(id: $id)
+}
+    `;
+
+export function useDeleteTaskMutation() {
+  return Urql.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument);
 };

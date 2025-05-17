@@ -5,6 +5,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { Provider as JotaiProvider } from "jotai";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
@@ -45,21 +46,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MantineProvider>
-          <Notifications />
-          <ApiProvider>
-            <AuthProvider>
-              <HeaderComponent />
-              <div className="flex justify-center">
-                <div className="max-w-[95%] min-w-[300px]">
-                  <div className="flex justify-start w-[100%] ml-3 mb-4">
-                    <div>{children}</div>
+        <JotaiProvider>
+          <MantineProvider>
+            <Notifications />
+            <ApiProvider>
+              <AuthProvider>
+                <HeaderComponent />
+                <div className="flex justify-center">
+                  <div className="max-w-[95%] min-w-[300px]">
+                    <div className="flex justify-start w-[100%] ml-3 mb-4">
+                      <div>{children}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </AuthProvider>
-          </ApiProvider>
-        </MantineProvider>
+              </AuthProvider>
+            </ApiProvider>
+          </MantineProvider>
+        </JotaiProvider>
       </body>
     </html>
   );

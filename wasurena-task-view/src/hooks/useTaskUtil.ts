@@ -1,10 +1,15 @@
 "use client";
 
 import { DeadLineCheckList } from "@/constants/TaskConstants";
-import { DeadLineCheck } from "@/graphql/gen/graphql";
+import { DeadLineCheck, TaskCheckDisplayResponse } from "@/graphql/gen/graphql";
 
 export type DeadLineSubCheckDailyHour = {
   hourInterval: number;
+};
+
+export type CategorizeCheckList = {
+  checkTask: TaskCheckDisplayResponse[];
+  notCheckTask: TaskCheckDisplayResponse[];
 };
 
 export const useTaskUtil = () => {
@@ -26,5 +31,24 @@ export const useTaskUtil = () => {
     return "期限なし";
   };
 
-  return { getDeadLineCheckDisplay };
+  // 期限チェックのリストをカテゴライズする
+  const getCategorizeCheckList = (checkList: TaskCheckDisplayResponse[]) => {
+    let checkTask: TaskCheckDisplayResponse[] = [];
+    let notCheckTask: TaskCheckDisplayResponse[] = [];
+
+    for (const check of checkList) {
+      if (check.deadLineCheck) {
+        checkTask = [...checkTask, check];
+      } else {
+        notCheckTask = [...notCheckTask, check];
+      }
+    }
+
+    return {
+      checkTask,
+      notCheckTask,
+    } as CategorizeCheckList;
+  };
+
+  return { getDeadLineCheckDisplay, getCategorizeCheckList };
 };

@@ -10,7 +10,7 @@ import {
   TaskInputFormValues,
 } from "./input/TaskInputComponent";
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
-import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
+import { TASK_DEFINITION_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   DeadLineCheck,
   InputMaybe,
@@ -29,13 +29,13 @@ export const TaskRegisterComponent: FC = ({}) => {
   const userAccountState = useAtomValue(userAccountAtom);
 
   const submitRegisterTask = async (formValues: TaskInputFormValues) => {
-    const deadLinCheck =
+    const deadLineCheck =
       formValues.displayFlag && formValues.deadLineCheck
         ? (formValues.deadLineCheck as DeadLineCheck)
         : null;
     let deadLineCheckSubSetting: InputMaybe<object> | null = null;
     if (
-      deadLinCheck === DeadLineCheck.DailyHour &&
+      deadLineCheck === DeadLineCheck.DailyHour &&
       formValues.deadLineCheckSubSettingHour != null
     ) {
       deadLineCheckSubSetting = {
@@ -53,7 +53,7 @@ export const TaskRegisterComponent: FC = ({}) => {
       displayFlag: formValues.displayFlag,
       notificationFlag: notificationFlag,
       categoryId: formValues.categoryId ?? null,
-      deadLineCheck: deadLinCheck,
+      deadLineCheck: deadLineCheck,
       deadLineCheckSubSetting: deadLineCheckSubSetting,
       detail: formValues.detail ?? null,
     });
@@ -69,7 +69,6 @@ export const TaskRegisterComponent: FC = ({}) => {
         loading: false,
       });
     } else {
-      router.push(`${TOP_PAGE_PATH}`);
       notifications.show({
         id: "submitRegister-success",
         position: "top-center",
@@ -80,6 +79,7 @@ export const TaskRegisterComponent: FC = ({}) => {
         color: "green",
         loading: false,
       });
+      router.push(`${TASK_DEFINITION_LIST_PAGE_PATH}`);
     }
   };
 

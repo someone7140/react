@@ -39,3 +39,26 @@ export const getTaskDefinitionsQueryDocument = gql`
     }
   }
 `;
+
+export const getTaskCheckDisplayListQueryDocument = gql`
+  query GetTaskCheckDisplayList {
+    getTaskCheckDisplayList {
+      id
+      title
+      displayFlag
+      notificationFlag
+      categoryId
+      categoryName
+      deadLineCheck
+      deadLineCheckSubSetting
+      latestExecDateTime
+      isExceedDeadLine
+    }
+  }
+`;
+
+export const deleteTaskDefinitionMutationDocument = gql`
+  mutation DeleteTask($id: String!) {
+    deleteTask(id: $id)
+  }
+`;

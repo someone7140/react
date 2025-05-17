@@ -10,6 +10,7 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@atmina/urql-custom-scalars-exchange": "^1.1.1",
     "@graphql-codegen/typescript-operations": "^4.6.0",
     "@graphql-codegen/typescript-urql": "^4.0.0",
     "@mantine/core": "^7.17.5",
@@ -29,6 +30,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@graphql-codegen/cli": "^5.0.5",
     "@graphql-codegen/client-preset": "^4.8.0",
+    "@graphql-codegen/introspection": "^4.0.3",
     "@tailwindcss/postcss": "^4.1.4",
     "@types/node": "^22.15.3",
     "@types/react": "^19.1.2",
