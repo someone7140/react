@@ -5,43 +5,43 @@ import { notifications } from "@mantine/notifications";
 import { Button, Modal } from "@mantine/core";
 
 import {
-  TaskDefinitionResponse,
-  useDeleteTaskMutation,
+  TaskExecuteResponse,
+  useDeleteTaskExecuteMutation,
 } from "@/graphql/gen/graphql";
 
 type Props = {
-  task?: TaskDefinitionResponse;
+  taskExec?: TaskExecuteResponse;
   closeModal: () => void;
   refetch: () => void;
 };
 
-export const TaskDefinitionDeleteModalComponent: FC<Props> = ({
-  task,
+export const TaskExecutionDeleteModalComponent: FC<Props> = ({
+  taskExec,
   closeModal,
   refetch,
 }) => {
-  const [deleteTaskMutationResult, deleteTaskMutation] =
-    useDeleteTaskMutation();
+  const [deleteTaskExecuteMutationResult, deleteTaskExecuteMutation] =
+    useDeleteTaskExecuteMutation();
 
   const onModalClose = () => {
-    if (!deleteTaskMutationResult.fetching) {
+    if (!deleteTaskExecuteMutationResult.fetching) {
       closeModal();
     }
   };
 
-  const submitDeleteTask = async () => {
-    if (task) {
-      const result = await deleteTaskMutation({
-        id: task.id,
+  const submitDeleteTaskExecute = async () => {
+    if (taskExec) {
+      const result = await deleteTaskExecuteMutation({
+        taskExecuteId: taskExec.id,
       });
-      if (!result?.data?.deleteTask || result.error) {
+      if (!result?.data?.deleteTaskExecute || result.error) {
         notifications.show({
           id: "submitRegister-error",
           position: "top-center",
           withCloseButton: true,
           autoClose: 5000,
           title: "削除エラー",
-          message: "タスクの削除に失敗しました",
+          message: "実施履歴の削除に失敗しました",
           color: "red",
           loading: false,
         });
@@ -51,8 +51,8 @@ export const TaskDefinitionDeleteModalComponent: FC<Props> = ({
           position: "top-center",
           withCloseButton: true,
           autoClose: 5000,
-          title: "タスク削除",
-          message: "タスクを削除しました。",
+          title: "実施履歴削除",
+          message: "実施履歴を削除しました。",
           color: "green",
           loading: false,
         });
@@ -64,20 +64,20 @@ export const TaskDefinitionDeleteModalComponent: FC<Props> = ({
 
   return (
     <Modal
-      opened={!!task}
+      opened={!!taskExec}
       onClose={onModalClose}
-      title="タスク削除"
+      title="タスク実施履歴除除"
       className="max-w-[310px] min-w-[310px]"
     >
       <div>
-        {task?.title}を削除します。よろしいですか。
+        タスクの実施履歴を削除します。よろしいですか。
         <div className="flex justify-center mt-3">
           <Button
             color="gray"
             onClick={async () => {
-              await submitDeleteTask();
+              await submitDeleteTaskExecute();
             }}
-            disabled={deleteTaskMutationResult.fetching}
+            disabled={deleteTaskExecuteMutationResult.fetching}
           >
             削除
           </Button>

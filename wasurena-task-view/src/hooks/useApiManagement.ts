@@ -45,7 +45,7 @@ export const useApiManagement = () => {
 
   // urqlのgraphqlエラーからコードを取得
   const getErrorCodeFromGraphQLError = (error?: CombinedError): number => {
-    // errorが空の場合は200
+    // errorが空の場合は500
     if (!error) {
       return 500;
     }

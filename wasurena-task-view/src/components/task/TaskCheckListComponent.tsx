@@ -66,9 +66,10 @@ export const TaskCheckListComponent: FC = ({}) => {
                 <>
                   {categorizeCheckList.checkTask.map((check) => {
                     return (
-                      <React.Fragment key={check.id}>
-                        <TaskCheckCardComponent checkTask={check} />
-                      </React.Fragment>
+                      <TaskCheckCardComponent
+                        checkTask={check}
+                        key={check.id}
+                      />
                     );
                   })}
                 </>
@@ -81,9 +82,10 @@ export const TaskCheckListComponent: FC = ({}) => {
                 <>
                   {categorizeCheckList.notCheckTask.map((check) => {
                     return (
-                      <React.Fragment key={check.id}>
-                        <TaskCheckCardComponent checkTask={check} />
-                      </React.Fragment>
+                      <TaskCheckCardComponent
+                        checkTask={check}
+                        key={check.id}
+                      />
                     );
                   })}
                 </>

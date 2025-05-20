@@ -64,55 +64,59 @@ export const TaskDefinitionListComponent: FC = ({}) => {
             <div className="flex flex-col gap-5 min-w-[300px] max-w-[335px]">
               {definitionList.map((definition) => {
                 return (
-                  <React.Fragment key={definition.id}>
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                      <div className="text-xl font-semibold break-all">
-                        {definition.title}
+                  <Card
+                    shadow="sm"
+                    padding="lg"
+                    radius="md"
+                    withBorder
+                    key={definition.id}
+                  >
+                    <div className="text-xl font-semibold break-all">
+                      {definition.title}
+                    </div>
+                    {definition.detail && (
+                      <div className="ml-3 mb-3 whitespace-pre-wrap break-all">
+                        {definition.detail}
                       </div>
-                      {definition.detail && (
-                        <div className="ml-3 mb-3 whitespace-pre-wrap break-all">
-                          {definition.detail}
-                        </div>
-                      )}
+                    )}
+                    <div>
+                      チェック対象一覧：
+                      {definition.displayFlag ? "表示" : "非表示"}
+                    </div>
+                    {definition.categoryId && (
                       <div>
-                        チェック対象一覧：
-                        {definition.displayFlag ? "表示" : "非表示"}
+                        カテゴリー：
+                        {definition.categoryName}
                       </div>
-                      {definition.categoryId && (
-                        <div>
-                          カテゴリー：
-                          {definition.categoryName}
-                        </div>
-                      )}
-                      {definition.displayFlag && (
-                        <div>
-                          期限設定：
-                          {getDeadLineCheckDisplay(
-                            definition.deadLineCheck ?? undefined,
-                            definition.deadLineCheckSubSetting ?? undefined
-                          )}
-                        </div>
-                      )}
-                      {userAccountState?.isLineBotFollow && (
-                        <div>
-                          LINE通知：
-                          {definition.notificationFlag ? "あり" : "なし"}
-                        </div>
-                      )}
-                      <div className="flex justify-center mt-3 gap-3">
-                        <Button color="lime">実施履歴</Button>
-                        <Button color="orange">編集</Button>
-                        <Button
-                          color="gray"
-                          onClick={() => {
-                            setDeleteTask(definition);
-                          }}
-                        >
-                          定義削除
-                        </Button>
+                    )}
+                    {definition.displayFlag && (
+                      <div>
+                        期限設定：
+                        {getDeadLineCheckDisplay(
+                          definition.deadLineCheck ?? undefined,
+                          definition.deadLineCheckSubSetting ?? undefined
+                        )}
                       </div>
-                    </Card>
-                  </React.Fragment>
+                    )}
+                    {userAccountState?.isLineBotFollow && (
+                      <div>
+                        LINE通知：
+                        {definition.notificationFlag ? "あり" : "なし"}
+                      </div>
+                    )}
+                    <div className="flex justify-center mt-3 gap-3">
+                      <Button color="lime">実施履歴</Button>
+                      <Button color="orange">編集</Button>
+                      <Button
+                        color="gray"
+                        onClick={() => {
+                          setDeleteTask(definition);
+                        }}
+                      >
+                        定義削除
+                      </Button>
+                    </div>
+                  </Card>
                 );
               })}
               <TaskDefinitionDeleteModalComponent

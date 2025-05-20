@@ -2,9 +2,9 @@
 
 import React, { FC } from "react";
 import { Button, Modal, Textarea } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
 import { TaskCheckDisplayResponse } from "@/graphql/gen/graphql";
-import { useForm } from "@mantine/form";
 import { formAreaStyle, textInputStyle } from "@/style/formStyle";
 
 type Props = {
@@ -51,8 +51,8 @@ export const TaskExecutionWithMemoModalComponent: FC<Props> = ({
         <div>「{checkTask.title}」の実施を登録します </div>
         <Textarea
           label="メモ"
-          key={form.key("detail")}
-          {...form.getInputProps("detail")}
+          key={form.key("memo")}
+          {...form.getInputProps("memo")}
           className={`${textInputStyle()} ml-9`}
           autosize
           minRows={3}

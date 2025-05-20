@@ -5,6 +5,7 @@ import { notifications } from "@mantine/notifications";
 import { Button, Card } from "@mantine/core";
 
 import { TaskExecutionWithMemoModalComponent } from "../modal/TaskExecutionWithMemoModalComponent";
+import { TaskExecutionListModalComponent } from "../modal/TaskExecutionListModalComponent";
 import {
   TaskCheckDisplayResponse,
   useCreateTaskExecuteMutation,
@@ -21,6 +22,8 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
     isOpenTaskExecutionWithMemoModal,
     setIsOpenTaskExecutionWithMemoModal,
   ] = useState<boolean>(false);
+  const [isOpenTaskExecutionListModal, setIsOpenTaskExecutionListModal] =
+    useState<boolean>(false);
   const [createTaskMutationResult, createTaskMutation] =
     useCreateTaskExecuteMutation();
 
@@ -164,7 +167,13 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
               (メモ登録)
             </div>
           </Button>
-          <Button color="lime" styles={BUTTON_STYLE}>
+          <Button
+            color="lime"
+            styles={BUTTON_STYLE}
+            onClick={() => {
+              setIsOpenTaskExecutionListModal(true);
+            }}
+          >
             実施履歴
           </Button>
         </div>
@@ -178,6 +187,15 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
           }}
           execRegister={executeTaskWithMemo}
           submitDisabled={createTaskMutationResult.fetching}
+        />
+      )}
+      {isOpenTaskExecutionListModal && (
+        <TaskExecutionListModalComponent
+          checkTask={checkTaskState}
+          isOpen={isOpenTaskExecutionListModal}
+          closeModal={() => {
+            setIsOpenTaskExecutionListModal(false);
+          }}
         />
       )}
     </>
