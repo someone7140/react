@@ -44,7 +44,7 @@ export const UserAccountInputComponent: FC<Props> = ({
 }) => {
   const { userAccountInputSession, updateUserAccountInputSession } =
     useUserAccountInputSessionStore();
-  const form = useForm<UserAccountInputFormType>({
+  const form = useForm({
     validators: {
       onSubmit: userAccountInputFormSchema,
     },
@@ -101,7 +101,9 @@ export const UserAccountInputComponent: FC<Props> = ({
               }}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>
@@ -127,7 +129,9 @@ export const UserAccountInputComponent: FC<Props> = ({
               }}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>

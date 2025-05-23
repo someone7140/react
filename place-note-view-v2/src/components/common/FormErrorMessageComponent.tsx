@@ -1,17 +1,16 @@
 "use client";
 
 import { FC } from "react";
-import { ValidationError } from "@tanstack/react-form";
 
 type Props = {
-  errors?: ValidationError[];
+  message?: string;
 };
 
-export const FormErrorMessageComponent: FC<Props> = ({ errors }) => {
+export const FormErrorMessageComponent: FC<Props> = ({ message }) => {
   return (
     <>
-      {errors ? (
-        <div className="mt-1 ml-1 text-xs text-red-400">{errors[0]}</div>
+      {message ? (
+        <div className="mt-1 ml-1 text-xs text-red-400">{message}</div>
       ) : null}
     </>
   );

@@ -45,7 +45,7 @@ export const MyPostRefComponent: FC<Props> = ({
         {post.title}
       </div>
       <div className={"flex gap-2"}>
-        <div>場所:</div>
+        <div className={"min-w-[38px]"}>場所:</div>
         {!post.postPlace.url && <div>{post.postPlace.name}</div>}
         {post.postPlace.url && (
           <div>
@@ -85,7 +85,7 @@ export const MyPostRefComponent: FC<Props> = ({
         <div>{post.isOpen ? "公開" : "非公開"}</div>
       </div>
       <div className={"flex gap-2"}>
-        <div>カテゴリー:</div>
+        <div className={"min-w-[85px]"}>カテゴリー:</div>
         <div>
           {post.categoryIdList
             .flatMap((id) => {

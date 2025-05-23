@@ -21,8 +21,13 @@ export const postInputFormSchema = z.object({
 
 export type PostInputFormType = z.infer<typeof postInputFormSchema>;
 
+// date型はそのままparseができないので一旦string型で持つ
+export type PostInputSessionType = Omit<PostInputFormType, "visitedDate"> & {
+  visitedDateStr?: string;
+};
+
 type PostInputSessionStore = {
-  postInputSession: PostInputFormType | undefined;
+  postInputSession: PostInputSessionType | undefined;
   updatePostInputSession: (input?: PostInputFormType) => void;
 };
 
@@ -30,8 +35,16 @@ export const usePostInputSessionStore = create<PostInputSessionStore>()(
   persist(
     (set) => ({
       postInputSession: undefined,
-      updatePostInputSession: (input?: PostInputFormType) =>
-        set({ postInputSession: input }),
+      updatePostInputSession: (input?: PostInputFormType) => {
+        if (input) {
+          set({
+            postInputSession: {
+              ...input,
+              visitedDateStr: input?.visitedDate.toDateString(),
+            },
+          });
+        }
+      },
     }),
     {
       name: "postInputSession",

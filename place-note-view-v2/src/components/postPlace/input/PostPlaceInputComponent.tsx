@@ -89,7 +89,9 @@ export const PostPlaceInputComponent: FC<Props> = ({
               }}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>

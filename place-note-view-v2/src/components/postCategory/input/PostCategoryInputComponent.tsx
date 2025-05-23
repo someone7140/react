@@ -2,7 +2,7 @@
 
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm, Validator } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
@@ -54,28 +54,28 @@ export const PostCategoryInputComponent: FC<Props> = ({
   const { postCategoryInputSession, updatePostCategoryInputSession } =
     usePostCategoryInputSessionStore();
 
-  const form = useForm<
-    PostCategoryInputFormType,
-    Validator<PostCategoryInputFormType>
-  >({
+  const form = useForm({
     validators: {
       onSubmit: postCategoryInputFormSchema,
     },
     defaultValues: postCategoryInputSession
       ? postCategoryInputSession
-      : ((registeredCategory
-          ? {
-              name: registeredCategory.name,
-              parentCategoryId: registeredCategory.parentCategoryId ?? "",
-              displayOrder: registeredCategory.displayOrder ?? "",
-              detail: registeredCategory.detail ?? "",
-            }
-          : {
-              name: "",
-              parentCategoryId: "",
-              displayOrder: "",
-              detail: "",
-            }) as PostCategoryInputFormType),
+      : registeredCategory
+      ? {
+          name: registeredCategory.name,
+          parentCategoryId: registeredCategory.parentCategoryId ?? "",
+          displayOrder:
+            registeredCategory.displayOrder != null
+              ? registeredCategory.displayOrder.toString()
+              : "",
+          detail: registeredCategory.detail ?? "",
+        }
+      : {
+          name: "",
+          parentCategoryId: "",
+          displayOrder: "",
+          detail: "",
+        },
     onSubmit: async ({ value }) => {
       execSubmit(value);
     },
@@ -115,7 +115,9 @@ export const PostCategoryInputComponent: FC<Props> = ({
               }}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>
@@ -132,12 +134,23 @@ export const PostCategoryInputComponent: FC<Props> = ({
                 className: inputTextLabelStyle(),
               }}
               onChange={(e) => {
-                field.handleChange(parseInt(e.target.value));
+                if (e.target.value) {
+                  const order = parseInt(e.target.value);
+                  if (isNaN(order)) {
+                    field.handleChange("");
+                  } else {
+                    field.handleChange(order.toString());
+                  }
+                } else {
+                  field.handleChange("");
+                }
                 updatePostCategoryInputSession(form.state.values);
               }}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>

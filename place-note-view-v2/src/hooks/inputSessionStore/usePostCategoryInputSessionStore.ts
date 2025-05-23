@@ -2,8 +2,6 @@ import { z } from "zod";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import { numberInputConvert } from "@/utils/formUtil";
-
 export const postCategoryInputFormSchema = z.object({
   name: z
     .string({
@@ -13,14 +11,7 @@ export const postCategoryInputFormSchema = z.object({
       message: "名前は必須です",
     }),
   parentCategoryId: z.string().optional(),
-  displayOrder: z.preprocess(
-    numberInputConvert,
-    z
-      .number({
-        invalid_type_error: "表示順は数値を入力してください",
-      })
-      .optional()
-  ),
+  displayOrder: z.string().optional(),
   detail: z.string().optional(),
 });
 

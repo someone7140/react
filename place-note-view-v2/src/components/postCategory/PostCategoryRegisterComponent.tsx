@@ -22,8 +22,8 @@ export const PostCategoryRegisterComponent: FC = () => {
           ? formData.parentCategoryId
           : null,
         displayOrder:
-          formData.displayOrder != null && String(formData.displayOrder) != ""
-            ? formData.displayOrder
+          formData.displayOrder != null && formData.displayOrder != ""
+            ? parseInt(formData.displayOrder)
             : null,
         detail: formData.detail ?? null,
       },

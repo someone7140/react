@@ -136,9 +136,9 @@ export const PostListComponent: FC = ({}) => {
                   </div>
                   <div className="flex flex-row mt-1 items-center">
                     <div
-                      className={orderButtonStyle({
+                      className={`${orderButtonStyle({
                         type: isOrderPostDate ? "notSelected" : "selected",
-                      })}
+                      })} w-[70px]`}
                       onClick={() => {
                         switchOrderPostDate(false);
                       }}
@@ -146,9 +146,9 @@ export const PostListComponent: FC = ({}) => {
                       訪問日順
                     </div>
                     <div
-                      className={orderButtonStyle({
+                      className={`${orderButtonStyle({
                         type: isOrderPostDate ? "selected" : "notSelected",
-                      })}
+                      })} w-[70px]`}
                       onClick={() => {
                         switchOrderPostDate(true);
                       }}

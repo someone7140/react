@@ -69,7 +69,12 @@ export const PostInputComponent: FC<Props> = ({
       onSubmit: postInputFormSchema,
     },
     defaultValues: postInputSession
-      ? postInputSession
+      ? {
+          ...postInputSession,
+          visitedDate: postInputSession.visitedDateStr
+            ? new Date(postInputSession.visitedDateStr)
+            : new Date(),
+        }
       : ({
           title: editPostData?.title ?? "",
           detail: editPostData?.detail ?? "",
@@ -111,7 +116,9 @@ export const PostInputComponent: FC<Props> = ({
               }}
               crossOrigin={undefined}
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>
@@ -141,7 +148,9 @@ export const PostInputComponent: FC<Props> = ({
               }
               popperClassName="!z-20"
             />
-            <FormErrorMessageComponent errors={field.state.meta.errors} />
+            <FormErrorMessageComponent
+              message={field.state.meta.errors[0]?.message}
+            />
           </div>
         )}
       </form.Field>
