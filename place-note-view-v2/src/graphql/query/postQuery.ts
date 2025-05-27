@@ -126,3 +126,19 @@ export const getOpenPostsWithAccountInfoQueryDocument = gql`
     }
   }
 `;
+
+export const getMyPostsByLatLonQueryDocument = gql`
+  query GetMyPostsByLatLon(
+    $latLon: LatLon!
+    $radiusKiloMeter: Float!
+    $isOrderPostDate: Boolean!
+  ) {
+    getMyPostsByLatLon(
+      latLon: $latLon
+      radiusKiloMeter: $radiusKiloMeter
+      isOrderPostDate: $isOrderPostDate
+    ) {
+      ...PostObj
+    }
+  }
+`;

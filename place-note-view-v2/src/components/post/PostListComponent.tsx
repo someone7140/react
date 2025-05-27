@@ -4,14 +4,14 @@ import React, { FC, useEffect, useState } from "react";
 import { Button, Spinner } from "@material-tailwind/react";
 
 import { PostFilterDialogComponent } from "./dialog/PostFilterDialogComponent";
+import { PostListDisplayComponent } from "./list/PostListDisplayComponent";
+import { PostListOrderSettingComponent } from "./list/PostListOrderSettingComponent";
 import {
   PostCategoryResponse,
   PostPlaceResponse,
   useGetMyPostsQuery,
   useGetPostPlacesAndCategoriesQuery,
 } from "@/graphql/gen/graphql";
-import { PostListDisplayComponent } from "./list/PostListDisplayComponent";
-import { orderButtonStyle } from "@/style/PostStyle";
 
 export type PostListFilter = {
   category?: PostCategoryResponse;
@@ -134,28 +134,10 @@ export const PostListComponent: FC = ({}) => {
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-row mt-1 items-center">
-                    <div
-                      className={`${orderButtonStyle({
-                        type: isOrderPostDate ? "notSelected" : "selected",
-                      })} w-[70px]`}
-                      onClick={() => {
-                        switchOrderPostDate(false);
-                      }}
-                    >
-                      訪問日順
-                    </div>
-                    <div
-                      className={`${orderButtonStyle({
-                        type: isOrderPostDate ? "selected" : "notSelected",
-                      })} w-[70px]`}
-                      onClick={() => {
-                        switchOrderPostDate(true);
-                      }}
-                    >
-                      投稿日順
-                    </div>
-                  </div>
+                  <PostListOrderSettingComponent
+                    isOrderPostDate={isOrderPostDate}
+                    switchOrderPostDate={switchOrderPostDate}
+                  />
                 </div>
               </div>
               {postList.length === 0 && (

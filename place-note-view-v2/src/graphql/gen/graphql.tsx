@@ -187,6 +187,7 @@ export type PlaceNoteQuery = {
   getMyPostCategories: Array<FieldWrapper<PostCategoryResponse>>;
   getMyPostCategoryById: FieldWrapper<PostCategoryResponse>;
   getMyPosts: Array<FieldWrapper<PostResponse>>;
+  getMyPostsByLatLon: Array<FieldWrapper<PostResponse>>;
   getOpenPosts: Array<FieldWrapper<PostResponse>>;
   getPostPlaces: Array<FieldWrapper<PostPlaceResponse>>;
 };
@@ -217,6 +218,13 @@ export type PlaceNoteQueryGetMyPostsArgs = {
   idFilter?: InputMaybe<Scalars['String']['input']>;
   isOrderPostDate: Scalars['Boolean']['input'];
   placeIdFilter?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type PlaceNoteQueryGetMyPostsByLatLonArgs = {
+  isOrderPostDate: Scalars['Boolean']['input'];
+  latLon: LatLon;
+  radiusKiloMeter: Scalars['Float']['input'];
 };
 
 
@@ -488,6 +496,15 @@ export type GetOpenPostsWithAccountInfoQueryVariables = Exact<{
 
 
 export type GetOpenPostsWithAccountInfoQuery = { __typename?: 'PlaceNoteQuery', getOpenPosts: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, userName: string, userImageUrl?: string | null, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }>, getAccountUserByUserSettingId: { __typename?: 'AccountUserResponseRef', userSettingId: string, name: string, urlList: Array<string>, detail?: string | null, imageUrl?: string | null } };
+
+export type GetMyPostsByLatLonQueryVariables = Exact<{
+  latLon: LatLon;
+  radiusKiloMeter: Scalars['Float']['input'];
+  isOrderPostDate: Scalars['Boolean']['input'];
+}>;
+
+
+export type GetMyPostsByLatLonQuery = { __typename?: 'PlaceNoteQuery', getMyPostsByLatLon: Array<{ __typename?: 'PostResponse', id: string, userSettingId: string, userName: string, userImageUrl?: string | null, title: string, visitedDateStr: string, isOpen: boolean, categoryIdList: Array<string>, detail?: string | null, postPlace: { __typename?: 'PostPlaceInfo', id: string, name: string, prefectureCode?: string | null, url?: string | null, address?: string | null, latLon?: { __typename?: 'LatLonResponse', lat: number, lon: number } | null }, urlList: Array<{ __typename?: 'PostUrl', url: string, urlType: string, urlInfo?: { __typename?: 'PostUrlInfo', title: string, imageUrl?: string | null, siteName?: string | null } | null }> }> };
 
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on AccountUserResponse {
@@ -1407,3 +1424,49 @@ export type GetOpenPostsWithAccountInfoQueryHookResult = ReturnType<typeof useGe
 export type GetOpenPostsWithAccountInfoLazyQueryHookResult = ReturnType<typeof useGetOpenPostsWithAccountInfoLazyQuery>;
 export type GetOpenPostsWithAccountInfoSuspenseQueryHookResult = ReturnType<typeof useGetOpenPostsWithAccountInfoSuspenseQuery>;
 export type GetOpenPostsWithAccountInfoQueryResult = Apollo.QueryResult<GetOpenPostsWithAccountInfoQuery, GetOpenPostsWithAccountInfoQueryVariables>;
+export const GetMyPostsByLatLonDocument = gql`
+    query GetMyPostsByLatLon($latLon: LatLon!, $radiusKiloMeter: Float!, $isOrderPostDate: Boolean!) {
+  getMyPostsByLatLon(
+    latLon: $latLon
+    radiusKiloMeter: $radiusKiloMeter
+    isOrderPostDate: $isOrderPostDate
+  ) {
+    ...PostObj
+  }
+}
+    ${PostObjFragmentDoc}`;
+
+/**
+ * __useGetMyPostsByLatLonQuery__
+ *
+ * To run a query within a React component, call `useGetMyPostsByLatLonQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyPostsByLatLonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyPostsByLatLonQuery({
+ *   variables: {
+ *      latLon: // value for 'latLon'
+ *      radiusKiloMeter: // value for 'radiusKiloMeter'
+ *      isOrderPostDate: // value for 'isOrderPostDate'
+ *   },
+ * });
+ */
+export function useGetMyPostsByLatLonQuery(baseOptions: Apollo.QueryHookOptions<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables> & ({ variables: GetMyPostsByLatLonQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables>(GetMyPostsByLatLonDocument, options);
+      }
+export function useGetMyPostsByLatLonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables>(GetMyPostsByLatLonDocument, options);
+        }
+export function useGetMyPostsByLatLonSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables>(GetMyPostsByLatLonDocument, options);
+        }
+export type GetMyPostsByLatLonQueryHookResult = ReturnType<typeof useGetMyPostsByLatLonQuery>;
+export type GetMyPostsByLatLonLazyQueryHookResult = ReturnType<typeof useGetMyPostsByLatLonLazyQuery>;
+export type GetMyPostsByLatLonSuspenseQueryHookResult = ReturnType<typeof useGetMyPostsByLatLonSuspenseQuery>;
+export type GetMyPostsByLatLonQueryResult = Apollo.QueryResult<GetMyPostsByLatLonQuery, GetMyPostsByLatLonQueryVariables>;

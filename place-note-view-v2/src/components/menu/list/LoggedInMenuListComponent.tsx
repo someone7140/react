@@ -13,6 +13,7 @@ import {
   FolderPlusIcon,
   HomeIcon,
   IdentificationIcon,
+  MapIcon,
   PencilIcon,
   PowerIcon,
   RectangleStackIcon,
@@ -27,6 +28,7 @@ import {
   POST_LIST_PAGE_PATH,
   POST_PLACE_ADD_PAGE_PATH,
   POST_PLACE_LIST_PAGE_PATH,
+  POST_SEARCH_LOCATION_PAGE_PATH,
   TOP_PAGE_PATH,
   USER_ACCOUNT_EDIT_PAGE_PATH,
   USER_ACCOUNT_PROFILE,
@@ -88,6 +90,16 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
             <DocumentPlusIcon className="h-5 w-5" />
           </ListItemPrefix>
           投稿追加
+        </ListItem>
+        <ListItem
+          onClick={() => {
+            onCLickMenu(POST_SEARCH_LOCATION_PAGE_PATH);
+          }}
+        >
+          <ListItemPrefix>
+            <MapIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          投稿位置検索
         </ListItem>
         <ListItem
           onClick={() => {
