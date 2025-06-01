@@ -1,8 +1,15 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import { Button, Input, Radio, Spinner } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import {
+  Button,
+  Input,
+  NumberInput,
+  Radio,
+  RadioGroup,
+  Spinner,
+} from "@heroui/react";
 
 import { PostListDisplayComponent } from "./list/PostListDisplayComponent";
 import { PostListOrderSettingComponent } from "./list/PostListOrderSettingComponent";
@@ -15,7 +22,7 @@ import {
   useGetPostPlacesAndCategoriesQuery,
 } from "@/graphql/gen/graphql";
 import { useGeolocationService } from "@/hooks/geolocation/useGeolocationService";
-import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
+import { inputTextStyle } from "@/style/FormStyle";
 
 export type PostListFilter = {
   category?: PostCategoryResponse;
@@ -23,10 +30,12 @@ export type PostListFilter = {
 };
 
 export const PostSearchLocationComponent: FC = ({}) => {
-  const [isKeywordSearch, setIsKeywordSearch] = useState<boolean>(true);
+  const [searchSelected, setSearchSelected] = React.useState("keywordSelect");
   const [isOrderPostDate, setIsOrderPostDate] = useState<boolean>(false);
   const [addressKeyword, setAddressKeyword] = useState<string>("");
-  const [radiusKiloMeter, setRadiusKiloMeter] = useState<string>("");
+  const [radiusKiloMeter, setRadiusKiloMeter] = useState<number | undefined>(
+    undefined
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [postList, setPostList] = useState<PostResponse[] | undefined>(
     undefined
@@ -61,9 +70,9 @@ export const PostSearchLocationComponent: FC = ({}) => {
   };
 
   const submitSearchPost = async () => {
+    const isKeywordSearch = searchSelected === "keywordSelect";
     // 半径の入力チェック
-    const radiusKiloMeterFloat = parseFloat(radiusKiloMeter);
-    if (isNaN(radiusKiloMeterFloat)) {
+    if (!radiusKiloMeter || isNaN(radiusKiloMeter)) {
       toast.error("半径を入力してください");
       return;
     }
@@ -86,7 +95,7 @@ export const PostSearchLocationComponent: FC = ({}) => {
           lat: addressInfo.latLon.lat,
           lon: addressInfo.latLon.lon,
         },
-        radiusKiloMeter: radiusKiloMeterFloat,
+        radiusKiloMeter: radiusKiloMeter,
         isOrderPostDate: isOrderPostDate,
       });
     } else {
@@ -99,7 +108,7 @@ export const PostSearchLocationComponent: FC = ({}) => {
             lat: latitude,
             lon: longitude,
           },
-          radiusKiloMeter: radiusKiloMeterFloat,
+          radiusKiloMeter: radiusKiloMeter,
           isOrderPostDate: isOrderPostDate,
         });
       });
@@ -109,66 +118,58 @@ export const PostSearchLocationComponent: FC = ({}) => {
   return (
     <div className="max-w-[90%] min-w-[320px]">
       <div className="flex flex-col gap-2 mb-3">
-        <div className="flex gap-2">
-          <Radio
-            name="isKeywordSearch"
-            label="住所で検索"
-            checked={isKeywordSearch}
-            crossOrigin={undefined}
-            onChange={() => {
-              setIsKeywordSearch(true);
-            }}
-          />
-          <Radio
-            name="isKeywordSearch"
-            label="現在位置で検索"
-            onChange={() => {
-              setIsKeywordSearch(false);
-            }}
-            crossOrigin={undefined}
-          />
-        </div>
-        {isKeywordSearch && (
+        <RadioGroup
+          className="flex gap-2"
+          value={searchSelected}
+          onValueChange={setSearchSelected}
+        >
+          <Radio name="keywordSelect" value="keywordSelect">
+            住所で検索
+          </Radio>
+          <Radio name="nowPositionSelect" value="nowPositionSelect">
+            現在位置で検索
+          </Radio>
+        </RadioGroup>
+
+        {searchSelected === "keywordSelect" && (
           <Input
             value={addressKeyword}
             className={inputTextStyle()}
-            labelProps={{
-              className: inputTextLabelStyle(),
-            }}
             onChange={(e) => {
               {
                 setAddressKeyword(e.target.value);
               }
             }}
-            placeholder="住所キーワード"
-            crossOrigin={undefined}
+            label="住所キーワード"
+            classNames={{
+              label: "z-1",
+            }}
           />
         )}
-        <Input
-          value={radiusKiloMeter != null ? radiusKiloMeter : ""}
+        <NumberInput
+          hideStepper
+          value={radiusKiloMeter}
           className={inputTextStyle()}
-          labelProps={{
-            className: inputTextLabelStyle(),
+          label="半径(km)"
+          classNames={{
+            label: "z-1",
           }}
           onChange={(e) => {
-            {
-              setRadiusKiloMeter(e.target.value);
+            if (typeof e === "number") {
+              setRadiusKiloMeter(e);
             }
           }}
-          placeholder="半径(km)"
-          crossOrigin={undefined}
         />
         <PostListOrderSettingComponent
           isOrderPostDate={isOrderPostDate}
           switchOrderPostDate={switchOrderPostDate}
         />
         <Button
-          variant="filled"
           className="w-[80px] pl-1 pr-1"
-          onClick={() => {
+          onPress={() => {
             submitSearchPost();
           }}
-          color="light-blue"
+          color="primary"
           disabled={loading}
         >
           検索

@@ -3,7 +3,7 @@
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
+import { Button, Input, NumberInput, Textarea } from "@heroui/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import { POST_CATEGORY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
@@ -21,7 +21,6 @@ import {
   formItemAreaStyle,
   formLabelStyle,
   formSubmitAreaStyle,
-  inputTextLabelStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
 import { getRootCategoryList } from "@/utils/postUtil";
@@ -66,14 +65,13 @@ export const PostCategoryInputComponent: FC<Props> = ({
           parentCategoryId: registeredCategory.parentCategoryId ?? "",
           displayOrder:
             registeredCategory.displayOrder != null
-              ? registeredCategory.displayOrder.toString()
-              : "",
+              ? registeredCategory.displayOrder
+              : undefined,
           detail: registeredCategory.detail ?? "",
         }
       : {
           name: "",
           parentCategoryId: "",
-          displayOrder: "",
           detail: "",
         },
     onSubmit: async ({ value }) => {
@@ -96,16 +94,15 @@ export const PostCategoryInputComponent: FC<Props> = ({
       <form.Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              名前
-            </Typography>
             <Input
+              label="カテゴリー名"
+              isRequired
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
               onChange={(e) => {
                 {
@@ -113,7 +110,6 @@ export const PostCategoryInputComponent: FC<Props> = ({
                   updatePostCategoryInputSession(form.state.values);
                 }
               }}
-              crossOrigin={undefined}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -124,29 +120,22 @@ export const PostCategoryInputComponent: FC<Props> = ({
       <form.Field name="displayOrder">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>表示順</Typography>
-            <Input
+            <NumberInput
+              hideStepper
+              label="表示順"
               name={field.name}
-              value={Number.isNaN(field.state.value) ? "" : field.state.value}
+              value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
               onChange={(e) => {
-                if (e.target.value) {
-                  const order = parseInt(e.target.value);
-                  if (isNaN(order)) {
-                    field.handleChange("");
-                  } else {
-                    field.handleChange(order.toString());
-                  }
-                } else {
-                  field.handleChange("");
+                if (typeof e === "number") {
+                  field.handleChange(e);
+                  updatePostCategoryInputSession(form.state.values);
                 }
-                updatePostCategoryInputSession(form.state.values);
               }}
-              crossOrigin={undefined}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -158,11 +147,11 @@ export const PostCategoryInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex gap-4 items-center">
-              <Typography color="blue-gray">親カテゴリー</Typography>
+              <div className={formLabelStyle()}>親カテゴリー</div>
               <Button
-                color="orange"
+                color="warning"
                 disabled={selectCategoryList.length === 0}
-                onClick={() => {
+                onPress={() => {
                   setParentCategorySelectDialogOpen(true);
                 }}
               >
@@ -208,18 +197,18 @@ export const PostCategoryInputComponent: FC<Props> = ({
       <form.Field name="detail">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>詳細</Typography>
             <Textarea
+              label="詳細"
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
+              classNames={{
+                label: "z-1",
+              }}
               onChange={(e) => {
                 field.handleChange(e.target.value);
                 updatePostCategoryInputSession(form.state.values);
-              }}
-              labelProps={{
-                className: inputTextLabelStyle(),
               }}
             />
           </div>
@@ -227,15 +216,15 @@ export const PostCategoryInputComponent: FC<Props> = ({
       </form.Field>
       <div className={formSubmitAreaStyle()}>
         <Button
-          color="indigo"
+          color="primary"
           disabled={disabledFlag}
-          onClick={form.handleSubmit}
+          onPress={form.handleSubmit}
         >
           {registeredCategory ? "編集" : "登録"}
         </Button>
         <Button
-          color="blue-gray"
-          onClick={() => {
+          color="default"
+          onPress={() => {
             router.push(POST_CATEGORY_LIST_PAGE_PATH);
           }}
         >

@@ -1,12 +1,15 @@
 "use client";
 
-import { Card, Typography } from "@material-tailwind/react";
-
 import { pageTitleStyle } from "@/style/CommonStyle";
 
 export default function Home() {
   const TABLE_HEAD = ["日時", "タイトル", "詳細"];
   const TABLE_ROWS = [
+    {
+      date: "2025/05/27",
+      title: "投稿の位置検索作の追加",
+      detail: "キーワードと現在位置で投稿を検索できる",
+    },
     {
       date: "2025/03/03",
       title: "各種改修",
@@ -23,7 +26,7 @@ export default function Home() {
   return (
     <>
       <div className={pageTitleStyle()}>機能等の更新履歴</div>
-      <Card className=" max-w-[97%]">
+      <div className=" max-w-[97%]">
         <table className="table-auto text-left">
           <thead>
             <tr>
@@ -40,13 +43,7 @@ export default function Home() {
 
                 return (
                   <th key={head} className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none"
-                    >
-                      {head}
-                    </Typography>
+                    <div className="font-normal leading-none">{head}</div>
                   </th>
                 );
               })}
@@ -62,38 +59,20 @@ export default function Home() {
               return (
                 <tr key={date}>
                   <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {date}
-                    </Typography>
+                    <div className="font-normal">{date}</div>
                   </td>
                   <td className={`${classes} min-w-[90px]`}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {title}
-                    </Typography>
+                    <div className="font-normal">{title}</div>
                   </td>
                   <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {detail}
-                    </Typography>
+                    <div className="font-normal">{detail}</div>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </Card>
+      </div>
     </>
   );
 }

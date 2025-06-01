@@ -3,7 +3,7 @@
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
+import { Button, Input, Textarea } from "@heroui/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import { POST_PLACE_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
@@ -18,7 +18,6 @@ import {
   formItemAreaStyle,
   formLabelStyle,
   formSubmitAreaStyle,
-  inputTextLabelStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
 
@@ -72,22 +71,19 @@ export const PostPlaceInputComponent: FC<Props> = ({
       <form.Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              名前
-            </Typography>
             <Input
+              label="場所名"
+              isRequired
               name={field.name}
               value={field.state.value}
-              onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
-              }}
               onChange={(e) => {
                 field.handleChange(e.target.value);
                 updatePostPlaceInputSession(form.state.values);
               }}
-              crossOrigin={undefined}
+              classNames={{
+                label: "z-1",
+              }}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -98,14 +94,13 @@ export const PostPlaceInputComponent: FC<Props> = ({
       <form.Field name="address">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>住所</Typography>
             <Input
+              label="住所"
               name={field.name}
               value={field.state.value}
-              onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
               onChange={(e) => {
                 {
@@ -113,7 +108,6 @@ export const PostPlaceInputComponent: FC<Props> = ({
                   updatePostPlaceInputSession(form.state.values);
                 }
               }}
-              crossOrigin={undefined}
             />
           </div>
         )}
@@ -122,11 +116,11 @@ export const PostPlaceInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex gap-4 items-center">
-              <Typography className={formLabelStyle()}>カテゴリー</Typography>
+              <div className={formLabelStyle()}>カテゴリー</div>
               <Button
-                color="light-green"
+                color="success"
                 disabled={!categoryList || categoryList.length === 0}
-                onClick={() => {
+                onPress={() => {
                   setCategorySelectDialogOpen(true);
                 }}
               >
@@ -174,14 +168,14 @@ export const PostPlaceInputComponent: FC<Props> = ({
       <form.Field name="url">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>参考URL</Typography>
             <Input
+              label="参考URL"
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
               onChange={(e) => {
                 {
@@ -189,7 +183,6 @@ export const PostPlaceInputComponent: FC<Props> = ({
                   updatePostPlaceInputSession(form.state.values);
                 }
               }}
-              crossOrigin={undefined}
             />
           </div>
         )}
@@ -197,20 +190,19 @@ export const PostPlaceInputComponent: FC<Props> = ({
       <form.Field name="detail">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>詳細</Typography>
             <Textarea
+              label="詳細"
               name={field.name}
               value={field.state.value}
-              onBlur={field.handleBlur}
               className={inputTextStyle()}
+              classNames={{
+                label: "z-1",
+              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
                   updatePostPlaceInputSession(form.state.values);
                 }
-              }}
-              labelProps={{
-                className: inputTextLabelStyle(),
               }}
             />
           </div>
@@ -218,15 +210,15 @@ export const PostPlaceInputComponent: FC<Props> = ({
       </form.Field>
       <div className={formSubmitAreaStyle()}>
         <Button
-          color="indigo"
-          loading={disabledFlag}
-          onClick={form.handleSubmit}
+          color="primary"
+          isLoading={disabledFlag}
+          onPress={form.handleSubmit}
         >
           {registeredPlace ? "編集" : "登録"}
         </Button>
         <Button
-          color="blue-gray"
-          onClick={() => {
+          color="secondary"
+          onPress={() => {
             router.push(POST_PLACE_LIST_PAGE_PATH);
           }}
         >

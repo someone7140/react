@@ -3,7 +3,7 @@
 import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { Button, Spinner } from "@material-tailwind/react";
+import { Button, Spinner } from "@heroui/react";
 
 import {
   POST_LIST_PAGE_PATH,
@@ -90,15 +90,15 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
           <div className={pageTitleStyle()}>投稿する場所</div>
           <div className="flex flex-col gap-6 items-center mt-6">
             <Button
-              color="indigo"
-              onClick={onClickPlaceSelect}
+              color="primary"
+              onPress={onClickPlaceSelect}
               className="w-[180px]"
             >
               登録済みの場所を選択
             </Button>
             <Button
-              color="indigo"
-              onClick={onClickAddPlace}
+              color="success"
+              onPress={onClickAddPlace}
               className="w-[180px]"
             >
               新規に場所を追加

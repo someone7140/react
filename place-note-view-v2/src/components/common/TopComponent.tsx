@@ -1,8 +1,8 @@
 "use client";
 
 import { FC } from "react";
+import { Spinner } from "@heroui/react";
 import Link from "next/link";
-import { Spinner } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 
 import {

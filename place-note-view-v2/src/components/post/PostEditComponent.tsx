@@ -3,7 +3,7 @@
 import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner } from "@heroui/react";
 
 import { POST_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostInputComponent } from "@/components/post/input/PostInputComponent";

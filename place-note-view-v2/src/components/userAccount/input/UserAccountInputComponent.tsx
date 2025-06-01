@@ -4,15 +4,7 @@ import React, { FC, useRef, useState } from "react";
 import Image from "next/image";
 import { useForm } from "@tanstack/react-form";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
-import {
-  Button,
-  Input,
-  Popover,
-  PopoverContent,
-  PopoverHandler,
-  Textarea,
-  Typography,
-} from "@material-tailwind/react";
+import { Button, Input, Textarea, Tooltip } from "@heroui/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import {
@@ -25,7 +17,6 @@ import {
   formItemAreaStyle,
   formLabelStyle,
   formSubmitAreaStyle,
-  inputTextLabelStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
 
@@ -69,29 +60,23 @@ export const UserAccountInputComponent: FC<Props> = ({
     },
   });
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const [openPopover, setOpenPopover] = useState(false);
-
-  const popoverTriggers = {
-    onMouseEnter: () => setOpenPopover(true),
-    onMouseLeave: () => setOpenPopover(false),
-  };
+  const [isURLToolTipOpen, setIsURLToolTipOpen] = useState(false);
 
   return (
     <form>
       <form.Field name="userSettingId">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              ユーザID
-            </Typography>
             <Input
+              label="ユーザID"
+              isRequired
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
               placeholder="半角文字で入力"
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
               onChange={(e) => {
                 {
@@ -99,7 +84,6 @@ export const UserAccountInputComponent: FC<Props> = ({
                   updateUserAccountInputSession(form.state.values);
                 }
               }}
-              crossOrigin={undefined}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -110,16 +94,15 @@ export const UserAccountInputComponent: FC<Props> = ({
       <form.Field name="name">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              名前
-            </Typography>
             <Input
+              label="ユーザ名"
+              isRequired
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
               onChange={(e) => {
                 {
@@ -127,7 +110,6 @@ export const UserAccountInputComponent: FC<Props> = ({
                   updateUserAccountInputSession(form.state.values);
                 }
               }}
-              crossOrigin={undefined}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -138,10 +120,8 @@ export const UserAccountInputComponent: FC<Props> = ({
       <form.Field name="detail">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>
-              プロフィール詳細
-            </Typography>
             <Textarea
+              label="プロフィール詳細"
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
@@ -149,9 +129,6 @@ export const UserAccountInputComponent: FC<Props> = ({
               onChange={(e) => {
                 field.handleChange(e.target.value);
                 updateUserAccountInputSession(form.state.values);
-              }}
-              labelProps={{
-                className: inputTextLabelStyle(),
               }}
             />
           </div>
@@ -161,22 +138,23 @@ export const UserAccountInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex items-center">
-              <Typography className={formLabelStyle()}>URL</Typography>
-              <Popover
-                placement="top"
-                open={openPopover}
-                handler={setOpenPopover}
+              <div className={formLabelStyle()}>URL</div>
+              <Tooltip
+                content="プロフィールに関するSNSやブログ等のURLを入力"
+                placement="top-end"
+                isOpen={isURLToolTipOpen}
+                onOpenChange={(open) => setIsURLToolTipOpen(open)}
               >
-                <PopoverHandler {...popoverTriggers}>
-                  <InformationCircleIcon className="w-5 h-5 text-gray-400 mb-1 ml-1" />
-                </PopoverHandler>
-                <PopoverContent>
-                  <span>プロフィールに関するSNSやブログ等のURLを入力</span>
-                </PopoverContent>
-              </Popover>
+                <InformationCircleIcon
+                  className="w-5 h-5 text-gray-400 mb-1 ml-1"
+                  onClick={() => {
+                    setIsURLToolTipOpen(!isURLToolTipOpen);
+                  }}
+                />
+              </Tooltip>
               <Button
-                color="light-green"
-                onClick={() => {
+                color="success"
+                onPress={() => {
                   field.pushValue("");
                   updateUserAccountInputSession(form.state.values);
                 }}
@@ -196,19 +174,18 @@ export const UserAccountInputComponent: FC<Props> = ({
                           value={subField.state.value}
                           onBlur={subField.handleBlur}
                           className={`${inputTextStyle()} min-w-[220px]`}
-                          labelProps={{
-                            className: inputTextLabelStyle(),
+                          classNames={{
+                            label: "z-1",
                           }}
                           onChange={(e) => {
                             subField.handleChange(e.target.value);
                             updateUserAccountInputSession(form.state.values);
                           }}
-                          crossOrigin={undefined}
                         />
                         <Button
-                          color="blue-gray"
+                          color="default"
                           className={`min-w-[80px]`}
-                          onClick={() => {
+                          onPress={() => {
                             field.removeValue(i);
                             updateUserAccountInputSession(form.state.values);
                           }}
@@ -227,13 +204,12 @@ export const UserAccountInputComponent: FC<Props> = ({
       <form.Field name="imageFile">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>アイコン画像</Typography>
+            <div className={formLabelStyle()}>アイコン画像</div>
             <label>
               <div>
                 <Button
-                  variant="filled"
-                  color="light-blue"
-                  onClick={() => {
+                  color="success"
+                  onPress={() => {
                     inputFileRef?.current?.click();
                   }}
                 >
@@ -274,9 +250,9 @@ export const UserAccountInputComponent: FC<Props> = ({
       </form.Field>
       <div className={formSubmitAreaStyle()}>
         <Button
-          color="indigo"
+          color="primary"
           disabled={disabledFlag}
-          onClick={form.handleSubmit}
+          onPress={form.handleSubmit}
         >
           登録
         </Button>

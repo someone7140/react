@@ -7,7 +7,7 @@ import {
   UserPlusIcon,
   EnvelopeIcon,
 } from "@heroicons/react/24/solid";
-import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
+import { MenuItem } from "@szhsin/react-menu";
 
 import {
   INQUIRY_AND_OTHERS_PATH,
@@ -25,48 +25,40 @@ export const NotLoginMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
   const { updateUserAccountInputSession } = useUserAccountInputSessionStore();
 
   return (
-    <List className="gap-4 mt-2">
-      <ListItem
+    <div className="flex flex-col gap-1">
+      <MenuItem
         onClick={() => {
           onCLickMenu(TOP_PAGE_PATH);
         }}
       >
-        <ListItemPrefix>
-          <HomeIcon className="h-5 w-5" />
-        </ListItemPrefix>
-        Top
-      </ListItem>
-      <ListItem
+        <HomeIcon className="h-5 w-5" />
+        <div className="text-xl ml-3">Top</div>
+      </MenuItem>
+      <MenuItem
         onClick={() => {
           onCLickMenu(LOGIN_PAGE_PATH);
         }}
       >
-        <ListItemPrefix>
-          <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
-        </ListItemPrefix>
-        ログイン
-      </ListItem>
-      <ListItem
+        <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
+        <div className="text-xl ml-3">ログイン</div>
+      </MenuItem>
+      <MenuItem
         onClick={() => {
           updateUserAccountInputSession(undefined);
           onCLickMenu(USER_ACCOUNT_REGISTER_PAGE_PATH);
         }}
       >
-        <ListItemPrefix>
-          <UserPlusIcon className="h-5 w-5" />
-        </ListItemPrefix>
-        ユーザ登録
-      </ListItem>
-      <ListItem
+        <UserPlusIcon className="h-5 w-5" />
+        <div className="text-xl ml-3">ユーザ登録</div>
+      </MenuItem>
+      <MenuItem
         onClick={() => {
           onCLickMenu(INQUIRY_AND_OTHERS_PATH);
         }}
       >
-        <ListItemPrefix>
-          <EnvelopeIcon className="h-5 w-5" />
-        </ListItemPrefix>
-        問い合わせ等
-      </ListItem>
-    </List>
+        <EnvelopeIcon className="h-5 w-5" />
+        <div className="text-xl ml-3">問い合わせ等</div>
+      </MenuItem>
+    </div>
   );
 };

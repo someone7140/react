@@ -3,7 +3,7 @@
 import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner } from "@heroui/react";
 
 import { POST_CATEGORY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategoryInputComponent } from "@/components/postCategory/input/PostCategoryInputComponent";
@@ -36,8 +36,8 @@ export const PostCategoryEditComponent: FC<Props> = ({ id }) => {
           ? formData.parentCategoryId
           : null,
         displayOrder:
-          formData.displayOrder != null && formData.displayOrder != ""
-            ? parseInt(formData.displayOrder)
+          formData.displayOrder != null && !isNaN(formData.displayOrder)
+            ? formData.displayOrder
             : null,
         detail: formData.detail ?? null,
       },

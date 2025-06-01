@@ -33,7 +33,7 @@ export const OpenPostRefComponent: FC<Props> = ({
   const { prefectureMap } = useGeolocationService();
 
   return (
-    <div className="min-w-[300px] border p-3">
+    <div className="min-w-[300px] border border-gray-100 p-3">
       <div className={"text-wrap break-all text-black text-2xl"}>
         {post.title}
       </div>

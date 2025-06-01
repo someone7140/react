@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAsyncEffect } from "ahooks";
 import { useGetAccountUserByTokenLazyQuery } from "@/graphql/gen/graphql";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner } from "@heroui/react";
 
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 

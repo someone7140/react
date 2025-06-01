@@ -2,7 +2,7 @@
 
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Checkbox } from "@material-tailwind/react";
+import { Button, Checkbox } from "@heroui/react";
 
 import { POST_CATEGORY_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { PostCategoryDeleteDialogComponent } from "@/components/postCategory/dialog/PostCategoryDeleteDialogComponent";
@@ -40,11 +40,10 @@ export const PostCategoryItemComponent: FC<Props> = ({
       <div className="flex flex-row justify-start items-center w-[100%]">
         {displayCheck && (
           <Checkbox
-            checked={checkedCategoryIds.some((id) => id === category.id)}
-            onChange={() => {
+            isSelected={checkedCategoryIds.some((id) => id === category.id)}
+            onValueChange={() => {
               updateCategoryIdsFunc?.(category.id);
             }}
-            crossOrigin={undefined}
           />
         )}
         <div
@@ -65,8 +64,8 @@ export const PostCategoryItemComponent: FC<Props> = ({
       {displayActionButton && (
         <div className={formSubmitAreaStyle()}>
           <Button
-            color="orange"
-            onClick={() => {
+            color="warning"
+            onPress={() => {
               updatePostCategoryInputSession(undefined);
               router.push(`${POST_CATEGORY_EDIT_PAGE_PATH}?id=${category.id}`);
             }}
@@ -74,8 +73,8 @@ export const PostCategoryItemComponent: FC<Props> = ({
             編集
           </Button>
           <Button
-            color="blue-gray"
-            onClick={() => {
+            color="default"
+            onPress={() => {
               setIsDeleteOpen(true);
             }}
           >
@@ -94,8 +93,8 @@ export const PostCategoryItemComponent: FC<Props> = ({
       {displaySelectButton && (
         <div className={formSubmitAreaStyle()}>
           <Button
-            color="orange"
-            onClick={() => {
+            color="warning"
+            onPress={() => {
               updateCategoryIdsFunc?.(category.id);
             }}
           >

@@ -2,7 +2,13 @@
 
 import React, { FC } from "react";
 import { toast } from "react-toastify";
-import { Button, Dialog } from "@material-tailwind/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+} from "@heroui/react";
 
 import {
   PostCategoryResponse,
@@ -37,29 +43,41 @@ export const PostCategoryDeleteDialogComponent: FC<Props> = ({
     }
   };
 
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      closeDialog();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} handler={closeDialog}>
-      <div className={`${dialogBoxStyle()}`}>
-        <div className="flex justify-start text-lg text-wrap break-all">
-          「{category.name}」を削除します、よろしいですか。
-        </div>
-        <div className="flex gap-10 justify-center mt-3">
-          <Button
-            color="pink"
-            disabled={deleteCategoryLoading}
-            onClick={clickDelete}
-          >
-            削除する
-          </Button>
-          <Button
-            color="blue-gray"
-            onClick={closeDialog}
-            disabled={deleteCategoryLoading}
-          >
-            キャンセル
-          </Button>
-        </div>
-      </div>
-    </Dialog>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalBody className={`${dialogBoxStyle()}`}>
+              <div className="flex justify-start text-lg text-wrap break-all">
+                「{category.name}」を削除します、よろしいですか。
+              </div>
+            </ModalBody>
+            <ModalFooter className="flex gap-10 justify-center">
+              <Button
+                color="danger"
+                disabled={deleteCategoryLoading}
+                onPress={clickDelete}
+              >
+                削除する
+              </Button>
+              <Button
+                color="default"
+                onPress={onClose}
+                disabled={deleteCategoryLoading}
+              >
+                キャンセル
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 };

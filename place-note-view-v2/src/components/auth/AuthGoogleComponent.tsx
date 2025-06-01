@@ -2,7 +2,7 @@
 
 import React, { FC } from "react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
-import { Button } from "@material-tailwind/react";
+import { Button } from "@heroui/react";
 
 type Props = {
   onAuthGoogle: (authCode: string) => void;
@@ -19,12 +19,7 @@ const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle, disabledFlag }) => {
   });
 
   return (
-    <Button
-      variant="filled"
-      disabled={disabledFlag}
-      onClick={login}
-      color="light-blue"
-    >
+    <Button color="primary" disabled={disabledFlag} onPress={login}>
       Google認証
     </Button>
   );

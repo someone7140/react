@@ -2,12 +2,12 @@
 
 import React, { FC } from "react";
 import Link from "next/link";
-import { Button, Input } from "@material-tailwind/react";
+import { Button, Input } from "@heroui/react";
 
 import { MapModalByLatLonComponent } from "@/components/map/MapModalByLatLonComponent";
 import { PostPlaceActionComponent } from "@/components/postPlace/PostPlaceActionComponent";
 import { PostCategoryResponse, PostPlaceResponse } from "@/graphql/gen/graphql";
-import { inputTextLabelStyle, inputTextStyle } from "@/style/FormStyle";
+import { inputTextStyle } from "@/style/FormStyle";
 import { detailTextStyle } from "@/style/PostStyle";
 import { linkStyle } from "@/style/CommonStyle";
 
@@ -39,19 +39,17 @@ export const PostPlaceListDisplayComponent: FC<Props> = ({
           <Input
             value={nameFilter}
             className={`${inputTextStyle({ type: "short" })}`}
-            labelProps={{
-              className: inputTextLabelStyle(),
+            classNames={{
+              label: "z-1",
             }}
             onChange={(e) => setNameFilter(e.target.value)}
             placeholder="検索したい場所名"
-            crossOrigin={undefined}
           />
         </div>
         <Button
-          variant="filled"
           className="w-[80px] !px-2"
-          onClick={onClickFilter}
-          color="light-blue"
+          onPress={onClickFilter}
+          color="success"
         >
           絞り込み
         </Button>
@@ -107,8 +105,8 @@ export const PostPlaceListDisplayComponent: FC<Props> = ({
                 {placeSelectAction && (
                   <div className="mt-4 flex w-[100%] justify-center">
                     <Button
-                      color="orange"
-                      onClick={() => {
+                      color="warning"
+                      onPress={() => {
                         placeSelectAction(place);
                       }}
                     >

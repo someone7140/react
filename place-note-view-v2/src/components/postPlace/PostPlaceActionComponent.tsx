@@ -2,7 +2,7 @@
 
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@material-tailwind/react";
+import { Button } from "@heroui/react";
 
 import { PostPlaceResponse } from "@/graphql/gen/graphql";
 import { PostPlaceDeleteDialogComponent } from "@/components/postPlace/dialog/PostPlaceDeleteDialogComponent";
@@ -28,8 +28,8 @@ export const PostPlaceActionComponent: FC<Props> = ({
     <div className="flex w-[100%] gap-5 justify-center">
       <div>
         <Button
-          color="orange"
-          onClick={() => {
+          color="warning"
+          onPress={() => {
             // 遷移前に入力のセッションをクリアする
             updatePostPlaceInputSession(undefined);
             router.push(`${POST_PLACE_EDIT_PAGE_PATH}?id=${place.id}`);
@@ -40,8 +40,8 @@ export const PostPlaceActionComponent: FC<Props> = ({
       </div>
       <div>
         <Button
-          color="blue-gray"
-          onClick={() => {
+          color="default"
+          onPress={() => {
             setIsOpenDelete(true);
           }}
         >
@@ -59,8 +59,8 @@ export const PostPlaceActionComponent: FC<Props> = ({
       {selectActionForPost && (
         <div>
           <Button
-            color="teal"
-            onClick={() => {
+            color="secondary"
+            onPress={() => {
               selectActionForPost(place);
             }}
           >

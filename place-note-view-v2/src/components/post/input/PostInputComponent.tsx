@@ -5,17 +5,8 @@ import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
-import {
-  Button,
-  Input,
-  Popover,
-  PopoverContent,
-  PopoverHandler,
-  Switch,
-  Textarea,
-  Typography,
-} from "@material-tailwind/react";
 import { useForm } from "@tanstack/react-form";
+import { Button, Input, Switch, Textarea, Tooltip } from "@heroui/react";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
@@ -30,7 +21,6 @@ import {
   formItemAreaStyle,
   formLabelStyle,
   formSubmitAreaStyle,
-  inputTextLabelStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
 
@@ -58,11 +48,6 @@ export const PostInputComponent: FC<Props> = ({
   const [openPopover, setOpenPopover] = useState(false);
   const { postInputSession, updatePostInputSession } =
     usePostInputSessionStore();
-
-  const popoverTriggers = {
-    onMouseEnter: () => setOpenPopover(true),
-    onMouseLeave: () => setOpenPopover(false),
-  };
 
   const form = useForm({
     validators: {
@@ -97,24 +82,21 @@ export const PostInputComponent: FC<Props> = ({
       <form.Field name="title">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              タイトル
-            </Typography>
             <Input
+              label="場所名"
+              isRequired
               name={field.name}
               value={field.state.value}
-              onBlur={field.handleBlur}
               className={inputTextStyle()}
-              labelProps={{
-                className: inputTextLabelStyle(),
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
                   updatePostInputSession(form.state.values);
                 }
               }}
-              crossOrigin={undefined}
+              classNames={{
+                label: "z-1",
+              }}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -125,9 +107,7 @@ export const PostInputComponent: FC<Props> = ({
       <form.Field name="visitedDate">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle({ type: "required" })}>
-              訪問日
-            </Typography>
+            <div className={formLabelStyle({ type: "required" })}>訪問日</div>
             <DatePicker
               selected={field.state.value}
               onChange={(date) => {
@@ -137,15 +117,7 @@ export const PostInputComponent: FC<Props> = ({
               }}
               dateFormat="yyyy/MM/dd"
               popperPlacement="bottom-start"
-              customInput={
-                <Input
-                  className={inputTextStyle()}
-                  labelProps={{
-                    className: inputTextLabelStyle(),
-                  }}
-                  crossOrigin={undefined}
-                />
-              }
+              customInput={<Input className={inputTextStyle()} />}
               popperClassName="!z-20"
             />
             <FormErrorMessageComponent
@@ -157,21 +129,18 @@ export const PostInputComponent: FC<Props> = ({
       <form.Field name="isOpen">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>公開設定</Typography>
-            <div className="flex gap-5 items-center">
-              <Switch
-                color="blue"
-                checked={field.state.value}
-                onChange={(e) => {
-                  {
-                    field.handleChange(e.target.checked);
-                    updatePostInputSession(form.state.values);
-                  }
-                }}
-                crossOrigin={undefined}
-              />
-              <div>{field.state.value ? "公開" : "非公開"}</div>
-            </div>
+            <div className={formLabelStyle()}>公開設定</div>
+            <Switch
+              isSelected={field.state.value}
+              onChange={(e) => {
+                {
+                  field.handleChange(e.target.checked);
+                  updatePostInputSession(form.state.values);
+                }
+              }}
+            >
+              {field.state.value ? "公開" : "非公開"}
+            </Switch>
           </div>
         )}
       </form.Field>
@@ -179,11 +148,11 @@ export const PostInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex gap-4 items-center">
-              <Typography className={formLabelStyle()}>カテゴリー</Typography>
+              <div className={formLabelStyle()}>カテゴリー</div>
               <Button
-                color="light-green"
+                color="success"
                 disabled={!categoryList || categoryList.length === 0}
-                onClick={() => {
+                onPress={() => {
                   setCategorySelectDialogOpen(true);
                 }}
               >
@@ -232,22 +201,23 @@ export const PostInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <div className="flex items-center">
-              <Typography className={formLabelStyle()}>URL</Typography>
-              <Popover
-                placement="top"
-                open={openPopover}
-                handler={setOpenPopover}
+              <div className={formLabelStyle()}>URL</div>
+              <Tooltip
+                content="投稿に関連するSNSやブログ等のURLを入力"
+                placement="top-end"
+                isOpen={openPopover}
+                onOpenChange={(open) => setOpenPopover(open)}
               >
-                <PopoverHandler {...popoverTriggers}>
-                  <InformationCircleIcon className="w-5 h-5 text-gray-400 mb-1 ml-1" />
-                </PopoverHandler>
-                <PopoverContent>
-                  <span>投稿に関連するSNSやブログ等のURLを入力</span>
-                </PopoverContent>
-              </Popover>
+                <InformationCircleIcon
+                  className="w-5 h-5 text-gray-400 mb-1 ml-1"
+                  onClick={() => {
+                    setOpenPopover(!openPopover);
+                  }}
+                />
+              </Tooltip>
               <Button
-                color="light-green"
-                onClick={() => {
+                color="success"
+                onPress={() => {
                   field.pushValue("");
                   updatePostInputSession(form.state.values);
                 }}
@@ -267,21 +237,20 @@ export const PostInputComponent: FC<Props> = ({
                           value={subField.state.value}
                           onBlur={subField.handleBlur}
                           className={`${inputTextStyle()} min-w-[220px]`}
-                          labelProps={{
-                            className: inputTextLabelStyle(),
-                          }}
                           onChange={(e) => {
                             {
                               subField.handleChange(e.target.value);
                               updatePostInputSession(form.state.values);
                             }
                           }}
-                          crossOrigin={undefined}
+                          classNames={{
+                            label: "z-1",
+                          }}
                         />
                         <Button
-                          color="blue-gray"
+                          color="default"
                           className={`min-w-[80px]`}
-                          onClick={() => {
+                          onPress={() => {
                             field.removeValue(i);
                             updatePostInputSession(form.state.values);
                           }}
@@ -300,8 +269,8 @@ export const PostInputComponent: FC<Props> = ({
       <form.Field name="detail">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <Typography className={formLabelStyle()}>詳細など</Typography>
             <Textarea
+              label="詳細など"
               name={field.name}
               value={field.state.value}
               onBlur={field.handleBlur}
@@ -312,8 +281,8 @@ export const PostInputComponent: FC<Props> = ({
                   updatePostInputSession(form.state.values);
                 }
               }}
-              labelProps={{
-                className: inputTextLabelStyle(),
+              classNames={{
+                label: "z-1",
               }}
             />
           </div>
@@ -321,15 +290,15 @@ export const PostInputComponent: FC<Props> = ({
       </form.Field>
       <div className={formSubmitAreaStyle()}>
         <Button
-          color="indigo"
+          color="primary"
           disabled={disabledFlag}
-          onClick={form.handleSubmit}
+          onPress={form.handleSubmit}
         >
           {editPostData ? "編集" : "登録"}
         </Button>
         <Button
-          color="blue-gray"
-          onClick={() => {
+          color="default"
+          onPress={() => {
             const listPath = editPostData
               ? `${POST_PLACE_LIST_PAGE_PATH}?editPostId=${editPostData.id}`
               : POST_PLACE_LIST_PAGE_PATH;

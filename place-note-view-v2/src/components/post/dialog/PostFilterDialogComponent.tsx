@@ -1,16 +1,17 @@
 "use client";
 
 import React, { FC, useState } from "react";
+import { Key } from "@react-types/shared";
 import {
   Button,
-  Dialog,
-  Tabs,
-  TabsHeader,
-  TabsBody,
-  Tab,
-  TabPanel,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
   Spinner,
-} from "@material-tailwind/react";
+  Tab,
+  Tabs,
+} from "@heroui/react";
 
 import { PostListFilter } from "../PostListComponent";
 import { PostCategoryDisplayComponent } from "@/components/postCategory/ref/PostCategoryDisplayComponent";
@@ -42,7 +43,7 @@ export const PostFilterDialogComponent: FC<Props> = ({
   setPlaceNameFilter,
   onClickPlaceFilter,
 }) => {
-  const [activeTab, setActiveTab] = useState(
+  const [activeTab, setActiveTab] = useState<Key>(
     postFilter?.category ? "category" : "place"
   );
 
@@ -66,81 +67,59 @@ export const PostFilterDialogComponent: FC<Props> = ({
     setPostFilter({ place: place });
   };
 
+  const onOpenChange = (isOpenChange: boolean) => {
+    if (!isOpenChange) closeDialog();
+  };
+
   return (
-    <Dialog open={isOpen} handler={handleClose}>
-      {!categoryAndPlaceData && <Spinner />}
-      {categoryAndPlaceData && (
-        <div className={`${dialogBoxStyle()}`} tabIndex={0}>
-          <Tabs value={activeTab} className="max-w-[99%]">
-            <TabsHeader
-              className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
-              indicatorProps={{
-                id: "tabs-header-indicator",
-                className:
-                  "bg-transparent border-b-2 border-gray-900 shadow-none rounded-none",
-              }}
-            >
-              <Tab
-                value={"place"}
-                onClick={() => setActiveTab("place")}
-                className={
-                  "[&_#tabs-header-indicator]:!translate-x-0 " +
-                  (activeTab === "place" ? "text-gray-900" : "")
-                }
-              >
-                場所を選択
-              </Tab>
-              <Tab
-                value={"category"}
-                onClick={() => setActiveTab("category")}
-                className={
-                  "[&_#tabs-header-indicator]:!translate-x-0 " +
-                  (activeTab === "category" ? "text-gray-900" : "")
-                }
-              >
-                カテゴリーを選択
-              </Tab>
-            </TabsHeader>
-            <TabsBody
-              animate={{
-                initial: { opacity: 1 },
-                mount: { opacity: 1 },
-                unmount: { opacity: 1 },
-              }}
-            >
-              {activeTab === "place" ? (
-                <TabPanel value={"place"}>
-                  <div className="flex flex-col mb-3 overflow-scroll max-h-[60vh] !max-w-[95%] min-w-[280px]">
-                    <PostPlaceListDisplayComponent
-                      placeList={categoryAndPlaceData.getPostPlaces}
-                      categoryList={categoryAndPlaceData.getMyPostCategories}
-                      nameFilter={placeNameFilter}
-                      setNameFilter={setPlaceNameFilter}
-                      onClickFilter={onClickPlaceFilter}
-                      placeSelectAction={placeSelect}
-                    />
-                  </div>
-                </TabPanel>
-              ) : (
-                <TabPanel value={"category"}>
-                  <div className="flex justify-start mb-3 overflow-scroll max-h-[60vh] max-w-[99%] min-w-[280px]">
-                    <PostCategoryDisplayComponent
-                      categories={categoryAndPlaceData.getMyPostCategories}
-                      updateCategoryIdsFunc={categoryIdSelect}
-                      displaySelectButton
-                    />
-                  </div>
-                </TabPanel>
-              )}
-            </TabsBody>
-          </Tabs>
-          <div className="flex justify-center mt-3 mb-3">
-            <Button color="blue-gray" onClick={handleClose}>
-              閉じる
-            </Button>
-          </div>
-        </div>
-      )}
-    </Dialog>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            {!categoryAndPlaceData && <Spinner />}
+            {categoryAndPlaceData && (
+              <>
+                <ModalBody className={`${dialogBoxStyle()}`} tabIndex={0}>
+                  <Tabs
+                    className="max-w-[99%]"
+                    selectedKey={activeTab}
+                    onSelectionChange={setActiveTab}
+                  >
+                    <Tab key="place" title="場所を選択">
+                      <div className="flex flex-col mb-3 overflow-scroll max-h-[60vh] !max-w-[95%] min-w-[280px]">
+                        <PostPlaceListDisplayComponent
+                          placeList={categoryAndPlaceData.getPostPlaces}
+                          categoryList={
+                            categoryAndPlaceData.getMyPostCategories
+                          }
+                          nameFilter={placeNameFilter}
+                          setNameFilter={setPlaceNameFilter}
+                          onClickFilter={onClickPlaceFilter}
+                          placeSelectAction={placeSelect}
+                        />
+                      </div>
+                    </Tab>
+                    <Tab key="category" title="カテゴリーを選択">
+                      <div className="flex justify-start mb-3 overflow-scroll max-h-[60vh] max-w-[99%] min-w-[280px]">
+                        <PostCategoryDisplayComponent
+                          categories={categoryAndPlaceData.getMyPostCategories}
+                          updateCategoryIdsFunc={categoryIdSelect}
+                          displaySelectButton
+                        />
+                      </div>
+                    </Tab>
+                  </Tabs>
+                </ModalBody>
+                <ModalFooter className="flex justify-center mb-3">
+                  <Button color="default" onPress={onClose}>
+                    閉じる
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 };

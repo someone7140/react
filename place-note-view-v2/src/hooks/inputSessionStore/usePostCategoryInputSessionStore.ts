@@ -11,7 +11,7 @@ export const postCategoryInputFormSchema = z.object({
       message: "名前は必須です",
     }),
   parentCategoryId: z.string().optional(),
-  displayOrder: z.string().optional(),
+  displayOrder: z.number().or(z.nan()).optional(),
   detail: z.string().optional(),
 });
 

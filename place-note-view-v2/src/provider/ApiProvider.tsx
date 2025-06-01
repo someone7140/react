@@ -4,7 +4,7 @@ import {
   ApolloClient,
   ApolloNextAppProvider,
   InMemoryCache,
-} from "@apollo/experimental-nextjs-app-support";
+} from "@apollo/client-integration-nextjs";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 import { useAuthManagement } from "@/hooks/useAuthManagement";

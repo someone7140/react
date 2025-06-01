@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { HeroUIProvider } from "@heroui/react";
 
 import ogImage from "./ogp-image.png";
 import { GoogleAnalyticsComponent } from "@/components/common/GoogleAnalyticsComponent";
 import { HeaderComponent } from "@/components/common/HeaderComponent";
-import { SidebarComponent } from "@/components/menu/SidebarComponent";
 import { ApiProvider } from "@/provider/ApiProvider";
 import { AuthProvider } from "@/provider/AuthProvider";
 import "@/style/globals.css";
@@ -52,31 +52,32 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ApiProvider>
-          <AuthProvider>
-            <HeaderComponent />
-            <SidebarComponent />
-            <div className="flex justify-center mt-4">
-              <div className="max-w-[95%] min-w-[300px]">
-                <div className="flex justify-start w-[100%] ml-3 mb-4">
-                  <div>{children}</div>
+        <HeroUIProvider>
+          <ApiProvider>
+            <AuthProvider>
+              <HeaderComponent />
+              <div className="flex justify-center mt-4">
+                <div className="max-w-[95%] min-w-[300px]">
+                  <div className="flex justify-start w-[100%] ml-3 mb-4">
+                    <div>{children}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-          </AuthProvider>
-        </ApiProvider>
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
+            </AuthProvider>
+          </ApiProvider>
+        </HeroUIProvider>
       </body>
     </html>
   );

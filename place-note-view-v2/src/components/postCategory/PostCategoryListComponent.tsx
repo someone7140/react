@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner } from "@heroui/react";
 
 import { PostCategoryDisplayComponent } from "@/components/postCategory/ref/PostCategoryDisplayComponent";
 import { useGetMyPostCategoriesQuery } from "@/graphql/gen/graphql";

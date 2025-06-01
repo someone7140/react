@@ -1,20 +1,6 @@
-import withMT from "@material-tailwind/react/utils/withMT";
+import { heroui } from "@heroui/react";
 
-module.exports = withMT({
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/style/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        noix: " #7E5324",
-      },
-    },
-  },
-  plugins: [],
-});
+module.exports = {
+  content: ["./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"],
+  plugins: [heroui()],
+};

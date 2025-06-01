@@ -1,7 +1,13 @@
 "use client";
 
 import React, { FC } from "react";
-import { Button, Dialog } from "@material-tailwind/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+} from "@heroui/react";
 
 import { PostCategoryDisplayComponent } from "@/components/postCategory/ref/PostCategoryDisplayComponent";
 import { PostCategoryResponse } from "@/graphql/gen/graphql";
@@ -22,23 +28,37 @@ export const PostCategorySelectDialogComponent: FC<Props> = ({
   updateCategoryIdsFunc,
   selectedIds,
 }) => {
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      closeDialog();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} handler={closeDialog}>
-      <div className={`${dialogBoxStyle({ type: "scroll" })} max-h-[75vh]`}>
-        <div className="flex justify-start mb-3 w-[99%]">
-          <PostCategoryDisplayComponent
-            categories={categories}
-            updateCategoryIdsFunc={updateCategoryIdsFunc}
-            displayCheck
-            checkedCategoryIds={selectedIds}
-          />
-        </div>
-      </div>
-      <div className="flex justify-center mt-3 mb-3">
-        <Button color="blue-gray" onClick={closeDialog}>
-          閉じる
-        </Button>
-      </div>
-    </Dialog>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalBody
+              className={`${dialogBoxStyle({ type: "scroll" })} max-h-[75vh]`}
+            >
+              <div className="flex justify-start mb-3 w-[99%]">
+                <PostCategoryDisplayComponent
+                  categories={categories}
+                  updateCategoryIdsFunc={updateCategoryIdsFunc}
+                  displayCheck
+                  checkedCategoryIds={selectedIds}
+                />
+              </div>
+            </ModalBody>
+            <ModalFooter className="flex justify-center mb-3">
+              <Button color="default" onPress={onClose}>
+                閉じる
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 };

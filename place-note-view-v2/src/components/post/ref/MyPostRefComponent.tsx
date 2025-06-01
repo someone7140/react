@@ -3,7 +3,7 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@material-tailwind/react";
+import { Button } from "@heroui/react";
 
 import { InstagramComponent } from "./InstagramComponent";
 import { WebNoInfoComponent } from "./WebNoInfoComponent";
@@ -40,7 +40,7 @@ export const MyPostRefComponent: FC<Props> = ({
   const { updatePostInputSession } = usePostInputSessionStore();
 
   return (
-    <div className="min-w-[300px] border p-3">
+    <div className="min-w-[300px] border border-gray-100 p-3">
       <div className={"text-wrap break-all text-black text-2xl"}>
         {post.title}
       </div>
@@ -114,8 +114,8 @@ export const MyPostRefComponent: FC<Props> = ({
       </div>
       <div className={"flex gap-3 mt-2 justify-center"}>
         <Button
-          color="orange"
-          onClick={() => {
+          color="warning"
+          onPress={() => {
             updatePostInputSession(undefined);
             router.push(`${POST_EDIT_PAGE_PATH}?id=${post.id}`);
           }}
@@ -123,8 +123,8 @@ export const MyPostRefComponent: FC<Props> = ({
           編集
         </Button>
         <Button
-          color="blue-gray"
-          onClick={() => {
+          color="default"
+          onPress={() => {
             setIsDeleteOpen(true);
           }}
         >

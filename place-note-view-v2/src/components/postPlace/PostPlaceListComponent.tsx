@@ -2,10 +2,9 @@
 
 import React, { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner } from "@heroui/react";
 
 import { PostPlaceListDisplayComponent } from "./list/PostPlaceListDisplayComponent";
-
 import {
   POST_ADD_PAGE_PATH,
   POST_EDIT_PAGE_PATH,

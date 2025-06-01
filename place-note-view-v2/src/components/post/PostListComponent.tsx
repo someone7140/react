@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import { Button, Spinner } from "@material-tailwind/react";
+import { Button, Spinner } from "@heroui/react";
 
 import { PostFilterDialogComponent } from "./dialog/PostFilterDialogComponent";
 import { PostListDisplayComponent } from "./list/PostListDisplayComponent";
@@ -89,23 +89,21 @@ export const PostListComponent: FC = ({}) => {
                   <div className="flex flex-col gap-1">
                     <div className="flex flex-row gap-3">
                       <Button
-                        variant="filled"
                         className="w-[80px] pl-1 pr-1"
-                        onClick={() => {
+                        onPress={() => {
                           setIsOpenFilterDialog(true);
                         }}
-                        color="light-blue"
+                        color="primary"
                       >
                         絞り込み
                       </Button>
                       {postFilter && (
                         <Button
-                          variant="filled"
                           className="w-[70px] pl-1 pr-1"
-                          onClick={() => {
+                          onPress={() => {
                             setPostFilter(undefined);
                           }}
-                          color="blue-gray"
+                          color="default"
                         >
                           クリア
                         </Button>

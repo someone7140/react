@@ -3,9 +3,9 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Spinner } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { LinkIcon, UserIcon } from "@heroicons/react/24/solid";
+import { Spinner } from "@heroui/react";
 
 import { PostListDisplayComponent } from "@/components/post/list/PostListDisplayComponent";
 import { useGetOpenPostsWithAccountInfoQuery } from "@/graphql/gen/graphql";
@@ -58,7 +58,7 @@ export const UserAccountProfileComponent: FC<Props> = ({ userSettingId }) => {
           </div>
         </div>
       </div>
-      <div className={`${detailTextStyle()} ml-1`}>{userInfo.detail}</div>
+      <div className={`${detailTextStyle()} ml-1 mt-2`}>{userInfo.detail}</div>
       {userInfo.urlList.length > 0 && (
         <div className="flex flex-col mt-2 ml-2 gap-2">
           {userInfo.urlList.map((url, i) => {
