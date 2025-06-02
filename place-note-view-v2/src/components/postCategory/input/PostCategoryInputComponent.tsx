@@ -101,9 +101,6 @@ export const PostCategoryInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
@@ -127,9 +124,6 @@ export const PostCategoryInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 if (typeof e === "number") {
                   field.handleChange(e);
@@ -203,9 +197,6 @@ export const PostCategoryInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 field.handleChange(e.target.value);
                 updatePostCategoryInputSession(form.state.values);

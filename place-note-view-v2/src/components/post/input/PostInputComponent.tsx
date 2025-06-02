@@ -94,9 +94,6 @@ export const PostInputComponent: FC<Props> = ({
                   updatePostInputSession(form.state.values);
                 }
               }}
-              classNames={{
-                label: "z-1",
-              }}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -243,9 +240,6 @@ export const PostInputComponent: FC<Props> = ({
                               updatePostInputSession(form.state.values);
                             }
                           }}
-                          classNames={{
-                            label: "z-1",
-                          }}
                         />
                         <Button
                           color="default"
@@ -280,9 +274,6 @@ export const PostInputComponent: FC<Props> = ({
                   field.handleChange(e.target.value);
                   updatePostInputSession(form.state.values);
                 }
-              }}
-              classNames={{
-                label: "z-1",
               }}
             />
           </div>

@@ -141,9 +141,6 @@ export const PostSearchLocationComponent: FC = ({}) => {
               }
             }}
             label="住所キーワード"
-            classNames={{
-              label: "z-1",
-            }}
           />
         )}
         <NumberInput
@@ -151,9 +148,6 @@ export const PostSearchLocationComponent: FC = ({}) => {
           value={radiusKiloMeter}
           className={inputTextStyle()}
           label="半径(km)"
-          classNames={{
-            label: "z-1",
-          }}
           onChange={(e) => {
             if (typeof e === "number") {
               setRadiusKiloMeter(e);

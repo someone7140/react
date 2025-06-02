@@ -39,9 +39,6 @@ export const PostPlaceListDisplayComponent: FC<Props> = ({
           <Input
             value={nameFilter}
             className={`${inputTextStyle({ type: "short" })}`}
-            classNames={{
-              label: "z-1",
-            }}
             onChange={(e) => setNameFilter(e.target.value)}
             placeholder="検索したい場所名"
           />

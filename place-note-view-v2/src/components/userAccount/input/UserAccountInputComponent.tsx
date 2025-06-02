@@ -75,9 +75,6 @@ export const UserAccountInputComponent: FC<Props> = ({
               onBlur={field.handleBlur}
               placeholder="半角文字で入力"
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
@@ -101,9 +98,6 @@ export const UserAccountInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
@@ -174,9 +168,6 @@ export const UserAccountInputComponent: FC<Props> = ({
                           value={subField.state.value}
                           onBlur={subField.handleBlur}
                           className={`${inputTextStyle()} min-w-[220px]`}
-                          classNames={{
-                            label: "z-1",
-                          }}
                           onChange={(e) => {
                             subField.handleChange(e.target.value);
                             updateUserAccountInputSession(form.state.values);

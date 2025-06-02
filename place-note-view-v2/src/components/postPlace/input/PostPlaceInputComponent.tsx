@@ -81,9 +81,6 @@ export const PostPlaceInputComponent: FC<Props> = ({
                 field.handleChange(e.target.value);
                 updatePostPlaceInputSession(form.state.values);
               }}
-              classNames={{
-                label: "z-1",
-              }}
             />
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
@@ -99,9 +96,6 @@ export const PostPlaceInputComponent: FC<Props> = ({
               name={field.name}
               value={field.state.value}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
@@ -174,9 +168,6 @@ export const PostPlaceInputComponent: FC<Props> = ({
               value={field.state.value}
               onBlur={field.handleBlur}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
@@ -195,9 +186,6 @@ export const PostPlaceInputComponent: FC<Props> = ({
               name={field.name}
               value={field.state.value}
               className={inputTextStyle()}
-              classNames={{
-                label: "z-1",
-              }}
               onChange={(e) => {
                 {
                   field.handleChange(e.target.value);
