@@ -2,11 +2,18 @@
 
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@tanstack/react-form";
-import { Button, Input, Switch, Textarea, Tooltip } from "@heroui/react";
+import {
+  Button,
+  DatePicker,
+  Input,
+  Switch,
+  Textarea,
+  Tooltip,
+} from "@heroui/react";
+import { fromDate } from "@internationalized/date";
+import { I18nProvider } from "@react-aria/i18n";
 
 import { FormErrorMessageComponent } from "@/components/common/FormErrorMessageComponent";
 import { PostCategorySelectDialogComponent } from "@/components/postCategory/dialog/PostCategorySelectDialogComponent";
@@ -83,7 +90,7 @@ export const PostInputComponent: FC<Props> = ({
         {(field) => (
           <div className={formItemAreaStyle()}>
             <Input
-              label="場所名"
+              label="タイトル"
               isRequired
               name={field.name}
               value={field.state.value}
@@ -104,19 +111,19 @@ export const PostInputComponent: FC<Props> = ({
       <form.Field name="visitedDate">
         {(field) => (
           <div className={formItemAreaStyle()}>
-            <div className={formLabelStyle({ type: "required" })}>訪問日</div>
-            <DatePicker
-              selected={field.state.value}
-              onChange={(date) => {
-                const updateValue = date ?? field.state.value;
-                field.setValue(updateValue);
-                updatePostInputSession(form.state.values);
-              }}
-              dateFormat="yyyy/MM/dd"
-              popperPlacement="bottom-start"
-              customInput={<Input className={inputTextStyle()} />}
-              popperClassName="!z-20"
-            />
+            <I18nProvider locale="ja-JP">
+              <DatePicker
+                className="max-w-[284px]"
+                label="訪問日"
+                value={fromDate(field.state.value, "Asia/Tokyo")}
+                granularity="day"
+                onChange={(date) => {
+                  const updateValue = date ? date.toDate() : field.state.value;
+                  field.setValue(updateValue);
+                  updatePostInputSession(form.state.values);
+                }}
+              />
+            </I18nProvider>
             <FormErrorMessageComponent
               message={field.state.meta.errors[0]?.message}
             />
