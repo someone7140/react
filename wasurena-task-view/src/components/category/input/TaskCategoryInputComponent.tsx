@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import { Button, NumberInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
+import { TaskCategoryResponse } from "@/graphql/gen/graphql";
 import { formAreaStyle, textInputStyle } from "@/style/formStyle";
 
 export type TaskCategoryInputFormValues = {
@@ -14,18 +15,25 @@ export type TaskCategoryInputFormValues = {
 type Props = {
   submitTaskCategory: (user: TaskCategoryInputFormValues) => void;
   submitDisabled?: boolean;
+  registeredCategory?: TaskCategoryResponse;
 };
 
 export const TaskCategoryInputComponent: FC<Props> = ({
   submitTaskCategory,
   submitDisabled,
+  registeredCategory,
 }) => {
   const form = useForm<TaskCategoryInputFormValues>({
     mode: "uncontrolled",
-    initialValues: {
-      name: "",
-      displayOrder: undefined,
-    },
+    initialValues: registeredCategory
+      ? {
+          name: registeredCategory.name,
+          displayOrder: registeredCategory.displayOrder ?? undefined,
+        }
+      : {
+          name: "",
+          displayOrder: undefined,
+        },
 
     validate: {
       name: (value) => {

@@ -43,6 +43,10 @@ export const usePostInputSessionStore = create<PostInputSessionStore>()(
               visitedDateStr: input?.visitedDate.toDateString(),
             },
           });
+        } else {
+          set({
+            postInputSession: undefined,
+          });
         }
       },
     }),

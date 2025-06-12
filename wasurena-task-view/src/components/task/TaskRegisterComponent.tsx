@@ -15,14 +15,21 @@ import {
   DeadLineCheck,
   InputMaybe,
   useCreateTaskMutation,
-  useGetTaskCategoriesQuery,
+  useGetTaskCategoriesForTaskDefinitionQueryQuery,
 } from "@/graphql/gen/graphql";
-import { DeadLineSubCheckDailyHour } from "@/hooks/useTaskUtil";
+import {
+  DeadLineSubCheckDailyHour,
+  DeadLineSubCheckMonthlyDay,
+  DeadLineSubCheckWeekInterval,
+  DeadLineSubCheckWeeklyDay,
+  DeadLineSubCheckYearDate,
+} from "@/hooks/useTaskUtil";
 
 export const TaskRegisterComponent: FC = ({}) => {
-  const [{ data: categoryData }] = useGetTaskCategoriesQuery({
-    requestPolicy: "network-only",
-  });
+  const [{ data: categoryData }] =
+    useGetTaskCategoriesForTaskDefinitionQueryQuery({
+      requestPolicy: "network-only",
+    });
   const [createTaskMutationResult, createTaskMutation] =
     useCreateTaskMutation();
   const router = useRouter();
@@ -34,6 +41,7 @@ export const TaskRegisterComponent: FC = ({}) => {
         ? (formValues.deadLineCheck as DeadLineCheck)
         : null;
     let deadLineCheckSubSetting: InputMaybe<object> | null = null;
+    // 時間単位の設定がされていた場合
     if (
       deadLineCheck === DeadLineCheck.DailyHour &&
       formValues.deadLineCheckSubSettingHour != null
@@ -41,6 +49,47 @@ export const TaskRegisterComponent: FC = ({}) => {
       deadLineCheckSubSetting = {
         hourInterval: formValues.deadLineCheckSubSettingHour,
       } as DeadLineSubCheckDailyHour;
+    }
+    // 週の曜日設定がされていた場合
+    if (
+      deadLineCheck === DeadLineCheck.WeeklyDay &&
+      formValues.deadLineCheckSubSettingWeeklyDay != null
+    ) {
+      deadLineCheckSubSetting = {
+        weeklyDay: parseInt(formValues.deadLineCheckSubSettingWeeklyDay), // 文字列で選択してるので数値にparse
+      } as DeadLineSubCheckWeeklyDay;
+    }
+    // 週の間隔設定がされていた場合
+    if (
+      deadLineCheck === DeadLineCheck.WeeklyDayInterval &&
+      formValues.deadLineCheckSubSettingWeekInterval != null
+    ) {
+      deadLineCheckSubSetting = {
+        weekInterval: formValues.deadLineCheckSubSettingWeekInterval,
+      } as DeadLineSubCheckWeekInterval;
+    }
+    // 月の指定日設定がされていた場合
+    if (
+      deadLineCheck === DeadLineCheck.MonthDate &&
+      formValues.deadLineCheckSubSettingMonthDay != null
+    ) {
+      deadLineCheckSubSetting = {
+        monthlyDay: formValues.deadLineCheckSubSettingMonthDay,
+      } as DeadLineSubCheckMonthlyDay;
+    }
+    // 年の日付設定がされていた場合
+    if (
+      deadLineCheck === DeadLineCheck.YearOnceDate &&
+      formValues.deadLineCheckSubSettingYearMonth != null &&
+      formValues.deadLineCheckSubSettingYearDay != null
+    ) {
+      deadLineCheckSubSetting = {
+        yearDate: `${formValues.deadLineCheckSubSettingYearMonth
+          .toString()
+          .padStart(2, "0")}-${formValues.deadLineCheckSubSettingYearDay
+          .toString()
+          .padStart(2, "0")}`,
+      } as DeadLineSubCheckYearDate;
     }
 
     const notificationFlag =

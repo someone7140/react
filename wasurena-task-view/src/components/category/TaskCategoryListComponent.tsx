@@ -2,11 +2,15 @@
 
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { Button, Card, Loader } from "@mantine/core";
 
 import { TaskCategoryDeleteModalComponent } from "./modal/TaskCategoryDeleteModalComponent";
-import { CATEGORY_REGISTER_PAGE_PATH } from "@/constants/MenuPathConstants";
+import {
+  CATEGORY_EDIT_PAGE_PATH,
+  CATEGORY_REGISTER_PAGE_PATH,
+} from "@/constants/MenuPathConstants";
 import {
   TaskCategoryResponse,
   useGetTaskCategoriesQuery,
@@ -20,6 +24,7 @@ export const TaskCategoryListComponent: FC = ({}) => {
   const [deleteCategory, setDeleteCategory] = useState<
     TaskCategoryResponse | undefined
   >(undefined);
+  const router = useRouter();
 
   const refetchCategoryList = () => {
     reexecuteQuery({ requestPolicy: "network-only" });
@@ -72,7 +77,16 @@ export const TaskCategoryListComponent: FC = ({}) => {
                         <div>表示順：{category.displayOrder}</div>
                       )}
                       <div className="flex justify-center mt-2 gap-3">
-                        <Button color="orange">編集</Button>
+                        <Button
+                          color="orange"
+                          onClick={() => {
+                            router.push(
+                              `${CATEGORY_EDIT_PAGE_PATH}?id=${category.id}`
+                            );
+                          }}
+                        >
+                          編集
+                        </Button>
                         <Button
                           color="gray"
                           onClick={() => {

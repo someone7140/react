@@ -20,6 +20,11 @@ export type Scalars = {
   Time: { input: Date; output: Date; }
 };
 
+export type CategoryInput = {
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type CreateUserRegisterTokenResponse = {
   __typename?: 'CreateUserRegisterTokenResponse';
   lineName: FieldWrapper<Scalars['String']['output']>;
@@ -46,11 +51,12 @@ export type Mutation = {
   deleteTask: FieldWrapper<Scalars['Boolean']['output']>;
   deleteTaskExecute: FieldWrapper<Scalars['Boolean']['output']>;
   executeScheduleCheckBatch: FieldWrapper<Scalars['Boolean']['output']>;
+  updateCategory: FieldWrapper<Scalars['Boolean']['output']>;
 };
 
 
 export type MutationCreateCategoryArgs = {
-  input: NewCategory;
+  input: CategoryInput;
 };
 
 
@@ -88,9 +94,10 @@ export type MutationExecuteScheduleCheckBatchArgs = {
   token: Scalars['String']['input'];
 };
 
-export type NewCategory = {
-  displayOrder?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
+
+export type MutationUpdateCategoryArgs = {
+  id: Scalars['String']['input'];
+  input: CategoryInput;
 };
 
 export type NewTask = {
@@ -118,6 +125,7 @@ export type Query = {
   __typename?: 'Query';
   getRegisteredUser?: Maybe<FieldWrapper<UserAccountResponse>>;
   getTaskCategories?: Maybe<Array<FieldWrapper<TaskCategoryResponse>>>;
+  getTaskCategoryById?: Maybe<FieldWrapper<TaskCategoryResponse>>;
   getTaskCheckDisplayList?: Maybe<Array<FieldWrapper<TaskCheckDisplayResponse>>>;
   getTaskDefinitions?: Maybe<Array<FieldWrapper<TaskDefinitionResponse>>>;
   getTaskExecuteListByDefinitionId?: Maybe<Array<FieldWrapper<TaskExecuteResponse>>>;
@@ -128,6 +136,11 @@ export type Query = {
 
 export type QueryGetRegisteredUserArgs = {
   lineAuthCode: Scalars['String']['input'];
+};
+
+
+export type QueryGetTaskCategoryByIdArgs = {
+  categoryId: Scalars['String']['input'];
 };
 
 
@@ -222,6 +235,20 @@ export type GetRegisteredUserQueryVariables = Exact<{
 
 export type GetRegisteredUserQuery = { __typename?: 'Query', getRegisteredUser?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
 
+export type TaskCategoryObjFragment = { __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null };
+
+export type GetTaskCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskCategoriesQuery = { __typename?: 'Query', getTaskCategories?: Array<{ __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null }> | null };
+
+export type GetTaskCategoryByIdQueryVariables = Exact<{
+  taskCategoryId: Scalars['String']['input'];
+}>;
+
+
+export type GetTaskCategoryByIdQuery = { __typename?: 'Query', getTaskCategoryById?: { __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null } | null };
+
 export type CreateTaskCategoryMutationVariables = Exact<{
   name: Scalars['String']['input'];
   displayOrder?: InputMaybe<Scalars['Int']['input']>;
@@ -230,10 +257,14 @@ export type CreateTaskCategoryMutationVariables = Exact<{
 
 export type CreateTaskCategoryMutation = { __typename?: 'Mutation', createCategory: boolean };
 
-export type GetTaskCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+export type UpdateTaskCategoryMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  displayOrder?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
-export type GetTaskCategoriesQuery = { __typename?: 'Query', getTaskCategories?: Array<{ __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null }> | null };
+export type UpdateTaskCategoryMutation = { __typename?: 'Mutation', updateCategory: boolean };
 
 export type DeleteTaskCategoryMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -294,6 +325,11 @@ export type DeleteTaskMutationVariables = Exact<{
 
 export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: boolean };
 
+export type GetTaskCategoriesForTaskDefinitionQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskCategoriesForTaskDefinitionQueryQuery = { __typename?: 'Query', getTaskCategories?: Array<{ __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null }> | null };
+
 export const AccountUserObjFragmentDoc = gql`
     fragment AccountUserObj on UserAccountResponse {
   token
@@ -301,6 +337,13 @@ export const AccountUserObjFragmentDoc = gql`
   userSettingId
   imageUrl
   isLineBotFollow
+}
+    `;
+export const TaskCategoryObjFragmentDoc = gql`
+    fragment TaskCategoryObj on TaskCategoryResponse {
+  id
+  name
+  displayOrder
 }
     `;
 export const GetUserRegisterTokenDocument = gql`
@@ -350,6 +393,28 @@ export const GetRegisteredUserDocument = gql`
 export function useGetRegisteredUserQuery(options: Omit<Urql.UseQueryArgs<GetRegisteredUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRegisteredUserQuery, GetRegisteredUserQueryVariables>({ query: GetRegisteredUserDocument, ...options });
 };
+export const GetTaskCategoriesDocument = gql`
+    query GetTaskCategories {
+  getTaskCategories {
+    ...TaskCategoryObj
+  }
+}
+    ${TaskCategoryObjFragmentDoc}`;
+
+export function useGetTaskCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCategoriesQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskCategoriesQuery, GetTaskCategoriesQueryVariables>({ query: GetTaskCategoriesDocument, ...options });
+};
+export const GetTaskCategoryByIdDocument = gql`
+    query GetTaskCategoryById($taskCategoryId: String!) {
+  getTaskCategoryById(categoryId: $taskCategoryId) {
+    ...TaskCategoryObj
+  }
+}
+    ${TaskCategoryObjFragmentDoc}`;
+
+export function useGetTaskCategoryByIdQuery(options: Omit<Urql.UseQueryArgs<GetTaskCategoryByIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskCategoryByIdQuery, GetTaskCategoryByIdQueryVariables>({ query: GetTaskCategoryByIdDocument, ...options });
+};
 export const CreateTaskCategoryDocument = gql`
     mutation CreateTaskCategory($name: String!, $displayOrder: Int) {
   createCategory(input: {name: $name, displayOrder: $displayOrder})
@@ -359,18 +424,14 @@ export const CreateTaskCategoryDocument = gql`
 export function useCreateTaskCategoryMutation() {
   return Urql.useMutation<CreateTaskCategoryMutation, CreateTaskCategoryMutationVariables>(CreateTaskCategoryDocument);
 };
-export const GetTaskCategoriesDocument = gql`
-    query GetTaskCategories {
-  getTaskCategories {
-    id
-    name
-    displayOrder
-  }
+export const UpdateTaskCategoryDocument = gql`
+    mutation UpdateTaskCategory($id: String!, $name: String!, $displayOrder: Int) {
+  updateCategory(id: $id, input: {name: $name, displayOrder: $displayOrder})
 }
     `;
 
-export function useGetTaskCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCategoriesQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetTaskCategoriesQuery, GetTaskCategoriesQueryVariables>({ query: GetTaskCategoriesDocument, ...options });
+export function useUpdateTaskCategoryMutation() {
+  return Urql.useMutation<UpdateTaskCategoryMutation, UpdateTaskCategoryMutationVariables>(UpdateTaskCategoryDocument);
 };
 export const DeleteTaskCategoryDocument = gql`
     mutation DeleteTaskCategory($id: String!) {
@@ -471,4 +532,15 @@ export const DeleteTaskDocument = gql`
 
 export function useDeleteTaskMutation() {
   return Urql.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument);
+};
+export const GetTaskCategoriesForTaskDefinitionQueryDocument = gql`
+    query GetTaskCategoriesForTaskDefinitionQuery {
+  getTaskCategories {
+    ...TaskCategoryObj
+  }
+}
+    ${TaskCategoryObjFragmentDoc}`;
+
+export function useGetTaskCategoriesForTaskDefinitionQueryQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCategoriesForTaskDefinitionQueryQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskCategoriesForTaskDefinitionQueryQuery, GetTaskCategoriesForTaskDefinitionQueryQueryVariables>({ query: GetTaskCategoriesForTaskDefinitionQueryDocument, ...options });
 };

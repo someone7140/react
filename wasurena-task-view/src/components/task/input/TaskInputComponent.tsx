@@ -13,15 +13,27 @@ import {
 import { useForm } from "@mantine/form";
 
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
-import { DeadLineCheckList } from "@/constants/TaskConstants";
+import {
+  DeadLineCheckList,
+  DeadLineWeeklyDayList,
+} from "@/constants/TaskConstants";
 import { DeadLineCheck, TaskCategoryResponse } from "@/graphql/gen/graphql";
-import { formAreaStyle, textInputStyle } from "@/style/formStyle";
+import {
+  formAreaStyle,
+  subSettingTextInputStyle,
+  textInputStyle,
+} from "@/style/formStyle";
 
 export type TaskInputFormValues = {
   title: string;
   displayFlag: boolean;
   deadLineCheck?: string;
   deadLineCheckSubSettingHour?: number;
+  deadLineCheckSubSettingWeeklyDay?: string;
+  deadLineCheckSubSettingWeekInterval?: number;
+  deadLineCheckSubSettingMonthDay?: number;
+  deadLineCheckSubSettingYearMonth?: number;
+  deadLineCheckSubSettingYearDay?: number;
   notificationFlag: boolean;
   categoryId: string;
   detail?: string;
@@ -48,6 +60,11 @@ export const TaskInputComponent: FC<Props> = ({
       notificationFlag: false,
       deadLineCheck: "",
       deadLineCheckSubSettingHour: undefined,
+      deadLineCheckSubSettingWeeklyDay: "1", // デフォルトは月曜日とする
+      deadLineCheckSubSettingWeekInterval: undefined,
+      deadLineCheckSubSettingMonthDay: undefined,
+      deadLineCheckSubSettingYearMonth: undefined,
+      deadLineCheckSubSettingYearDay: undefined,
       categoryId: "",
     },
 
@@ -60,8 +77,40 @@ export const TaskInputComponent: FC<Props> = ({
       },
       deadLineCheckSubSettingHour: (value, values) => {
         if (values.deadLineCheck == DeadLineCheck.DailyHour) {
-          if (value == null || !(value > 0)) {
+          if (value == null || value <= 0) {
             return "時間を入力してください";
+          }
+        }
+        return null;
+      },
+      deadLineCheckSubSettingWeekInterval: (value, values) => {
+        if (values.deadLineCheck == DeadLineCheck.WeeklyDayInterval) {
+          if (value == null || value <= 0) {
+            return "週間隔を入力してください";
+          }
+        }
+        return null;
+      },
+      deadLineCheckSubSettingMonthDay: (value, values) => {
+        if (values.deadLineCheck == DeadLineCheck.MonthDate) {
+          if (value == null || value <= 0 || value > 31) {
+            return "日を入力してください";
+          }
+        }
+        return null;
+      },
+      deadLineCheckSubSettingYearMonth: (value, values) => {
+        if (values.deadLineCheck == DeadLineCheck.YearOnceDate) {
+          if (value == null || value <= 0 || value > 12) {
+            return "月を入力してください";
+          }
+        }
+        return null;
+      },
+      deadLineCheckSubSettingYearDay: (value, values) => {
+        if (values.deadLineCheck == DeadLineCheck.YearOnceDate) {
+          if (value == null || value <= 0 || value > 31) {
+            return "日を入力してください";
           }
         }
         return null;
@@ -131,8 +180,58 @@ export const TaskInputComponent: FC<Props> = ({
           label="時間(hour)"
           key={form.key("deadLineCheckSubSettingHour")}
           {...form.getInputProps("deadLineCheckSubSettingHour")}
-          className={textInputStyle()}
+          className={subSettingTextInputStyle()}
         />
+      )}
+      {deadLineCheckState == DeadLineCheck.WeeklyDay && (
+        <Select
+          withAsterisk
+          label="週の曜日"
+          data={DeadLineWeeklyDayList}
+          key={form.key("deadLineCheckSubSettingWeeklyDay")}
+          {...form.getInputProps("deadLineCheckSubSettingWeeklyDay")}
+          allowDeselect={false}
+        />
+      )}
+      {deadLineCheckState == DeadLineCheck.WeeklyDayInterval && (
+        <NumberInput
+          withAsterisk
+          hideControls
+          label="週間隔(数値)"
+          key={form.key("deadLineCheckSubSettingWeekInterval")}
+          {...form.getInputProps("deadLineCheckSubSettingWeekInterval")}
+          className={subSettingTextInputStyle()}
+        />
+      )}
+      {deadLineCheckState == DeadLineCheck.MonthDate && (
+        <NumberInput
+          withAsterisk
+          hideControls
+          label="月の指定日(数値)"
+          key={form.key("deadLineCheckSubSettingMonthDay")}
+          {...form.getInputProps("deadLineCheckSubSettingMonthDay")}
+          className={subSettingTextInputStyle()}
+        />
+      )}
+      {deadLineCheckState == DeadLineCheck.YearOnceDate && (
+        <>
+          <NumberInput
+            withAsterisk
+            hideControls
+            label="年の指定月(数値)"
+            key={form.key("deadLineCheckSubSettingYearMonth")}
+            {...form.getInputProps("deadLineCheckSubSettingYearMonth")}
+            className={subSettingTextInputStyle()}
+          />
+          <NumberInput
+            withAsterisk
+            hideControls
+            label="年の指定日(数値)"
+            key={form.key("deadLineCheckSubSettingYearDay")}
+            {...form.getInputProps("deadLineCheckSubSettingYearDay")}
+            className={subSettingTextInputStyle()}
+          />
+        </>
       )}
       {userAccountState?.isLineBotFollow && form.getValues().displayFlag && (
         <Switch

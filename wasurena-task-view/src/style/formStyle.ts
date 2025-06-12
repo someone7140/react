@@ -7,3 +7,7 @@ export const formAreaStyle = tv({
 export const textInputStyle = tv({
   base: "w-[310px]",
 });
+
+export const subSettingTextInputStyle = tv({
+  base: "w-[210px]",
+});

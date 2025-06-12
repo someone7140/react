@@ -10,4 +10,5 @@ export const TASK_DEFINITION_LIST_PAGE_PATH = "/task/definitionList";
 export const TASK_CHECK_LIST_PAGE_PATH = "/task/checkList";
 
 export const CATEGORY_REGISTER_PAGE_PATH = "/category/register";
+export const CATEGORY_EDIT_PAGE_PATH = "/category/edit";
 export const CATEGORY_LIST_PAGE_PATH = "/category/list";

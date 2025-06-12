@@ -7,6 +7,22 @@ export type DeadLineSubCheckDailyHour = {
   hourInterval: number;
 };
 
+export type DeadLineSubCheckWeeklyDay = {
+  weeklyDay: number;
+};
+
+export type DeadLineSubCheckWeekInterval = {
+  weekInterval: number;
+};
+
+export type DeadLineSubCheckMonthlyDay = {
+  monthlyDay: number;
+};
+
+export type DeadLineSubCheckYearDate = {
+  yearDate: string; // 月日（MM-dd形式）
+};
+
 export type CategorizeCheckList = {
   checkTask: TaskCheckDisplayResponse[];
   notCheckTask: TaskCheckDisplayResponse[];

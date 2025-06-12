@@ -62,3 +62,11 @@ export const deleteTaskDefinitionMutationDocument = gql`
     deleteTask(id: $id)
   }
 `;
+
+export const getTaskCategoriesForTaskDefinitionQueryDocument = gql`
+  query GetTaskCategoriesForTaskDefinitionQuery {
+    getTaskCategories {
+      ...TaskCategoryObj
+    }
+  }
+`;
