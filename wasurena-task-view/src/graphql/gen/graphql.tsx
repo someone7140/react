@@ -52,6 +52,7 @@ export type Mutation = {
   deleteTaskExecute: FieldWrapper<Scalars['Boolean']['output']>;
   executeScheduleCheckBatch: FieldWrapper<Scalars['Boolean']['output']>;
   updateCategory: FieldWrapper<Scalars['Boolean']['output']>;
+  updateTask: FieldWrapper<Scalars['Boolean']['output']>;
 };
 
 
@@ -61,7 +62,7 @@ export type MutationCreateCategoryArgs = {
 
 
 export type MutationCreateTaskArgs = {
-  input: NewTask;
+  input: TaskInput;
 };
 
 
@@ -100,14 +101,10 @@ export type MutationUpdateCategoryArgs = {
   input: CategoryInput;
 };
 
-export type NewTask = {
-  categoryId?: InputMaybe<Scalars['String']['input']>;
-  deadLineCheck?: InputMaybe<DeadLineCheck>;
-  deadLineCheckSubSetting?: InputMaybe<Scalars['Map']['input']>;
-  detail?: InputMaybe<Scalars['String']['input']>;
-  displayFlag: Scalars['Boolean']['input'];
-  notificationFlag: Scalars['Boolean']['input'];
-  title: Scalars['String']['input'];
+
+export type MutationUpdateTaskArgs = {
+  id: Scalars['String']['input'];
+  input: TaskInput;
 };
 
 export type NewTaskExecute = {
@@ -127,6 +124,7 @@ export type Query = {
   getTaskCategories?: Maybe<Array<FieldWrapper<TaskCategoryResponse>>>;
   getTaskCategoryById?: Maybe<FieldWrapper<TaskCategoryResponse>>;
   getTaskCheckDisplayList?: Maybe<Array<FieldWrapper<TaskCheckDisplayResponse>>>;
+  getTaskDefinitionById?: Maybe<FieldWrapper<TaskDefinitionResponse>>;
   getTaskDefinitions?: Maybe<Array<FieldWrapper<TaskDefinitionResponse>>>;
   getTaskExecuteListByDefinitionId?: Maybe<Array<FieldWrapper<TaskExecuteResponse>>>;
   getUserAccountFromAuthHeader?: Maybe<FieldWrapper<UserAccountResponse>>;
@@ -141,6 +139,11 @@ export type QueryGetRegisteredUserArgs = {
 
 export type QueryGetTaskCategoryByIdArgs = {
   categoryId: Scalars['String']['input'];
+};
+
+
+export type QueryGetTaskDefinitionByIdArgs = {
+  taskDefinitionId: Scalars['String']['input'];
 };
 
 
@@ -194,6 +197,16 @@ export type TaskExecuteResponse = {
   id: FieldWrapper<Scalars['String']['output']>;
   memo?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   taskDefinitionId: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type TaskInput = {
+  categoryId?: InputMaybe<Scalars['String']['input']>;
+  deadLineCheck?: InputMaybe<DeadLineCheck>;
+  deadLineCheckSubSetting?: InputMaybe<Scalars['Map']['input']>;
+  detail?: InputMaybe<Scalars['String']['input']>;
+  displayFlag: Scalars['Boolean']['input'];
+  notificationFlag: Scalars['Boolean']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type UserAccountResponse = {
@@ -295,6 +308,8 @@ export type DeleteTaskExecuteMutationVariables = Exact<{
 
 export type DeleteTaskExecuteMutation = { __typename?: 'Mutation', deleteTaskExecute: boolean };
 
+export type TaskDefinitionObjFragment = { __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, detail?: string | null };
+
 export type CreateTaskMutationVariables = Exact<{
   title: Scalars['String']['input'];
   displayFlag: Scalars['Boolean']['input'];
@@ -308,10 +323,31 @@ export type CreateTaskMutationVariables = Exact<{
 
 export type CreateTaskMutation = { __typename?: 'Mutation', createTask: boolean };
 
+export type UpdateTaskMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+  displayFlag: Scalars['Boolean']['input'];
+  notificationFlag: Scalars['Boolean']['input'];
+  categoryId?: InputMaybe<Scalars['String']['input']>;
+  deadLineCheck?: InputMaybe<DeadLineCheck>;
+  deadLineCheckSubSetting?: InputMaybe<Scalars['Map']['input']>;
+  detail?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdateTaskMutation = { __typename?: 'Mutation', updateTask: boolean };
+
 export type GetTaskDefinitionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTaskDefinitionsQuery = { __typename?: 'Query', getTaskDefinitions?: Array<{ __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, detail?: string | null }> | null };
+
+export type GetTaskDefinitionByIdAndCategoryQueryVariables = Exact<{
+  taskDefinitionId: Scalars['String']['input'];
+}>;
+
+
+export type GetTaskDefinitionByIdAndCategoryQuery = { __typename?: 'Query', getTaskDefinitionById?: { __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, detail?: string | null } | null, getTaskCategories?: Array<{ __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null }> | null };
 
 export type GetTaskCheckDisplayListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -344,6 +380,19 @@ export const TaskCategoryObjFragmentDoc = gql`
   id
   name
   displayOrder
+}
+    `;
+export const TaskDefinitionObjFragmentDoc = gql`
+    fragment TaskDefinitionObj on TaskDefinitionResponse {
+  id
+  title
+  displayFlag
+  notificationFlag
+  categoryId
+  categoryName
+  deadLineCheck
+  deadLineCheckSubSetting
+  detail
 }
     `;
 export const GetUserRegisterTokenDocument = gql`
@@ -485,24 +534,43 @@ export const CreateTaskDocument = gql`
 export function useCreateTaskMutation() {
   return Urql.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument);
 };
-export const GetTaskDefinitionsDocument = gql`
-    query GetTaskDefinitions {
-  getTaskDefinitions {
-    id
-    title
-    displayFlag
-    notificationFlag
-    categoryId
-    categoryName
-    deadLineCheck
-    deadLineCheckSubSetting
-    detail
-  }
+export const UpdateTaskDocument = gql`
+    mutation UpdateTask($id: String!, $title: String!, $displayFlag: Boolean!, $notificationFlag: Boolean!, $categoryId: String, $deadLineCheck: DeadLineCheck, $deadLineCheckSubSetting: Map, $detail: String) {
+  updateTask(
+    id: $id
+    input: {title: $title, displayFlag: $displayFlag, notificationFlag: $notificationFlag, categoryId: $categoryId, deadLineCheck: $deadLineCheck, deadLineCheckSubSetting: $deadLineCheckSubSetting, detail: $detail}
+  )
 }
     `;
 
+export function useUpdateTaskMutation() {
+  return Urql.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument);
+};
+export const GetTaskDefinitionsDocument = gql`
+    query GetTaskDefinitions {
+  getTaskDefinitions {
+    ...TaskDefinitionObj
+  }
+}
+    ${TaskDefinitionObjFragmentDoc}`;
+
 export function useGetTaskDefinitionsQuery(options?: Omit<Urql.UseQueryArgs<GetTaskDefinitionsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetTaskDefinitionsQuery, GetTaskDefinitionsQueryVariables>({ query: GetTaskDefinitionsDocument, ...options });
+};
+export const GetTaskDefinitionByIdAndCategoryDocument = gql`
+    query GetTaskDefinitionByIdAndCategory($taskDefinitionId: String!) {
+  getTaskDefinitionById(taskDefinitionId: $taskDefinitionId) {
+    ...TaskDefinitionObj
+  }
+  getTaskCategories {
+    ...TaskCategoryObj
+  }
+}
+    ${TaskDefinitionObjFragmentDoc}
+${TaskCategoryObjFragmentDoc}`;
+
+export function useGetTaskDefinitionByIdAndCategoryQuery(options: Omit<Urql.UseQueryArgs<GetTaskDefinitionByIdAndCategoryQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskDefinitionByIdAndCategoryQuery, GetTaskDefinitionByIdAndCategoryQueryVariables>({ query: GetTaskDefinitionByIdAndCategoryDocument, ...options });
 };
 export const GetTaskCheckDisplayListDocument = gql`
     query GetTaskCheckDisplayList {

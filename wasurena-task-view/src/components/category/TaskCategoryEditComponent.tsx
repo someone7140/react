@@ -72,6 +72,7 @@ export const TaskCategoryEditComponent: FC<Props> = ({ id }) => {
         autoClose: 5000,
         title: "取得エラー",
         message: "カテゴリーが取得できませんでした",
+        color: "red",
         loading: false,
       });
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { useAtomValue } from "jotai";
@@ -10,23 +10,28 @@ import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TASK_DEFINITION_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   DeadLineCheck,
-  useCreateTaskMutation,
-  useGetTaskCategoriesForTaskDefinitionQueryQuery,
+  useGetTaskDefinitionByIdAndCategoryQuery,
+  useUpdateTaskMutation,
 } from "@/graphql/gen/graphql";
 import { TaskInputFormValues, useTaskUtil } from "@/hooks/useTaskUtil";
 
-export const TaskRegisterComponent: FC = ({}) => {
-  const [{ data: categoryData }] =
-    useGetTaskCategoriesForTaskDefinitionQueryQuery({
+type Props = {
+  id: string;
+};
+
+export const TaskEditComponent: FC<Props> = ({ id }) => {
+  const [{ data: taskAndCategoryData, error }] =
+    useGetTaskDefinitionByIdAndCategoryQuery({
+      variables: { taskDefinitionId: id },
       requestPolicy: "network-only",
     });
-  const [createTaskMutationResult, createTaskMutation] =
-    useCreateTaskMutation();
+  const [updateTaskMutationResult, updateTaskMutation] =
+    useUpdateTaskMutation();
   const router = useRouter();
   const userAccountState = useAtomValue(userAccountAtom);
   const { getDeadLineCheckSubSettingFromForm } = useTaskUtil();
 
-  const submitRegisterTask = async (formValues: TaskInputFormValues) => {
+  const submitEditTask = async (formValues: TaskInputFormValues) => {
     const deadLineCheck =
       formValues.displayFlag && formValues.deadLineCheck
         ? (formValues.deadLineCheck as DeadLineCheck)
@@ -37,7 +42,8 @@ export const TaskRegisterComponent: FC = ({}) => {
         ? formValues.notificationFlag
         : false;
 
-    const result = await createTaskMutation({
+    const result = await updateTaskMutation({
+      id: id,
       title: formValues.title,
       displayFlag: formValues.displayFlag,
       notificationFlag: notificationFlag,
@@ -49,25 +55,25 @@ export const TaskRegisterComponent: FC = ({}) => {
       ),
       detail: formValues.detail ?? null,
     });
-    if (!result?.data?.createTask || result.error) {
+    if (!result?.data?.updateTask || result.error) {
       notifications.show({
-        id: "submitRegister-error",
+        id: "submitEdit-error",
         position: "top-center",
         withCloseButton: true,
         autoClose: 5000,
-        title: "登録エラー",
-        message: "タスクの登録に失敗しました",
+        title: "更新エラー",
+        message: "タスクの更新に失敗しました",
         color: "red",
         loading: false,
       });
     } else {
       notifications.show({
-        id: "submitRegister-success",
+        id: "submitEdit-success",
         position: "top-center",
         withCloseButton: true,
         autoClose: 5000,
-        title: "タスク登録",
-        message: "タスク登録しました。",
+        title: "タスク更新",
+        message: "タスク更新しました。",
         color: "green",
         loading: false,
       });
@@ -75,13 +81,34 @@ export const TaskRegisterComponent: FC = ({}) => {
     }
   };
 
+  useEffect(() => {
+    if (error) {
+      notifications.show({
+        id: "getTask-error",
+        position: "top-center",
+        withCloseButton: true,
+        autoClose: 5000,
+        title: "取得エラー",
+        message: "タスクが取得できませんでした",
+        color: "red",
+        loading: false,
+      });
+    }
+  }, [error]);
+
+  const categoryData = taskAndCategoryData?.getTaskCategories;
+  const registeredTaskData = taskAndCategoryData?.getTaskDefinitionById;
+
   return (
     <>
-      <TaskInputComponent
-        submitTask={submitRegisterTask}
-        submitDisabled={createTaskMutationResult.fetching}
-        categoriesData={categoryData?.getTaskCategories ?? undefined}
-      />
+      {registeredTaskData && (
+        <TaskInputComponent
+          submitTask={submitEditTask}
+          submitDisabled={updateTaskMutationResult.fetching}
+          categoriesData={categoryData ?? undefined}
+          registeredTask={registeredTaskData}
+        />
+      )}
     </>
   );
 };

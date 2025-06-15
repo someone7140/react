@@ -1,14 +1,18 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
+import { useAtomValue } from "jotai";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { Button, Card, Loader } from "@mantine/core";
-import { useAtomValue } from "jotai";
 
 import { TaskDefinitionDeleteModalComponent } from "./modal/TaskDefinitionDeleteModalComponent";
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
-import { TASK_REGISTER_PAGE_PATH } from "@/constants/MenuPathConstants";
+import {
+  TASK_EDIT_PAGE_PATH,
+  TASK_REGISTER_PAGE_PATH,
+} from "@/constants/MenuPathConstants";
 import {
   TaskDefinitionResponse,
   useGetTaskDefinitionsQuery,
@@ -24,6 +28,7 @@ export const TaskDefinitionListComponent: FC = ({}) => {
   >(undefined);
   const { getDeadLineCheckDisplay } = useTaskUtil();
   const userAccountState = useAtomValue(userAccountAtom);
+  const router = useRouter();
 
   const refetchDefinitionList = () => {
     reexecuteQuery({ requestPolicy: "network-only" });
@@ -106,7 +111,16 @@ export const TaskDefinitionListComponent: FC = ({}) => {
                     )}
                     <div className="flex justify-center mt-3 gap-3">
                       <Button color="lime">実施履歴</Button>
-                      <Button color="orange">編集</Button>
+                      <Button
+                        color="orange"
+                        onClick={() => {
+                          router.push(
+                            `${TASK_EDIT_PAGE_PATH}?id=${definition.id}`
+                          );
+                        }}
+                      >
+                        編集
+                      </Button>
                       <Button
                         color="gray"
                         onClick={() => {

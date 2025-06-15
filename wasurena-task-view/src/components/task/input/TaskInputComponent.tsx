@@ -1,7 +1,8 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useAtomValue } from "jotai";
+import { useRouter } from "next/navigation";
 import {
   Button,
   NumberInput,
@@ -17,56 +18,67 @@ import {
   DeadLineCheckList,
   DeadLineWeeklyDayList,
 } from "@/constants/TaskConstants";
-import { DeadLineCheck, TaskCategoryResponse } from "@/graphql/gen/graphql";
+import {
+  DeadLineCheck,
+  TaskCategoryResponse,
+  TaskDefinitionResponse,
+} from "@/graphql/gen/graphql";
+import { TaskInputFormValues, useTaskUtil } from "@/hooks/useTaskUtil";
 import {
   formAreaStyle,
   subSettingTextInputStyle,
   textInputStyle,
 } from "@/style/formStyle";
-
-export type TaskInputFormValues = {
-  title: string;
-  displayFlag: boolean;
-  deadLineCheck?: string;
-  deadLineCheckSubSettingHour?: number;
-  deadLineCheckSubSettingWeeklyDay?: string;
-  deadLineCheckSubSettingWeekInterval?: number;
-  deadLineCheckSubSettingMonthDay?: number;
-  deadLineCheckSubSettingYearMonth?: number;
-  deadLineCheckSubSettingYearDay?: number;
-  notificationFlag: boolean;
-  categoryId: string;
-  detail?: string;
-};
+import { TASK_DEFINITION_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 
 type Props = {
-  submitTask: (user: TaskInputFormValues) => void;
+  submitTask: (task: TaskInputFormValues) => void;
   submitDisabled?: boolean;
   categoriesData?: TaskCategoryResponse[];
+  registeredTask?: TaskDefinitionResponse;
 };
 
 export const TaskInputComponent: FC<Props> = ({
   submitTask,
   submitDisabled,
   categoriesData,
+  registeredTask,
 }) => {
   const userAccountState = useAtomValue(userAccountAtom);
+  const { getTaskInputDeadLineCheckSubSetting } = useTaskUtil();
+  const router = useRouter();
 
+  const registeredDeadLineCheckSubSetting = registeredTask
+    ? getTaskInputDeadLineCheckSubSetting(
+        registeredTask?.deadLineCheck ?? undefined,
+        registeredTask?.deadLineCheckSubSetting ?? undefined
+      )
+    : undefined;
   const form = useForm<TaskInputFormValues>({
     mode: "uncontrolled",
-    initialValues: {
-      title: "",
-      displayFlag: true,
-      notificationFlag: false,
-      deadLineCheck: "",
-      deadLineCheckSubSettingHour: undefined,
-      deadLineCheckSubSettingWeeklyDay: "1", // デフォルトは月曜日とする
-      deadLineCheckSubSettingWeekInterval: undefined,
-      deadLineCheckSubSettingMonthDay: undefined,
-      deadLineCheckSubSettingYearMonth: undefined,
-      deadLineCheckSubSettingYearDay: undefined,
-      categoryId: "",
-    },
+    initialValues: registeredTask
+      ? {
+          title: registeredTask.title,
+          displayFlag: registeredTask.displayFlag,
+          notificationFlag: registeredTask.notificationFlag,
+          deadLineCheck: registeredTask.deadLineCheck ?? "",
+          categoryId: registeredTask.categoryId ?? "",
+          detail: registeredTask.detail ?? "",
+          ...registeredDeadLineCheckSubSetting,
+        }
+      : {
+          title: "",
+          displayFlag: true,
+          notificationFlag: false,
+          deadLineCheck: "",
+          deadLineCheckSubSettingHour: undefined,
+          deadLineCheckSubSettingWeeklyDay: "1", // デフォルトは月曜日とする
+          deadLineCheckSubSettingWeekInterval: undefined,
+          deadLineCheckSubSettingMonthDay: undefined,
+          deadLineCheckSubSettingYearMonth: undefined,
+          deadLineCheckSubSettingYearDay: undefined,
+          categoryId: "",
+        },
 
     validate: {
       title: (value) => {
@@ -117,17 +129,19 @@ export const TaskInputComponent: FC<Props> = ({
       },
     },
   });
-  const [deadLineCheckState, setDeadLineCheckState] = useState<
-    DeadLineCheck | undefined
-  >(undefined);
 
-  form.watch("deadLineCheck", ({ value }) => {
-    if (value) {
-      setDeadLineCheckState(value as DeadLineCheck);
+  // 対象の期限サブ設定を表示させるかの判定
+  const judgeDisplayDeadLineSubSetting = (
+    deadLineCheckStr: string | undefined,
+    targetSubSetting: DeadLineCheck
+  ) => {
+    if (deadLineCheckStr) {
+      const deadLineCheck = deadLineCheckStr as DeadLineCheck;
+      return deadLineCheck === targetSubSetting;
     } else {
-      setDeadLineCheckState(undefined);
+      return false;
     }
-  });
+  };
 
   const categorySelects = categoriesData
     ? [
@@ -173,7 +187,10 @@ export const TaskInputComponent: FC<Props> = ({
           allowDeselect={false}
         />
       )}
-      {deadLineCheckState == DeadLineCheck.DailyHour && (
+      {judgeDisplayDeadLineSubSetting(
+        form.getValues().deadLineCheck,
+        DeadLineCheck.DailyHour
+      ) && (
         <NumberInput
           withAsterisk
           hideControls
@@ -183,7 +200,10 @@ export const TaskInputComponent: FC<Props> = ({
           className={subSettingTextInputStyle()}
         />
       )}
-      {deadLineCheckState == DeadLineCheck.WeeklyDay && (
+      {judgeDisplayDeadLineSubSetting(
+        form.getValues().deadLineCheck,
+        DeadLineCheck.WeeklyDay
+      ) && (
         <Select
           withAsterisk
           label="週の曜日"
@@ -193,7 +213,10 @@ export const TaskInputComponent: FC<Props> = ({
           allowDeselect={false}
         />
       )}
-      {deadLineCheckState == DeadLineCheck.WeeklyDayInterval && (
+      {judgeDisplayDeadLineSubSetting(
+        form.getValues().deadLineCheck,
+        DeadLineCheck.WeeklyDayInterval
+      ) && (
         <NumberInput
           withAsterisk
           hideControls
@@ -203,7 +226,10 @@ export const TaskInputComponent: FC<Props> = ({
           className={subSettingTextInputStyle()}
         />
       )}
-      {deadLineCheckState == DeadLineCheck.MonthDate && (
+      {judgeDisplayDeadLineSubSetting(
+        form.getValues().deadLineCheck,
+        DeadLineCheck.MonthDate
+      ) && (
         <NumberInput
           withAsterisk
           hideControls
@@ -213,7 +239,10 @@ export const TaskInputComponent: FC<Props> = ({
           className={subSettingTextInputStyle()}
         />
       )}
-      {deadLineCheckState == DeadLineCheck.YearOnceDate && (
+      {judgeDisplayDeadLineSubSetting(
+        form.getValues().deadLineCheck,
+        DeadLineCheck.YearOnceDate
+      ) && (
         <>
           <NumberInput
             withAsterisk
@@ -249,9 +278,17 @@ export const TaskInputComponent: FC<Props> = ({
         minRows={3}
         maxRows={7}
       />
-      <div className="flex justify-center mt-2">
+      <div className="flex justify-center gap-3 mt-2">
         <Button type="submit" color="blue" disabled={submitDisabled}>
           登録
+        </Button>
+        <Button
+          color="gray"
+          onClick={() => {
+            router.push(`${TASK_DEFINITION_LIST_PAGE_PATH}`);
+          }}
+        >
+          一覧へ
         </Button>
       </div>
     </form>
