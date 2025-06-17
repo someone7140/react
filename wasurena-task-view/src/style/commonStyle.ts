@@ -7,3 +7,7 @@ export const pageTitleStyle = tv({
 export const linkStyle = tv({
   base: "underline text-blue-600 hover:text-blue-800",
 });
+
+export const menuItemStyle = tv({
+  base: "!mb-0 !px-3 !py-1",
+});

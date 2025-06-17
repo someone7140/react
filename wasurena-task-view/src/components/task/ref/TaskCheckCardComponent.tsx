@@ -137,6 +137,16 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
             checkTaskState.deadLineCheckSubSetting ?? undefined
           )}
         </div>
+        {checkTaskState.nextDeadLineDateTime && (
+          <div>
+            次回期限日時：
+            {checkTaskState.nextDeadLineDateTime.toLocaleDateString("ja-JP", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })}
+          </div>
+        )}
         {checkTaskState.categoryName && (
           <div>
             カテゴリー：

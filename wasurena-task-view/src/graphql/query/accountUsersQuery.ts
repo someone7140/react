@@ -37,6 +37,16 @@ export const createUserAccountMutationDocument = gql`
   }
 `;
 
+export const updateUserAccountMutationDocument = gql`
+  mutation UpdateUserAccount($userName: String!, $userSettingId: String!) {
+    updateUserAccount(
+      input: { userName: $userName, userSettingId: $userSettingId }
+    ) {
+      ...AccountUserObj
+    }
+  }
+`;
+
 export const getUserAccountFromAuthHeaderQueryDocument = gql`
   query GetUserAccountFromAuthHeader {
     getUserAccountFromAuthHeader {

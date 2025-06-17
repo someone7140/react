@@ -12,15 +12,18 @@ import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import {
   CATEGORY_LIST_PAGE_PATH,
   CATEGORY_REGISTER_PAGE_PATH,
+  INQUIRY_AND_OTHERS_PAGE_PATH,
   LOGIN_PAGE_PATH,
   TASK_CHECK_LIST_PAGE_PATH,
   TASK_DEFINITION_LIST_PAGE_PATH,
   TASK_REGISTER_PAGE_PATH,
   TOP_PAGE_PATH,
+  USER_ACCOUNT_EDIT_PAGE_PATH,
   USER_ACCOUNT_NOTIFY_SETTING_PAGE_PATH,
   USER_ACCOUNT_REGISTER_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
+import { menuItemStyle } from "@/style/commonStyle";
 
 const CustomMenuButton = forwardRef<
   HTMLButtonElement,
@@ -84,54 +87,106 @@ export const MenuComponent: FC = ({}) => {
           <Menu.Label>
             <span className="text-base">タスク管理</span>
           </Menu.Label>
-          <Menu.Item component={NextLink} href={TASK_CHECK_LIST_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={TASK_CHECK_LIST_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">タスクチェック対象一覧</span>
           </Menu.Item>
-          <Menu.Item component={NextLink} href={TASK_DEFINITION_LIST_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={TASK_DEFINITION_LIST_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">タスク定義一覧</span>
           </Menu.Item>
-          <Menu.Item component={NextLink} href={TASK_REGISTER_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={TASK_REGISTER_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">タスク登録</span>
           </Menu.Item>
           <Menu.Divider />
           <Menu.Label>
             <span className="text-base">タスクカテゴリー管理</span>
           </Menu.Label>
-          <Menu.Item component={NextLink} href={CATEGORY_REGISTER_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={CATEGORY_REGISTER_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">カテゴリー登録</span>
           </Menu.Item>
-          <Menu.Item component={NextLink} href={CATEGORY_LIST_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={CATEGORY_LIST_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">カテゴリー一覧</span>
           </Menu.Item>
           <Menu.Divider />
           <Menu.Label>
-            <span className="text-base">ユーザ管理</span>
+            <span className="text-base">ユーザー管理</span>
           </Menu.Label>
           <Menu.Item
             component={NextLink}
+            href={USER_ACCOUNT_EDIT_PAGE_PATH}
+            className={menuItemStyle()}
+          >
+            <span className="text-lg">ユーザー情報編集</span>
+          </Menu.Item>
+          <Menu.Item
+            component={NextLink}
             href={USER_ACCOUNT_NOTIFY_SETTING_PAGE_PATH}
+            className={menuItemStyle()}
           >
             <span className="text-lg">LINE通知設定</span>
           </Menu.Item>
-          <Menu.Item onClick={onClickLogout}>
+          <Menu.Item onClick={onClickLogout} className={menuItemStyle()}>
             <span className="text-lg">ログアウト</span>
+          </Menu.Item>
+          <Menu.Divider />
+          <Menu.Item
+            component={NextLink}
+            href={INQUIRY_AND_OTHERS_PAGE_PATH}
+            className={menuItemStyle()}
+          >
+            <span className="text-lg">お問い合わせ等</span>
           </Menu.Item>
         </Menu.Dropdown>
       )}
 
       {!userAccountState && (
         <Menu.Dropdown>
-          <Menu.Item component={NextLink} href={TOP_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={TOP_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">Top</span>
           </Menu.Item>
-          <Menu.Item component={NextLink} href={LOGIN_PAGE_PATH}>
+          <Menu.Item
+            component={NextLink}
+            href={LOGIN_PAGE_PATH}
+            className={menuItemStyle()}
+          >
             <span className="text-lg">ログイン</span>
           </Menu.Item>
           <Menu.Item
             component={NextLink}
             href={USER_ACCOUNT_REGISTER_PAGE_PATH}
+            className={menuItemStyle()}
           >
-            <span className="text-lg">会員登録</span>
+            <span className="text-lg">ユーザー登録</span>
+          </Menu.Item>
+          <Menu.Item
+            component={NextLink}
+            href={INQUIRY_AND_OTHERS_PAGE_PATH}
+            className={menuItemStyle()}
+          >
+            <span className="text-lg">お問い合わせ等</span>
           </Menu.Item>
         </Menu.Dropdown>
       )}

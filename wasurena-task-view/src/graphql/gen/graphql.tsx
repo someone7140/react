@@ -53,6 +53,7 @@ export type Mutation = {
   executeScheduleCheckBatch: FieldWrapper<Scalars['Boolean']['output']>;
   updateCategory: FieldWrapper<Scalars['Boolean']['output']>;
   updateTask: FieldWrapper<Scalars['Boolean']['output']>;
+  updateUserAccount?: Maybe<FieldWrapper<UserAccountResponse>>;
 };
 
 
@@ -105,6 +106,11 @@ export type MutationUpdateCategoryArgs = {
 export type MutationUpdateTaskArgs = {
   id: Scalars['String']['input'];
   input: TaskInput;
+};
+
+
+export type MutationUpdateUserAccountArgs = {
+  input: UpdateUserAccountInput;
 };
 
 export type NewTaskExecute = {
@@ -174,6 +180,7 @@ export type TaskCheckDisplayResponse = {
   id: FieldWrapper<Scalars['String']['output']>;
   isExceedDeadLine: FieldWrapper<Scalars['Boolean']['output']>;
   latestExecDateTime?: Maybe<FieldWrapper<Scalars['Time']['output']>>;
+  nextDeadLineDateTime?: Maybe<FieldWrapper<Scalars['Time']['output']>>;
   notificationFlag: FieldWrapper<Scalars['Boolean']['output']>;
   title: FieldWrapper<Scalars['String']['output']>;
 };
@@ -209,6 +216,11 @@ export type TaskInput = {
   title: Scalars['String']['input'];
 };
 
+export type UpdateUserAccountInput = {
+  userName: Scalars['String']['input'];
+  userSettingId: Scalars['String']['input'];
+};
+
 export type UserAccountResponse = {
   __typename?: 'UserAccountResponse';
   imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
@@ -235,6 +247,14 @@ export type CreateUserAccountMutationVariables = Exact<{
 
 
 export type CreateUserAccountMutation = { __typename?: 'Mutation', createUserAccount?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
+
+export type UpdateUserAccountMutationVariables = Exact<{
+  userName: Scalars['String']['input'];
+  userSettingId: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUserAccountMutation = { __typename?: 'Mutation', updateUserAccount?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
 
 export type GetUserAccountFromAuthHeaderQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -352,7 +372,7 @@ export type GetTaskDefinitionByIdAndCategoryQuery = { __typename?: 'Query', getT
 export type GetTaskCheckDisplayListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, latestExecDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
+export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: object | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
 
 export type DeleteTaskMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -419,6 +439,17 @@ export const CreateUserAccountDocument = gql`
 
 export function useCreateUserAccountMutation() {
   return Urql.useMutation<CreateUserAccountMutation, CreateUserAccountMutationVariables>(CreateUserAccountDocument);
+};
+export const UpdateUserAccountDocument = gql`
+    mutation UpdateUserAccount($userName: String!, $userSettingId: String!) {
+  updateUserAccount(input: {userName: $userName, userSettingId: $userSettingId}) {
+    ...AccountUserObj
+  }
+}
+    ${AccountUserObjFragmentDoc}`;
+
+export function useUpdateUserAccountMutation() {
+  return Urql.useMutation<UpdateUserAccountMutation, UpdateUserAccountMutationVariables>(UpdateUserAccountDocument);
 };
 export const GetUserAccountFromAuthHeaderDocument = gql`
     query GetUserAccountFromAuthHeader {
@@ -584,6 +615,7 @@ export const GetTaskCheckDisplayListDocument = gql`
     deadLineCheck
     deadLineCheckSubSetting
     latestExecDateTime
+    nextDeadLineDateTime
     isExceedDeadLine
   }
 }

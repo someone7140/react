@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className={pageTitleStyle()}>会員登録</div>
+      <div className={pageTitleStyle()}>ユーザー登録</div>
       {!authCode && redirectUrl && (
         <UserAccountLineAuthComponent redirectUrl={redirectUrl} />
       )}

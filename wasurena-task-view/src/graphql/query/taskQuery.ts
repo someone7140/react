@@ -95,6 +95,7 @@ export const getTaskCheckDisplayListQueryDocument = gql`
       deadLineCheck
       deadLineCheckSubSetting
       latestExecDateTime
+      nextDeadLineDateTime
       isExceedDeadLine
     }
   }

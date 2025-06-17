@@ -48,7 +48,7 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
         position: "top-center",
         withCloseButton: true,
         autoClose: 5000,
-        title: "会員登録エラー",
+        title: "ユーザー登録エラー",
         message:
           errorCode == 400
             ? "ユーザーIDが重複しています。再度入力の上登録お願いします。"
@@ -66,8 +66,8 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
         position: "top-center",
         withCloseButton: true,
         autoClose: 5000,
-        title: "会員登録",
-        message: "会員登録しました。",
+        title: "ユーザー登録",
+        message: "ユーザー登録しました。",
         color: "green",
         loading: false,
       });
