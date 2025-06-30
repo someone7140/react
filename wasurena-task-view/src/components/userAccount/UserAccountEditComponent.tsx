@@ -12,7 +12,10 @@ import {
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { useUpdateUserAccountMutation } from "@/graphql/gen/graphql";
-import { useApiManagement } from "@/hooks/useApiManagement";
+import {
+  ErrorClassification,
+  useApiManagement,
+} from "@/hooks/useApiManagement";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 export const UserAccountEditComponent: FC = ({}) => {
@@ -37,7 +40,7 @@ export const UserAccountEditComponent: FC = ({}) => {
         autoClose: 5000,
         title: "ユーザー登録エラー",
         message:
-          errorCode == 400
+          errorCode == ErrorClassification.BAD_REQUEST
             ? "ユーザーIDが重複しています。再度入力の上登録お願いします。"
             : "編集でエラーが起きました。",
         color: "red",

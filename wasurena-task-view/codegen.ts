@@ -18,7 +18,7 @@ const config: CodegenConfig = {
         useTypeImports: true,
         scalars: {
           Map: "object",
-          Time: "Date",
+          DateTime: "Date",
         },
       },
     },

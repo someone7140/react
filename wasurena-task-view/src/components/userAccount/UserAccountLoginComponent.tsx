@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { useGetRegisteredUserQuery } from "@/graphql/gen/graphql";
-import { useApiManagement } from "@/hooks/useApiManagement";
+import {
+  ErrorClassification,
+  useApiManagement,
+} from "@/hooks/useApiManagement";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 type Props = {
@@ -33,7 +36,7 @@ export const UserAccountLoginComponent: FC<Props> = ({ authCode }) => {
           autoClose: 5000,
           title: "ログインエラー",
           message:
-            errorCode == 404
+            errorCode == ErrorClassification.UNAUTHORIZED
               ? "ユーザーが見つかりませんでした。会員登録を行ってください。"
               : "処理エラーが起きました。再度お試しください。",
           color: "red",

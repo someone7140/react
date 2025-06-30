@@ -8,6 +8,7 @@ import { notifications } from "@mantine/notifications";
 import { Button, Card, Loader } from "@mantine/core";
 
 import { TaskDefinitionDeleteModalComponent } from "./modal/TaskDefinitionDeleteModalComponent";
+import { TaskExecutionListModalComponent } from "./modal/TaskExecutionListModalComponent";
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import {
   TASK_EDIT_PAGE_PATH,
@@ -24,6 +25,9 @@ export const TaskDefinitionListComponent: FC = ({}) => {
   const [{ data, fetching, error }, reexecuteQuery] =
     useGetTaskDefinitionsQuery({ requestPolicy: "network-only" });
   const [deleteTask, setDeleteTask] = useState<
+    TaskDefinitionResponse | undefined
+  >(undefined);
+  const [executeCheckTask, setExecuteCheckTask] = useState<
     TaskDefinitionResponse | undefined
   >(undefined);
   const { getDeadLineCheckDisplay } = useTaskUtil();
@@ -110,7 +114,14 @@ export const TaskDefinitionListComponent: FC = ({}) => {
                       </div>
                     )}
                     <div className="flex justify-center mt-3 gap-3">
-                      <Button color="lime">実施履歴</Button>
+                      <Button
+                        color="lime"
+                        onClick={() => {
+                          setExecuteCheckTask(definition);
+                        }}
+                      >
+                        実施履歴
+                      </Button>
                       <Button
                         color="orange"
                         onClick={() => {
@@ -140,6 +151,16 @@ export const TaskDefinitionListComponent: FC = ({}) => {
                 }}
                 refetch={refetchDefinitionList}
               />
+              {executeCheckTask && (
+                <TaskExecutionListModalComponent
+                  checkTaskId={executeCheckTask.id}
+                  checkTaskTitle={executeCheckTask.title}
+                  isOpen={true}
+                  closeModal={() => {
+                    setExecuteCheckTask(undefined);
+                  }}
+                />
+              )}
             </div>
           )}
         </>

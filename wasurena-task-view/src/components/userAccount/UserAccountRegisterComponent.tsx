@@ -17,7 +17,10 @@ import {
   useCreateUserAccountMutation,
   useGetUserRegisterTokenQuery,
 } from "@/graphql/gen/graphql";
-import { useApiManagement } from "@/hooks/useApiManagement";
+import {
+  ErrorClassification,
+  useApiManagement,
+} from "@/hooks/useApiManagement";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 
 type Props = {
@@ -50,9 +53,9 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
         autoClose: 5000,
         title: "ユーザー登録エラー",
         message:
-          errorCode == 400
+          errorCode == ErrorClassification.BAD_REQUEST
             ? "ユーザーIDが重複しています。再度入力の上登録お願いします。"
-            : errorCode == 403
+            : errorCode == ErrorClassification.FORBIDDEN
             ? "登録済みのLINEアカウントです。ログインから認証してください。"
             : "会員登録でエラーが起きました。",
         color: "red",
@@ -84,7 +87,7 @@ export const UserAccountRegisterComponent: FC<Props> = ({ authCode }) => {
         autoClose: 5000,
         title: "認証情報取得エラー",
         message:
-          errorCode === 403
+          errorCode === ErrorClassification.FORBIDDEN
             ? "登録済みのLINEアカウントです。ログインから認証してください。"
             : "LINE認証情報の取得に失敗しました。再度の認証をお願いします。",
         color: "red",

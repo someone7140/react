@@ -18,7 +18,7 @@ export const getTaskCategoriesQueryDocument = gql`
 
 export const getTaskCategoryByIdQueryDocument = gql`
   query GetTaskCategoryById($taskCategoryId: String!) {
-    getTaskCategoryById(categoryId: $taskCategoryId) {
+    getTaskCategoryById(id: $taskCategoryId) {
       ...TaskCategoryObj
     }
   }

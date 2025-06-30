@@ -201,7 +201,8 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
       )}
       {isOpenTaskExecutionListModal && (
         <TaskExecutionListModalComponent
-          checkTask={checkTaskState}
+          checkTaskId={checkTaskState.id}
+          checkTaskTitle={checkTaskState.title}
           isOpen={isOpenTaskExecutionListModal}
           closeModal={() => {
             setIsOpenTaskExecutionListModal(false);

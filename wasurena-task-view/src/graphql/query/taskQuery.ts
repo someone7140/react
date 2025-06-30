@@ -14,17 +14,17 @@ export const taskDefinitionResponseFragment = gql`
   }
 `;
 
-export const createTaskMutationDocument = gql`
-  mutation CreateTask(
+export const createTaskDefinitionMutationDocument = gql`
+  mutation CreateTaskDefinition(
     $title: String!
     $displayFlag: Boolean!
     $notificationFlag: Boolean!
     $categoryId: String
     $deadLineCheck: DeadLineCheck
-    $deadLineCheckSubSetting: Map
+    $deadLineCheckSubSetting: JSON
     $detail: String
   ) {
-    createTask(
+    createTaskDefinition(
       input: {
         title: $title
         displayFlag: $displayFlag
@@ -38,18 +38,18 @@ export const createTaskMutationDocument = gql`
   }
 `;
 
-export const updateTaskMutationDocument = gql`
-  mutation UpdateTask(
+export const updateTaskDefinitionMutationDocument = gql`
+  mutation UpdateTaskDefinition(
     $id: String!
     $title: String!
     $displayFlag: Boolean!
     $notificationFlag: Boolean!
     $categoryId: String
     $deadLineCheck: DeadLineCheck
-    $deadLineCheckSubSetting: Map
+    $deadLineCheckSubSetting: JSON
     $detail: String
   ) {
-    updateTask(
+    updateTaskDefinition(
       id: $id
       input: {
         title: $title
@@ -74,7 +74,7 @@ export const getTaskDefinitionsQueryDocument = gql`
 
 export const getTaskDefinitionByIdQueryDocument = gql`
   query GetTaskDefinitionByIdAndCategory($taskDefinitionId: String!) {
-    getTaskDefinitionById(taskDefinitionId: $taskDefinitionId) {
+    getTaskDefinitionById(id: $taskDefinitionId) {
       ...TaskDefinitionObj
     }
     getTaskCategories {
@@ -102,8 +102,8 @@ export const getTaskCheckDisplayListQueryDocument = gql`
 `;
 
 export const deleteTaskDefinitionMutationDocument = gql`
-  mutation DeleteTask($id: String!) {
-    deleteTask(id: $id)
+  mutation DeleteTaskDefinition($id: String!) {
+    deleteTaskDefinition(id: $id)
   }
 `;
 

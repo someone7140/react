@@ -6,7 +6,7 @@ import { Button, Modal } from "@mantine/core";
 
 import {
   TaskDefinitionResponse,
-  useDeleteTaskMutation,
+  useDeleteTaskDefinitionMutation,
 } from "@/graphql/gen/graphql";
 
 type Props = {
@@ -21,7 +21,7 @@ export const TaskDefinitionDeleteModalComponent: FC<Props> = ({
   refetch,
 }) => {
   const [deleteTaskMutationResult, deleteTaskMutation] =
-    useDeleteTaskMutation();
+    useDeleteTaskDefinitionMutation();
 
   const onModalClose = () => {
     if (!deleteTaskMutationResult.fetching) {
@@ -34,7 +34,7 @@ export const TaskDefinitionDeleteModalComponent: FC<Props> = ({
       const result = await deleteTaskMutation({
         id: task.id,
       });
-      if (!result?.data?.deleteTask || result.error) {
+      if (!result?.data?.deleteTaskDefinition || result.error) {
         notifications.show({
           id: "submitRegister-error",
           position: "top-center",

@@ -11,7 +11,7 @@ import { TASK_DEFINITION_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   DeadLineCheck,
   useGetTaskDefinitionByIdAndCategoryQuery,
-  useUpdateTaskMutation,
+  useUpdateTaskDefinitionMutation,
 } from "@/graphql/gen/graphql";
 import { TaskInputFormValues, useTaskUtil } from "@/hooks/useTaskUtil";
 
@@ -26,7 +26,7 @@ export const TaskEditComponent: FC<Props> = ({ id }) => {
       requestPolicy: "network-only",
     });
   const [updateTaskMutationResult, updateTaskMutation] =
-    useUpdateTaskMutation();
+    useUpdateTaskDefinitionMutation();
   const router = useRouter();
   const userAccountState = useAtomValue(userAccountAtom);
   const { getDeadLineCheckSubSettingFromForm } = useTaskUtil();
@@ -55,7 +55,7 @@ export const TaskEditComponent: FC<Props> = ({ id }) => {
       ),
       detail: formValues.detail ?? null,
     });
-    if (!result?.data?.updateTask || result.error) {
+    if (!result?.data?.updateTaskDefinition || result.error) {
       notifications.show({
         id: "submitEdit-error",
         position: "top-center",

@@ -21,6 +21,6 @@ export const getTaskExecuteListByDefinitionIdQueryDocument = gql`
 
 export const deleteTaskExecuteMutationDocument = gql`
   mutation DeleteTaskExecute($taskExecuteId: String!) {
-    deleteTaskExecute(taskExecuteId: $taskExecuteId)
+    deleteTaskExecute(id: $taskExecuteId)
   }
 `;

@@ -6,25 +6,26 @@ import { notifications } from "@mantine/notifications";
 
 import { TaskExecutionDeleteModalComponent } from "./TaskExecutionDeleteModalComponent";
 import {
-  TaskCheckDisplayResponse,
   TaskExecuteResponse,
   useGetTaskExecuteListByDefinitionIdQuery,
 } from "@/graphql/gen/graphql";
 
 type Props = {
-  checkTask: TaskCheckDisplayResponse;
+  checkTaskId: string;
+  checkTaskTitle: string;
   isOpen: boolean;
   closeModal: () => void;
 };
 
 export const TaskExecutionListModalComponent: FC<Props> = ({
-  checkTask,
+  checkTaskId,
+  checkTaskTitle,
   isOpen,
   closeModal,
 }) => {
   const [{ data, fetching, error }, reexecuteQuery] =
     useGetTaskExecuteListByDefinitionIdQuery({
-      variables: { taskDefinitionId: checkTask.id },
+      variables: { taskDefinitionId: checkTaskId },
       requestPolicy: "network-only",
     });
   const [deleteTargetExecute, setDeleteTargetExecute] = useState<
@@ -153,7 +154,7 @@ export const TaskExecutionListModalComponent: FC<Props> = ({
     <Modal
       opened={isOpen}
       onClose={closeModal}
-      title={`${checkTask.title}の実施履歴`}
+      title={`${checkTaskTitle}の実施履歴`}
       className="max-w-[310px] min-w-[310px]"
     >
       {fetching && <Loader size={30} />}

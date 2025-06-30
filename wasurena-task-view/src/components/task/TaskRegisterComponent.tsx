@@ -10,7 +10,7 @@ import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TASK_DEFINITION_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   DeadLineCheck,
-  useCreateTaskMutation,
+  useCreateTaskDefinitionMutation,
   useGetTaskCategoriesForTaskDefinitionQueryQuery,
 } from "@/graphql/gen/graphql";
 import { TaskInputFormValues, useTaskUtil } from "@/hooks/useTaskUtil";
@@ -21,7 +21,7 @@ export const TaskRegisterComponent: FC = ({}) => {
       requestPolicy: "network-only",
     });
   const [createTaskMutationResult, createTaskMutation] =
-    useCreateTaskMutation();
+    useCreateTaskDefinitionMutation();
   const router = useRouter();
   const userAccountState = useAtomValue(userAccountAtom);
   const { getDeadLineCheckSubSettingFromForm } = useTaskUtil();
@@ -49,7 +49,7 @@ export const TaskRegisterComponent: FC = ({}) => {
       ),
       detail: formValues.detail ?? null,
     });
-    if (!result?.data?.createTask || result.error) {
+    if (!result?.data?.createTaskDefinition || result.error) {
       notifications.show({
         id: "submitRegister-error",
         position: "top-center",

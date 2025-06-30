@@ -1,13 +1,37 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
+scalar DateTime
+scalar JSON
 
-scalar Map
-scalar Time
+type CreateUserRegisterTokenResponse {
+  token: String!
+  lineName: String!
+}
 
-directive @isAuthenticated on FIELD_DEFINITION
+input NewUserAccountInput {
+  authToken: String!
+  userSettingId: String!
+  userName: String!
+}
+
+input UpdateUserAccountInput {
+  userSettingId: String!
+  userName: String!
+}
+
+type UserAccountResponse {
+  token: String!
+  userSettingId: String!
+  userName: String!
+  imageUrl: String
+  isLineBotFollow: Boolean!
+}
 
 input CategoryInput {
+  name: String!
+  displayOrder: Int
+}
+
+type TaskCategoryResponse {
+  id: String!
   name: String!
   displayOrder: Int
 }
@@ -22,49 +46,14 @@ enum DeadLineCheck {
   YearOnceDate
 }
 
-input TaskInput {
+input TaskDefinitionInput {
   title: String!
   displayFlag: Boolean!
   notificationFlag: Boolean!
   categoryId: String
   deadLineCheck: DeadLineCheck
-  deadLineCheckSubSetting: Map
+  deadLineCheckSubSetting: JSON
   detail: String
-}
-
-input NewTaskExecute {
-  taskDefinitionId: String!
-  memo: String
-}
-
-input NewUserAccount {
-  authToken: String!
-  userSettingId: String!
-  userName: String!
-}
-
-input UpdateUserAccountInput {
-  userSettingId: String!
-  userName: String!
-}
-
-type CreateUserRegisterTokenResponse {
-  token: String!
-  lineName: String!
-}
-
-type UserAccountResponse {
-  token: String!
-  userSettingId: String!
-  userName: String!
-  imageUrl: String
-  isLineBotFollow: Boolean!
-}
-
-type TaskCategoryResponse {
-  id: String!
-  name: String!
-  displayOrder: Int
 }
 
 type TaskDefinitionResponse {
@@ -75,7 +64,7 @@ type TaskDefinitionResponse {
   categoryId: String
   categoryName: String
   deadLineCheck: DeadLineCheck
-  deadLineCheckSubSetting: Map
+  deadLineCheckSubSetting: JSON
   detail: String
 }
 
@@ -87,47 +76,48 @@ type TaskCheckDisplayResponse {
   categoryId: String
   categoryName: String
   deadLineCheck: DeadLineCheck
-  deadLineCheckSubSetting: Map
+  deadLineCheckSubSetting: JSON
   detail: String
-  latestExecDateTime: Time
-  nextDeadLineDateTime: Time
+  latestExecDateTime: DateTime
+  nextDeadLineDateTime: DateTime
   isExceedDeadLine: Boolean!
+}
+
+input TaskExecuteInput {
+  taskDefinitionId: String!
+  memo: String
 }
 
 type TaskExecuteResponse {
   id: String!
   taskDefinitionId: String!
-  executeDateTime: Time!
+  executeDateTime: DateTime!
   memo: String
 }
 
 type Query {
   getUserRegisterToken(lineAuthCode: String!): CreateUserRegisterTokenResponse
   getRegisteredUser(lineAuthCode: String!): UserAccountResponse
-  getUserAccountFromAuthHeader: UserAccountResponse @isAuthenticated
-  getTaskCategories: [TaskCategoryResponse!] @isAuthenticated
-  getTaskCategoryById(categoryId: String!): TaskCategoryResponse
-    @isAuthenticated
-  getTaskDefinitions: [TaskDefinitionResponse!] @isAuthenticated
-  getTaskDefinitionById(taskDefinitionId: String!): TaskDefinitionResponse
-    @isAuthenticated
-  getTaskCheckDisplayList: [TaskCheckDisplayResponse!] @isAuthenticated
+  getUserAccountFromAuthHeader: UserAccountResponse
+  getTaskCategories: [TaskCategoryResponse!]
+  getTaskCategoryById(id: String!): TaskCategoryResponse
+  getTaskDefinitions: [TaskDefinitionResponse!]
+  getTaskDefinitionById(id: String!): TaskDefinitionResponse
+  getTaskCheckDisplayList: [TaskCheckDisplayResponse!]
   getTaskExecuteListByDefinitionId(
     taskDefinitionId: String!
-  ): [TaskExecuteResponse!] @isAuthenticated
+  ): [TaskExecuteResponse!]
 }
 
 type Mutation {
-  executeScheduleCheckBatch(token: String!): Boolean!
-  createCategory(input: CategoryInput!): Boolean! @isAuthenticated
-  updateCategory(id: String!, input: CategoryInput!): Boolean! @isAuthenticated
-  deleteCategory(id: String!): Boolean! @isAuthenticated
-  createTask(input: TaskInput!): Boolean! @isAuthenticated
-  updateTask(id: String!, input: TaskInput!): Boolean! @isAuthenticated
-  deleteTask(id: String!): Boolean! @isAuthenticated
-  createTaskExecute(input: NewTaskExecute!): Boolean! @isAuthenticated
-  deleteTaskExecute(taskExecuteId: String!): Boolean! @isAuthenticated
-  createUserAccount(input: NewUserAccount!): UserAccountResponse
+  createUserAccount(input: NewUserAccountInput!): UserAccountResponse
   updateUserAccount(input: UpdateUserAccountInput!): UserAccountResponse
-    @isAuthenticated
+  createCategory(input: CategoryInput!): Boolean
+  updateCategory(id: String!, input: CategoryInput!): Boolean
+  deleteCategory(id: String!): Boolean
+  createTaskDefinition(input: TaskDefinitionInput!): Boolean
+  updateTaskDefinition(id: String!, input: TaskDefinitionInput!): Boolean
+  deleteTaskDefinition(id: String!): Boolean
+  createTaskExecute(input: TaskExecuteInput!): Boolean
+  deleteTaskExecute(id: String!): Boolean
 }
