@@ -15,4 +15,4 @@ export const CATEGORY_REGISTER_PAGE_PATH = "/category/register";
 export const CATEGORY_EDIT_PAGE_PATH = "/category/edit";
 export const CATEGORY_LIST_PAGE_PATH = "/category/list";
 
-export const INQUIRY_AND_OTHERS_PAGE_PATH = "inquiryAndOthers";
+export const INQUIRY_AND_OTHERS_PAGE_PATH = "/inquiryAndOthers";

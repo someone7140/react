@@ -16,7 +16,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
+  DateTime: { input: Date; output: Date; }
   JSON: { input: any; output: any; }
 };
 
@@ -50,6 +50,7 @@ export type Mutation = {
   deleteCategory?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   deleteTaskDefinition?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   deleteTaskExecute?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
+  executeTaskCheckNotifyBatch?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   updateCategory?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   updateTaskDefinition?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   updateUserAccount?: Maybe<FieldWrapper<UserAccountResponse>>;
@@ -88,6 +89,11 @@ export type MutationDeleteTaskDefinitionArgs = {
 
 export type MutationDeleteTaskExecuteArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationExecuteTaskCheckNotifyBatchArgs = {
+  batchToken: Scalars['String']['input'];
 };
 
 
@@ -313,7 +319,7 @@ export type GetTaskExecuteListByDefinitionIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTaskExecuteListByDefinitionIdQuery = { __typename?: 'Query', getTaskExecuteListByDefinitionId?: Array<{ __typename?: 'TaskExecuteResponse', id: string, taskDefinitionId: string, executeDateTime: any, memo?: string | null }> | null };
+export type GetTaskExecuteListByDefinitionIdQuery = { __typename?: 'Query', getTaskExecuteListByDefinitionId?: Array<{ __typename?: 'TaskExecuteResponse', id: string, taskDefinitionId: string, executeDateTime: Date, memo?: string | null }> | null };
 
 export type DeleteTaskExecuteMutationVariables = Exact<{
   taskExecuteId: Scalars['String']['input'];
@@ -366,7 +372,7 @@ export type GetTaskDefinitionByIdAndCategoryQuery = { __typename?: 'Query', getT
 export type GetTaskCheckDisplayListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: any | null, nextDeadLineDateTime?: any | null, isExceedDeadLine: boolean }> | null };
+export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
 
 export type DeleteTaskDefinitionMutationVariables = Exact<{
   id: Scalars['String']['input'];
