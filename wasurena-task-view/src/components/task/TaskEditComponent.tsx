@@ -38,7 +38,9 @@ export const TaskEditComponent: FC<Props> = ({ id }) => {
         : null;
 
     const notificationFlag =
-      formValues.displayFlag && userAccountState?.isLineBotFollow
+      formValues.displayFlag &&
+      userAccountState?.isLineBotFollow &&
+      !!formValues.deadLineCheck
         ? formValues.notificationFlag
         : false;
 

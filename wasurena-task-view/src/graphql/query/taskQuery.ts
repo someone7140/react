@@ -14,6 +14,22 @@ export const taskDefinitionResponseFragment = gql`
   }
 `;
 
+export const taskCheckDisplayResponseFragment = gql`
+  fragment TaskCheckDisplayObj on TaskCheckDisplayResponse {
+    id
+    title
+    displayFlag
+    notificationFlag
+    categoryId
+    categoryName
+    deadLineCheck
+    deadLineCheckSubSetting
+    latestExecDateTime
+    nextDeadLineDateTime
+    isExceedDeadLine
+  }
+`;
+
 export const createTaskDefinitionMutationDocument = gql`
   mutation CreateTaskDefinition(
     $title: String!
@@ -86,17 +102,15 @@ export const getTaskDefinitionByIdQueryDocument = gql`
 export const getTaskCheckDisplayListQueryDocument = gql`
   query GetTaskCheckDisplayList {
     getTaskCheckDisplayList {
-      id
-      title
-      displayFlag
-      notificationFlag
-      categoryId
-      categoryName
-      deadLineCheck
-      deadLineCheckSubSetting
-      latestExecDateTime
-      nextDeadLineDateTime
-      isExceedDeadLine
+      ...TaskCheckDisplayObj
+    }
+  }
+`;
+
+export const getTaskCheckDisplayListTopQueryDocument = gql`
+  query GetTaskCheckDisplayListTop {
+    getTaskCheckDisplayList {
+      ...TaskCheckDisplayObj
     }
   }
 `;

@@ -3,7 +3,9 @@
 import React, { FC, useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { Button, Card } from "@mantine/core";
+import { useAtomValue } from "jotai";
 
+import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TaskExecutionWithMemoModalComponent } from "../modal/TaskExecutionWithMemoModalComponent";
 import { TaskExecutionListModalComponent } from "../modal/TaskExecutionListModalComponent";
 import {
@@ -17,6 +19,7 @@ type Props = {
 };
 
 export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
+  const userAccountState = useAtomValue(userAccountAtom);
   const [checkTaskState, setCheckTaskState] = useState(checkTask);
   const [
     isOpenTaskExecutionWithMemoModal,
@@ -151,6 +154,12 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
           <div>
             カテゴリー：
             {checkTaskState.categoryName}
+          </div>
+        )}
+        {userAccountState?.isLineBotFollow && (
+          <div>
+            LINE通知：
+            {checkTaskState.notificationFlag ? "あり" : "なし"}
           </div>
         )}
         <div className="flex justify-center mt-3 gap-3 items-stretch">

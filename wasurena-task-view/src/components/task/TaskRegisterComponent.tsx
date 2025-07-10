@@ -33,7 +33,9 @@ export const TaskRegisterComponent: FC = ({}) => {
         : null;
 
     const notificationFlag =
-      formValues.displayFlag && userAccountState?.isLineBotFollow
+      formValues.displayFlag &&
+      userAccountState?.isLineBotFollow &&
+      !!formValues.deadLineCheck
         ? formValues.notificationFlag
         : false;
 

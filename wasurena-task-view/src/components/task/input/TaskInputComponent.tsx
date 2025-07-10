@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
 import {
@@ -47,6 +47,10 @@ export const TaskInputComponent: FC<Props> = ({
   const userAccountState = useAtomValue(userAccountAtom);
   const { getTaskInputDeadLineCheckSubSetting } = useTaskUtil();
   const router = useRouter();
+  // 対象の期限サブ設定を表示させるかの判定に使う設定
+  const [selectedDeadLineCheck, setSelectedDeadLineCheck] = useState<
+    DeadLineCheck | undefined
+  >(registeredTask?.deadLineCheck ?? undefined);
 
   const registeredDeadLineCheckSubSetting = registeredTask
     ? getTaskInputDeadLineCheckSubSetting(
@@ -54,6 +58,7 @@ export const TaskInputComponent: FC<Props> = ({
         registeredTask?.deadLineCheckSubSetting ?? undefined
       )
     : undefined;
+
   const form = useForm<TaskInputFormValues>({
     mode: "uncontrolled",
     initialValues: registeredTask
@@ -130,19 +135,6 @@ export const TaskInputComponent: FC<Props> = ({
     },
   });
 
-  // 対象の期限サブ設定を表示させるかの判定
-  const judgeDisplayDeadLineSubSetting = (
-    deadLineCheckStr: string | undefined,
-    targetSubSetting: DeadLineCheck
-  ) => {
-    if (deadLineCheckStr) {
-      const deadLineCheck = deadLineCheckStr as DeadLineCheck;
-      return deadLineCheck === targetSubSetting;
-    } else {
-      return false;
-    }
-  };
-
   const categorySelects = categoriesData
     ? [
         { value: "", label: "未指定" },
@@ -151,6 +143,10 @@ export const TaskInputComponent: FC<Props> = ({
         }),
       ]
     : [];
+
+  form.watch("deadLineCheck", ({ value }) => {
+    setSelectedDeadLineCheck(value ? (value as DeadLineCheck) : undefined);
+  });
 
   return (
     <form
@@ -187,10 +183,7 @@ export const TaskInputComponent: FC<Props> = ({
           allowDeselect={false}
         />
       )}
-      {judgeDisplayDeadLineSubSetting(
-        form.getValues().deadLineCheck,
-        DeadLineCheck.DailyHour
-      ) && (
+      {selectedDeadLineCheck === DeadLineCheck.DailyHour && (
         <NumberInput
           withAsterisk
           hideControls
@@ -200,10 +193,7 @@ export const TaskInputComponent: FC<Props> = ({
           className={subSettingTextInputStyle()}
         />
       )}
-      {judgeDisplayDeadLineSubSetting(
-        form.getValues().deadLineCheck,
-        DeadLineCheck.WeeklyDay
-      ) && (
+      {selectedDeadLineCheck === DeadLineCheck.WeeklyDay && (
         <Select
           withAsterisk
           label="週の曜日"
@@ -213,10 +203,7 @@ export const TaskInputComponent: FC<Props> = ({
           allowDeselect={false}
         />
       )}
-      {judgeDisplayDeadLineSubSetting(
-        form.getValues().deadLineCheck,
-        DeadLineCheck.WeeklyDayInterval
-      ) && (
+      {selectedDeadLineCheck === DeadLineCheck.WeeklyDayInterval && (
         <NumberInput
           withAsterisk
           hideControls
@@ -226,10 +213,7 @@ export const TaskInputComponent: FC<Props> = ({
           className={subSettingTextInputStyle()}
         />
       )}
-      {judgeDisplayDeadLineSubSetting(
-        form.getValues().deadLineCheck,
-        DeadLineCheck.MonthDate
-      ) && (
+      {selectedDeadLineCheck === DeadLineCheck.MonthDate && (
         <NumberInput
           withAsterisk
           hideControls
@@ -239,10 +223,7 @@ export const TaskInputComponent: FC<Props> = ({
           className={subSettingTextInputStyle()}
         />
       )}
-      {judgeDisplayDeadLineSubSetting(
-        form.getValues().deadLineCheck,
-        DeadLineCheck.YearOnceDate
-      ) && (
+      {selectedDeadLineCheck === DeadLineCheck.YearOnceDate && (
         <>
           <NumberInput
             withAsterisk
@@ -262,13 +243,15 @@ export const TaskInputComponent: FC<Props> = ({
           />
         </>
       )}
-      {userAccountState?.isLineBotFollow && form.getValues().displayFlag && (
-        <Switch
-          key={form.key("notificationFlag")}
-          {...form.getInputProps("notificationFlag", { type: "checkbox" })}
-          label="LINE通知"
-        />
-      )}
+      {userAccountState?.isLineBotFollow &&
+        form.getValues().displayFlag &&
+        !!form.getValues().deadLineCheck && (
+          <Switch
+            key={form.key("notificationFlag")}
+            {...form.getInputProps("notificationFlag", { type: "checkbox" })}
+            label="LINE通知"
+          />
+        )}
       <Textarea
         label="詳細など"
         key={form.key("detail")}

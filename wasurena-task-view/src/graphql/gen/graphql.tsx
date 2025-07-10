@@ -330,6 +330,8 @@ export type DeleteTaskExecuteMutation = { __typename?: 'Mutation', deleteTaskExe
 
 export type TaskDefinitionObjFragment = { __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, detail?: string | null };
 
+export type TaskCheckDisplayObjFragment = { __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean };
+
 export type CreateTaskDefinitionMutationVariables = Exact<{
   title: Scalars['String']['input'];
   displayFlag: Scalars['Boolean']['input'];
@@ -374,6 +376,11 @@ export type GetTaskCheckDisplayListQueryVariables = Exact<{ [key: string]: never
 
 export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
 
+export type GetTaskCheckDisplayListTopQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskCheckDisplayListTopQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
+
 export type DeleteTaskDefinitionMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
@@ -413,6 +420,21 @@ export const TaskDefinitionObjFragmentDoc = gql`
   deadLineCheck
   deadLineCheckSubSetting
   detail
+}
+    `;
+export const TaskCheckDisplayObjFragmentDoc = gql`
+    fragment TaskCheckDisplayObj on TaskCheckDisplayResponse {
+  id
+  title
+  displayFlag
+  notificationFlag
+  categoryId
+  categoryName
+  deadLineCheck
+  deadLineCheckSubSetting
+  latestExecDateTime
+  nextDeadLineDateTime
+  isExceedDeadLine
 }
     `;
 export const GetUserRegisterTokenDocument = gql`
@@ -606,23 +628,24 @@ export function useGetTaskDefinitionByIdAndCategoryQuery(options: Omit<Urql.UseQ
 export const GetTaskCheckDisplayListDocument = gql`
     query GetTaskCheckDisplayList {
   getTaskCheckDisplayList {
-    id
-    title
-    displayFlag
-    notificationFlag
-    categoryId
-    categoryName
-    deadLineCheck
-    deadLineCheckSubSetting
-    latestExecDateTime
-    nextDeadLineDateTime
-    isExceedDeadLine
+    ...TaskCheckDisplayObj
   }
 }
-    `;
+    ${TaskCheckDisplayObjFragmentDoc}`;
 
 export function useGetTaskCheckDisplayListQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCheckDisplayListQueryVariables>, 'query'>) {
   return Urql.useQuery<GetTaskCheckDisplayListQuery, GetTaskCheckDisplayListQueryVariables>({ query: GetTaskCheckDisplayListDocument, ...options });
+};
+export const GetTaskCheckDisplayListTopDocument = gql`
+    query GetTaskCheckDisplayListTop {
+  getTaskCheckDisplayList {
+    ...TaskCheckDisplayObj
+  }
+}
+    ${TaskCheckDisplayObjFragmentDoc}`;
+
+export function useGetTaskCheckDisplayListTopQuery(options?: Omit<Urql.UseQueryArgs<GetTaskCheckDisplayListTopQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetTaskCheckDisplayListTopQuery, GetTaskCheckDisplayListTopQueryVariables>({ query: GetTaskCheckDisplayListTopDocument, ...options });
 };
 export const DeleteTaskDefinitionDocument = gql`
     mutation DeleteTaskDefinition($id: String!) {

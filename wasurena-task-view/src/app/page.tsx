@@ -2,13 +2,19 @@
 
 import Link from "next/link";
 import { useAtom } from "jotai";
+import { Loader } from "@mantine/core";
 
 import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TaskCheckListComponent } from "@/components/task/TaskCheckListComponent";
+import { useGetTaskCheckDisplayListTopQuery } from "@/graphql/gen/graphql";
 import { linkStyle } from "@/style/commonStyle";
 
 export default function Home() {
   const [userAccountState] = useAtom(userAccountAtom);
+  const [{ data, fetching, error }] = useGetTaskCheckDisplayListTopQuery({
+    requestPolicy: "network-only",
+    pause: !userAccountState,
+  });
 
   return (
     <div>
@@ -26,7 +32,17 @@ export default function Home() {
           を行なって使用してください。
         </div>
       )}
-      {userAccountState && <TaskCheckListComponent />}
+      {userAccountState && (
+        <>
+          {fetching && <Loader size={30} />}
+          {data?.getTaskCheckDisplayList && (
+            <TaskCheckListComponent
+              taskCheckList={data.getTaskCheckDisplayList}
+              error={error}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }
