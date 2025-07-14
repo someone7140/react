@@ -72,7 +72,7 @@ export const PostRegisterComponent: FC<Props> = ({ placeId }) => {
     <>
       {placeId && data && data.getPostPlaces.length > 0 && (
         <>
-          <div className={pageTitleStyle()}>
+          <div className={`${pageTitleStyle()} mr-5`}>
             「{data.getPostPlaces[0].name}」で投稿
           </div>
           <PostInputComponent

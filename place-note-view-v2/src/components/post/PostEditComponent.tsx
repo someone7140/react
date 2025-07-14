@@ -30,6 +30,7 @@ export const PostEditComponent: FC<Props> = ({ id, placeId }) => {
       idFilter: id,
       placeIdFilter: null,
       categoryIdsFilter: null,
+      keywordFilter: null,
       isOrderPostDate: false,
     },
     fetchPolicy: "network-only",

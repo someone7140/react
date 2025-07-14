@@ -3,13 +3,9 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export const postPlaceInputFormSchema = z.object({
-  name: z
-    .string({
-      required_error: "名前は必須です",
-    })
-    .min(1, {
-      message: "名前は必須です",
-    }),
+  name: z.string().min(1, {
+    message: "名前は必須です",
+  }),
   address: z.string().optional(),
   categoryIdList: z.array(z.string()),
   detail: z.string().optional(),

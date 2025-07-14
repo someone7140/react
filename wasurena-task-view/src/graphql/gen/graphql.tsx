@@ -130,6 +130,7 @@ export type Query = {
   getTaskExecuteListByDefinitionId?: Maybe<Array<FieldWrapper<TaskExecuteResponse>>>;
   getUserAccountFromAuthHeader?: Maybe<FieldWrapper<UserAccountResponse>>;
   getUserRegisterToken?: Maybe<FieldWrapper<CreateUserRegisterTokenResponse>>;
+  pingCheckExecute?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
 };
 
 
@@ -267,6 +268,11 @@ export type GetRegisteredUserQueryVariables = Exact<{
 
 
 export type GetRegisteredUserQuery = { __typename?: 'Query', getRegisteredUser?: { __typename?: 'UserAccountResponse', token: string, userName: string, userSettingId: string, imageUrl?: string | null, isLineBotFollow: boolean } | null };
+
+export type PingCheckExecuteQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PingCheckExecuteQuery = { __typename?: 'Query', pingCheckExecute?: boolean | null };
 
 export type TaskCategoryObjFragment = { __typename?: 'TaskCategoryResponse', id: string, name: string, displayOrder?: number | null };
 
@@ -494,6 +500,15 @@ export const GetRegisteredUserDocument = gql`
 
 export function useGetRegisteredUserQuery(options: Omit<Urql.UseQueryArgs<GetRegisteredUserQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRegisteredUserQuery, GetRegisteredUserQueryVariables>({ query: GetRegisteredUserDocument, ...options });
+};
+export const PingCheckExecuteDocument = gql`
+    query PingCheckExecute {
+  pingCheckExecute
+}
+    `;
+
+export function usePingCheckExecuteQuery(options?: Omit<Urql.UseQueryArgs<PingCheckExecuteQueryVariables>, 'query'>) {
+  return Urql.useQuery<PingCheckExecuteQuery, PingCheckExecuteQueryVariables>({ query: PingCheckExecuteDocument, ...options });
 };
 export const GetTaskCategoriesDocument = gql`
     query GetTaskCategories {

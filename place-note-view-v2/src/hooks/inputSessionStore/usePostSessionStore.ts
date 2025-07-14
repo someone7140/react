@@ -3,15 +3,11 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export const postInputFormSchema = z.object({
-  title: z
-    .string({
-      required_error: "タイトルは必須です",
-    })
-    .min(1, {
-      message: "タイトルは必須です",
-    }),
-  visitedDate: z.date({
-    required_error: "訪問日は必須です",
+  title: z.string().min(1, {
+    message: "タイトルは必須です",
+  }),
+  visitedDate: z.date().refine((val) => val != null, {
+    message: "日付は必須です",
   }),
   isOpen: z.boolean(),
   categoryIdList: z.array(z.string()),

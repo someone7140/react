@@ -8,7 +8,6 @@ export const USER_ACCOUNT_PROFILE = "/userAccount/profile";
 export const POST_LIST_PAGE_PATH = "/myPost/list";
 export const POST_ADD_PAGE_PATH = "/myPost/add";
 export const POST_EDIT_PAGE_PATH = "/myPost/edit";
-export const POST_SEARCH_LOCATION_PAGE_PATH = "/myPost/searchLocation";
 export const POST_CATEGORY_LIST_PAGE_PATH = "/postCategory/list";
 export const POST_CATEGORY_ADD_PAGE_PATH = "/postCategory/add";
 export const POST_CATEGORY_EDIT_PAGE_PATH = "/postCategory/edit";

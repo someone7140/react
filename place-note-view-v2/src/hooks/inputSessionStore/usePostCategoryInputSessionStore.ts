@@ -3,13 +3,9 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export const postCategoryInputFormSchema = z.object({
-  name: z
-    .string({
-      required_error: "名前は必須です",
-    })
-    .min(1, {
-      message: "名前は必須です",
-    }),
+  name: z.string().min(1, {
+    message: "名前は必須です",
+  }),
   parentCategoryId: z.string().optional(),
   displayOrder: z.number().or(z.nan()).optional(),
   detail: z.string().optional(),

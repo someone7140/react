@@ -6,6 +6,11 @@ export default function Home() {
   const TABLE_HEAD = ["日時", "タイトル", "詳細"];
   const TABLE_ROWS = [
     {
+      date: "2025/07/14",
+      title: "投稿検索機能の見直し",
+      detail: "投稿検索機能を1画面に統合し4種類方法を設置",
+    },
+    {
       date: "2025/06/02",
       title: "UIの刷新",
       detail: "UIのライブラリを変更",

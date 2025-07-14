@@ -217,6 +217,7 @@ export type PlaceNoteQueryGetMyPostsArgs = {
   categoryIdsFilter?: InputMaybe<Array<Scalars['String']['input']>>;
   idFilter?: InputMaybe<Scalars['String']['input']>;
   isOrderPostDate: Scalars['Boolean']['input'];
+  keywordFilter?: InputMaybe<Scalars['String']['input']>;
   placeIdFilter?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -479,6 +480,7 @@ export type GetMyPostsQueryVariables = Exact<{
   idFilter?: InputMaybe<Scalars['String']['input']>;
   categoryIdsFilter?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   placeIdFilter?: InputMaybe<Scalars['String']['input']>;
+  keywordFilter?: InputMaybe<Scalars['String']['input']>;
   isOrderPostDate: Scalars['Boolean']['input'];
 }>;
 
@@ -1291,11 +1293,12 @@ export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutati
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const GetMyPostsDocument = gql`
-    query GetMyPosts($idFilter: String, $categoryIdsFilter: [String!], $placeIdFilter: String, $isOrderPostDate: Boolean!) {
+    query GetMyPosts($idFilter: String, $categoryIdsFilter: [String!], $placeIdFilter: String, $keywordFilter: String, $isOrderPostDate: Boolean!) {
   getMyPosts(
     idFilter: $idFilter
     categoryIdsFilter: $categoryIdsFilter
     placeIdFilter: $placeIdFilter
+    keywordFilter: $keywordFilter
     isOrderPostDate: $isOrderPostDate
   ) {
     ...PostObj
@@ -1318,6 +1321,7 @@ export const GetMyPostsDocument = gql`
  *      idFilter: // value for 'idFilter'
  *      categoryIdsFilter: // value for 'categoryIdsFilter'
  *      placeIdFilter: // value for 'placeIdFilter'
+ *      keywordFilter: // value for 'keywordFilter'
  *      isOrderPostDate: // value for 'isOrderPostDate'
  *   },
  * });

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FC, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { PostUrl } from "@/graphql/gen/graphql";
@@ -25,11 +26,14 @@ export const WebWithInfoComponent: FC<Props> = ({ url }) => {
             onError={(e) => {
               setLoadImageError(true);
             }}
+            alt={url.urlInfo?.title}
           />
         )}
-        <div className={"text-wrap break-all text-black mt-1"}>
-          【{url.urlInfo?.siteName}】
-        </div>
+        {url.urlInfo?.siteName && (
+          <div className={"text-wrap break-all text-black mt-1"}>
+            【{url.urlInfo?.siteName}】
+          </div>
+        )}
       </Link>
     </div>
   );

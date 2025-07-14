@@ -75,14 +75,14 @@ export const PostPlaceListDisplayComponent: FC<Props> = ({
                 <div className="ml-2 mt-1">
                   <div className={`${detailTextStyle()}`}>{place.detail}</div>
                   <div className="flex gap-2 items-center">
-                    <div className="text-wrap break-all max-w-[90%]">
+                    <div className="text-wrap break-all max-w-[82%]">
                       {place?.address}
                     </div>
                     {place?.latLon && (
                       <MapModalByLatLonComponent latLon={place.latLon} />
                     )}
                   </div>
-                  <div className="text-wrap break-all text-noix">
+                  <div className="text-wrap break-all mr-6">
                     {place.categoryIdList
                       .map((id) => categoryList.find((c) => c.id === id)?.name)
                       .join("、")}

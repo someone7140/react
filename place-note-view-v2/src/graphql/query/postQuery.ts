@@ -91,12 +91,14 @@ export const getMyPostsQueryDocument = gql`
     $idFilter: String
     $categoryIdsFilter: [String!]
     $placeIdFilter: String
+    $keywordFilter: String
     $isOrderPostDate: Boolean!
   ) {
     getMyPosts(
       idFilter: $idFilter
       categoryIdsFilter: $categoryIdsFilter
       placeIdFilter: $placeIdFilter
+      keywordFilter: $keywordFilter
       isOrderPostDate: $isOrderPostDate
     ) {
       ...PostObj
