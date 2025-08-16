@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { HeaderComponent } from "@/components/common/HeaderComponent";
 import { ToastComponent } from "@/components/common/ToastComponent";
-import { ApiProvider } from "@/provider/ApiProvider";
+import ApiProvider from "@/provider/ApiProvider";
+import StoreProvider from "@/provider/StoreProvider";
 import "@/style/globals.css";
 
 const geistSans = Geist({
@@ -31,17 +32,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ApiProvider>
-          <HeaderComponent />
-          <ToastComponent />
-          <div className="flex justify-center mt-3">
-            <div className="max-w-[98%] min-w-[300px]">
-              <div className="flex justify-start w-[100%] ml-3 mb-4">
-                <div>{children}</div>
+        <StoreProvider>
+          <ApiProvider>
+            <HeaderComponent />
+            <ToastComponent />
+            <div className="flex justify-center mt-3">
+              <div className="max-w-[98%] min-w-[300px]">
+                <div className="flex justify-start w-[100%] ml-3 mb-4">
+                  <div>{children}</div>
+                </div>
               </div>
             </div>
-          </div>
-        </ApiProvider>
+          </ApiProvider>
+        </StoreProvider>
       </body>
     </html>
   );

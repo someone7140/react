@@ -1,6 +1,6 @@
 "use client";
 
-import { UserAccountRegisterComponent } from "@/components/userAccount/UserAccountRegisterComponent";
+import { UserAccountLoginComponent } from "@/components/userAccount/UserAccountLoginComponent";
 import { useAppSelector } from "@/store/reduxStore";
 import { pageTitleStyle } from "@/style/CommonStyle";
 
@@ -11,8 +11,8 @@ export default function Home() {
     <>
       {!userAccount && (
         <>
-          <div className={pageTitleStyle()}>ユーザー登録</div>
-          <UserAccountRegisterComponent />
+          <div className={pageTitleStyle()}>ログイン</div>
+          <UserAccountLoginComponent />
         </>
       )}
     </>

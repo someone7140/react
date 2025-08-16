@@ -4,11 +4,14 @@ import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
 
+import { LoginMenuListComponent } from "./list/LoginMenuListComponent";
 import { NotLoginMenuListComponent } from "./list/NotLoginMenuListComponent";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
+import { useAppSelector } from "@/store/reduxStore";
 
 export const MenuComponent: FC = ({}) => {
   const router = useRouter();
+  const userAccount = useAppSelector((state) => state.userAccount);
 
   const onClickMenu = (path: string, reloadFlag?: boolean) => {
     if (reloadFlag) {
@@ -29,7 +32,10 @@ export const MenuComponent: FC = ({}) => {
             className="cursor-pointer"
           />
         </MenubarTrigger>
-        <NotLoginMenuListComponent onClickMenu={onClickMenu} />
+        {!userAccount && (
+          <NotLoginMenuListComponent onClickMenu={onClickMenu} />
+        )}
+        {userAccount && <LoginMenuListComponent onClickMenu={onClickMenu} />}
       </MenubarMenu>
     </Menubar>
   );

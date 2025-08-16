@@ -1,5 +1,6 @@
-import { ApolloError, HttpLink } from "@apollo/client";
+import { HttpLink } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client-integration-nextjs";
+import { GraphQLFormattedError } from "graphql";
 
 export const useApiManagement = () => {
   const makeApolloClient = (authToken?: string) => {
@@ -31,10 +32,11 @@ export const useApiManagement = () => {
   };
 
   // graphqlエラーからコードを取得
-  const getErrorCodeFromGraphQLError = (error: ApolloError) => {
+  const getErrorCodeFromGraphQLError = (
+    errors: ReadonlyArray<GraphQLFormattedError>
+  ) => {
     // エラーの配列の一つ目にエラーコードが入る前提
-    const errorCode =
-      (error.graphQLErrors?.[0].extensions?.code as number) ?? 500;
+    const errorCode = (errors?.[0]?.extensions?.code as number) ?? 500;
     return errorCode;
   };
 
