@@ -2,17 +2,18 @@
 
 import { NovelListComponentComponent } from "@/components/novel/NovelListComponent";
 import { useAppSelector } from "@/store/reduxStore";
+import { pageTitleStyle } from "@/style/CommonStyle";
 
 export default function Home() {
   const userAccount = useAppSelector((state) => state.userAccount);
 
   return (
     <>
-      {!userAccount && <>top</>}
       {userAccount && (
-        <div className="mb-4">
+        <>
+          <div className={pageTitleStyle()}>小説一覧</div>
           <NovelListComponentComponent />
-        </div>
+        </>
       )}
     </>
   );

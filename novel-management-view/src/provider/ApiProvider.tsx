@@ -6,12 +6,13 @@ import { useApiManagement } from "@/hooks/useApiManagement";
 import { useAppSelector } from "@/store/reduxStore";
 
 export default function ApiProvider({ children }: React.PropsWithChildren) {
-  const userAccountState = useAppSelector((state) => state.userAccount);
+  const authStorage = useAppSelector((state) => state.authStorage);
   const { makeApolloClient } = useApiManagement();
 
+  console.log(authStorage?.authToken);
   return (
     <ApolloNextAppProvider
-      makeClient={() => makeApolloClient(userAccountState?.token)}
+      makeClient={() => makeApolloClient(authStorage?.authToken)}
     >
       {children}
     </ApolloNextAppProvider>

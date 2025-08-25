@@ -1,9 +1,4 @@
-import {
-  TypedUseSelectorHook,
-  useDispatch,
-  useSelector,
-  useStore,
-} from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   FLUSH,
@@ -21,7 +16,7 @@ import { userAccountSlice } from "./slice/userAccountSlice";
 
 const rootReducer = combineReducers({
   userAccount: userAccountSlice.reducer,
-  authToken: persistedAuthStorageReducer,
+  authStorage: persistedAuthStorageReducer,
 });
 
 export const makeStore = () => {
@@ -45,6 +40,6 @@ export type AppPersistor = ReturnType<typeof makePersistor>;
 export type AppRootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
 
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<AppRootState> = useSelector;
-export const useAppStore = () => useStore<AppStore>();
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<AppRootState>();
+export const useAppStore = useStore.withTypes<AppStore>();

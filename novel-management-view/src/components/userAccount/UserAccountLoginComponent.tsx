@@ -26,7 +26,14 @@ export const UserAccountLoginComponent: FC = () => {
         variables: { authCode: authCode },
       });
       const res = result?.data?.loginByGoogleAuth;
-      if (res) {
+      if (result.errors) {
+        const errorCode = getErrorCodeFromGraphQLError(result.errors);
+        if (errorCode === 404) {
+          toast.error("未登録のGoogleアカウントです");
+        } else {
+          toast.error("システムエラーが発生しました");
+        }
+      } else if (res) {
         // ユーザー情報をグローバルstateに格納
         dispatch(
           updateUserAccount({
@@ -43,8 +50,8 @@ export const UserAccountLoginComponent: FC = () => {
     } catch (e) {
       if (e instanceof ApolloError) {
         const errorCode = getErrorCodeFromGraphQLError(e.graphQLErrors);
-        if (errorCode === 403) {
-          toast.error("既に登録済みのユーザーです");
+        if (errorCode === 404) {
+          toast.error("未登録のGoogleアカウントです");
         } else {
           toast.error("システムエラーが発生しました");
         }

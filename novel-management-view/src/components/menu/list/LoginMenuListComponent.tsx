@@ -5,7 +5,7 @@ import { Icon } from "@iconify-icon/react/dist/iconify.js";
 import { toast } from "sonner";
 
 import { MenubarContent, MenubarItem } from "@/components/ui/menubar";
-import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
+import { NOVEL_LIST_PATH, TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { useAppDispatch } from "@/store/reduxStore";
 import { menuDivStyle } from "@/style/MenuStyle";
 import { clearAuthToken } from "@/store/slice/authStorageSlice";
@@ -20,6 +20,21 @@ export const LoginMenuListComponent: FC<Props> = ({ onClickMenu }) => {
 
   return (
     <MenubarContent>
+      <MenubarItem
+        onClick={() => {
+          onClickMenu(NOVEL_LIST_PATH);
+        }}
+      >
+        <div className={menuDivStyle()}>
+          <Icon
+            icon="fluent-emoji-high-contrast:books"
+            width="20"
+            height="20"
+            style={{ color: "black" }}
+          />
+          <div>小説一覧</div>
+        </div>
+      </MenubarItem>
       <MenubarItem
         onClick={() => {
           dispatch(clearAuthToken());

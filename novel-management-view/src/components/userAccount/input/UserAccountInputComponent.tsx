@@ -16,11 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  formInputStyle,
-  formLabelStyle,
-  submitButtonStyle,
-} from "@/style/FormStyle";
+import { formLabelStyle, submitButtonStyle } from "@/style/FormStyle";
 
 export const userAccountInputFormSchema = z.object({
   userSettingId: z
@@ -68,7 +64,7 @@ export const UserAccountInputComponent: FC<Props> = ({
                 ユーザーID
               </FormLabel>
               <FormControl>
-                <Input {...field} className={formInputStyle()} />
+                <Input {...field} className="w-[320px]" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,7 +79,7 @@ export const UserAccountInputComponent: FC<Props> = ({
                 名前
               </FormLabel>
               <FormControl>
-                <Input {...field} className={formInputStyle()} />
+                <Input {...field} className="w-[320px]" />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -51,7 +51,7 @@ export const UserAccountRegisterComponent: FC = () => {
         if (errorCode === 403) {
           toast.error("既に登録済みのユーザーです");
         } else {
-          toast.error("システムエラーが発生しました");
+          toast.error("登録時にエラーが発生しました");
         }
       }
     }
@@ -73,7 +73,7 @@ export const UserAccountRegisterComponent: FC = () => {
             "ユーザーIDが重複しているか既に登録済みのGoogleアカウントです"
           );
         } else {
-          toast.error("システムエラーが発生しました");
+          toast.error("登録時にエラーが発生しました");
         }
       } else if (result.data?.addUserAccountByGoogleAuth) {
         const userData = result.data.addUserAccountByGoogleAuth;

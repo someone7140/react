@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { HeaderComponent } from "@/components/common/HeaderComponent";
 import { ToastComponent } from "@/components/common/ToastComponent";
 import ApiProvider from "@/provider/ApiProvider";
+import AuthProvider from "@/provider/AuthProvider";
 import StoreProvider from "@/provider/StoreProvider";
 import "@/style/globals.css";
 
@@ -34,15 +35,17 @@ export default function RootLayout({
       >
         <StoreProvider>
           <ApiProvider>
-            <HeaderComponent />
-            <ToastComponent />
-            <div className="flex justify-center mt-3">
-              <div className="max-w-[98%] min-w-[300px]">
-                <div className="flex justify-start w-[100%] ml-3 mb-4">
-                  <div>{children}</div>
+            <AuthProvider>
+              <HeaderComponent />
+              <ToastComponent />
+              <div className="flex justify-center mt-3">
+                <div className="max-w-[98%] min-w-[300px]">
+                  <div className="flex justify-start w-[100%] ml-3 mb-4">
+                    <div>{children}</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </AuthProvider>
           </ApiProvider>
         </StoreProvider>
       </body>
