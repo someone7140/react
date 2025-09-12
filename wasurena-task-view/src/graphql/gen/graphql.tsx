@@ -45,7 +45,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createCategory?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   createTaskDefinition?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
-  createTaskExecute?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
+  createTaskExecute?: Maybe<FieldWrapper<TaskCheckForMutationResponse>>;
   createUserAccount?: Maybe<FieldWrapper<UserAccountResponse>>;
   deleteCategory?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
   deleteTaskDefinition?: Maybe<FieldWrapper<Scalars['Boolean']['output']>>;
@@ -124,7 +124,7 @@ export type Query = {
   getRegisteredUser?: Maybe<FieldWrapper<UserAccountResponse>>;
   getTaskCategories?: Maybe<Array<FieldWrapper<TaskCategoryResponse>>>;
   getTaskCategoryById?: Maybe<FieldWrapper<TaskCategoryResponse>>;
-  getTaskCheckDisplayList?: Maybe<Array<FieldWrapper<TaskCheckDisplayResponse>>>;
+  getTaskCheckDisplayList?: Maybe<Array<FieldWrapper<TaskCheckForListResponse>>>;
   getTaskDefinitionById?: Maybe<FieldWrapper<TaskDefinitionResponse>>;
   getTaskDefinitions?: Maybe<Array<FieldWrapper<TaskDefinitionResponse>>>;
   getTaskExecuteListByDefinitionId?: Maybe<Array<FieldWrapper<TaskExecuteResponse>>>;
@@ -150,6 +150,8 @@ export type QueryGetTaskDefinitionByIdArgs = {
 
 
 export type QueryGetTaskExecuteListByDefinitionIdArgs = {
+  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   taskDefinitionId: Scalars['String']['input'];
 };
 
@@ -165,8 +167,8 @@ export type TaskCategoryResponse = {
   name: FieldWrapper<Scalars['String']['output']>;
 };
 
-export type TaskCheckDisplayResponse = {
-  __typename?: 'TaskCheckDisplayResponse';
+export type TaskCheckForListResponse = {
+  __typename?: 'TaskCheckForListResponse';
   categoryId?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   categoryName?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   deadLineCheck?: Maybe<FieldWrapper<DeadLineCheck>>;
@@ -179,6 +181,14 @@ export type TaskCheckDisplayResponse = {
   nextDeadLineDateTime?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
   notificationFlag: FieldWrapper<Scalars['Boolean']['output']>;
   title: FieldWrapper<Scalars['String']['output']>;
+};
+
+export type TaskCheckForMutationResponse = {
+  __typename?: 'TaskCheckForMutationResponse';
+  id: FieldWrapper<Scalars['String']['output']>;
+  isExceedDeadLine: FieldWrapper<Scalars['Boolean']['output']>;
+  latestExecDateTime?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+  nextDeadLineDateTime?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
 };
 
 export type TaskDefinitionInput = {
@@ -318,10 +328,12 @@ export type CreateTaskExecuteMutationVariables = Exact<{
 }>;
 
 
-export type CreateTaskExecuteMutation = { __typename?: 'Mutation', createTaskExecute?: boolean | null };
+export type CreateTaskExecuteMutation = { __typename?: 'Mutation', createTaskExecute?: { __typename?: 'TaskCheckForMutationResponse', id: string, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean } | null };
 
 export type GetTaskExecuteListByDefinitionIdQueryVariables = Exact<{
   taskDefinitionId: Scalars['String']['input'];
+  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
 }>;
 
 
@@ -336,7 +348,7 @@ export type DeleteTaskExecuteMutation = { __typename?: 'Mutation', deleteTaskExe
 
 export type TaskDefinitionObjFragment = { __typename?: 'TaskDefinitionResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, detail?: string | null };
 
-export type TaskCheckDisplayObjFragment = { __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean };
+export type TaskCheckDisplayObjFragment = { __typename?: 'TaskCheckForListResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean };
 
 export type CreateTaskDefinitionMutationVariables = Exact<{
   title: Scalars['String']['input'];
@@ -380,12 +392,12 @@ export type GetTaskDefinitionByIdAndCategoryQuery = { __typename?: 'Query', getT
 export type GetTaskCheckDisplayListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
+export type GetTaskCheckDisplayListQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckForListResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
 
 export type GetTaskCheckDisplayListTopQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCheckDisplayListTopQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckDisplayResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
+export type GetTaskCheckDisplayListTopQuery = { __typename?: 'Query', getTaskCheckDisplayList?: Array<{ __typename?: 'TaskCheckForListResponse', id: string, title: string, displayFlag: boolean, notificationFlag: boolean, categoryId?: string | null, categoryName?: string | null, deadLineCheck?: DeadLineCheck | null, deadLineCheckSubSetting?: any | null, latestExecDateTime?: Date | null, nextDeadLineDateTime?: Date | null, isExceedDeadLine: boolean }> | null };
 
 export type DeleteTaskDefinitionMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -429,7 +441,7 @@ export const TaskDefinitionObjFragmentDoc = gql`
 }
     `;
 export const TaskCheckDisplayObjFragmentDoc = gql`
-    fragment TaskCheckDisplayObj on TaskCheckDisplayResponse {
+    fragment TaskCheckDisplayObj on TaskCheckForListResponse {
   id
   title
   displayFlag
@@ -561,7 +573,12 @@ export function useDeleteTaskCategoryMutation() {
 };
 export const CreateTaskExecuteDocument = gql`
     mutation CreateTaskExecute($taskDefinitionId: String!, $memo: String) {
-  createTaskExecute(input: {taskDefinitionId: $taskDefinitionId, memo: $memo})
+  createTaskExecute(input: {taskDefinitionId: $taskDefinitionId, memo: $memo}) {
+    id
+    latestExecDateTime
+    nextDeadLineDateTime
+    isExceedDeadLine
+  }
 }
     `;
 
@@ -569,8 +586,12 @@ export function useCreateTaskExecuteMutation() {
   return Urql.useMutation<CreateTaskExecuteMutation, CreateTaskExecuteMutationVariables>(CreateTaskExecuteDocument);
 };
 export const GetTaskExecuteListByDefinitionIdDocument = gql`
-    query GetTaskExecuteListByDefinitionId($taskDefinitionId: String!) {
-  getTaskExecuteListByDefinitionId(taskDefinitionId: $taskDefinitionId) {
+    query GetTaskExecuteListByDefinitionId($taskDefinitionId: String!, $startDateTime: DateTime, $endDateTime: DateTime) {
+  getTaskExecuteListByDefinitionId(
+    taskDefinitionId: $taskDefinitionId
+    startDateTime: $startDateTime
+    endDateTime: $endDateTime
+  ) {
     id
     taskDefinitionId
     executeDateTime

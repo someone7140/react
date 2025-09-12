@@ -4,7 +4,7 @@ import { DeadLineCheckList } from "@/constants/TaskConstants";
 import {
   DeadLineCheck,
   InputMaybe,
-  TaskCheckDisplayResponse,
+  TaskCheckForListResponse,
 } from "@/graphql/gen/graphql";
 
 export type DeadLineSubCheckDailyHour = {
@@ -53,8 +53,8 @@ export type DeadLineSubCheckYearDateKindType = {
 };
 
 export type CategorizeCheckList = {
-  checkTask: TaskCheckDisplayResponse[];
-  notCheckTask: TaskCheckDisplayResponse[];
+  checkTask: TaskCheckForListResponse[];
+  notCheckTask: TaskCheckForListResponse[];
 };
 
 export type TaskInputFormValues = {
@@ -234,9 +234,9 @@ export const useTaskUtil = () => {
   };
 
   // 期限チェックのリストをカテゴライズする
-  const getCategorizeCheckList = (checkList: TaskCheckDisplayResponse[]) => {
-    let checkTask: TaskCheckDisplayResponse[] = [];
-    let notCheckTask: TaskCheckDisplayResponse[] = [];
+  const getCategorizeCheckList = (checkList: TaskCheckForListResponse[]) => {
+    let checkTask: TaskCheckForListResponse[] = [];
+    let notCheckTask: TaskCheckForListResponse[] = [];
 
     for (const check of checkList) {
       if (check.deadLineCheck) {

@@ -9,13 +9,14 @@ import { userAccountAtom } from "@/atoms/jotaiAtoms";
 import { TaskExecutionWithMemoModalComponent } from "../modal/TaskExecutionWithMemoModalComponent";
 import { TaskExecutionListModalComponent } from "../modal/TaskExecutionListModalComponent";
 import {
-  TaskCheckDisplayResponse,
+  TaskCheckForListResponse,
+  TaskCheckForMutationResponse,
   useCreateTaskExecuteMutation,
 } from "@/graphql/gen/graphql";
 import { useTaskUtil } from "@/hooks/useTaskUtil";
 
 type Props = {
-  checkTask: TaskCheckDisplayResponse;
+  checkTask: TaskCheckForListResponse;
 };
 
 export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
@@ -37,14 +38,16 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
     },
   };
 
-  const updateCheckTaskState = () => {
+  const updateCheckTaskState = (response: TaskCheckForMutationResponse) => {
     // 最終実施日時と期限切れフラグを更新
     setCheckTaskState({
       ...checkTaskState,
-      latestExecDateTime: new Date(),
-      isExceedDeadLine: false,
+      latestExecDateTime: response.latestExecDateTime,
+      isExceedDeadLine: response.isExceedDeadLine,
+      nextDeadLineDateTime: response.nextDeadLineDateTime,
     });
   };
+
   const executeTask = async () => {
     const result = await createTaskMutation({
       taskDefinitionId: checkTask.id,
@@ -71,7 +74,7 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
         color: "green",
         loading: false,
       });
-      updateCheckTaskState();
+      updateCheckTaskState(result.data.createTaskExecute);
     }
   };
 
@@ -102,7 +105,7 @@ export const TaskCheckCardComponent: FC<Props> = ({ checkTask }) => {
         color: "green",
         loading: false,
       });
-      updateCheckTaskState();
+      updateCheckTaskState(result.data.createTaskExecute);
       setIsOpenTaskExecutionWithMemoModal(false);
     }
   };

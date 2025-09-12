@@ -48,6 +48,7 @@ export const useApiManagement = () => {
           Authorization: token ? `Bearer ${token}` : "",
         },
       }),
+      preferGetMethod: false,
     });
   };
 

@@ -7,12 +7,12 @@ import { CombinedError } from "urql";
 
 import { TaskCheckCardComponent } from "./ref/TaskCheckCardComponent";
 import { TASK_DEFINITION_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
-import { TaskCheckDisplayResponse } from "@/graphql/gen/graphql";
+import { TaskCheckForListResponse } from "@/graphql/gen/graphql";
 import { useTaskUtil } from "@/hooks/useTaskUtil";
 import { linkStyle, pageTitleStyle } from "@/style/commonStyle";
 
 type Props = {
-  taskCheckList: TaskCheckDisplayResponse[];
+  taskCheckList: TaskCheckForListResponse[];
   error: CombinedError | undefined;
 };
 

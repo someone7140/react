@@ -1,4 +1,4 @@
-import { tv } from "tailwind-variants";
+import { tv } from "tailwind-variants/lite";
 
 export const formAreaStyle = tv({
   base: "flex flex-col gap-5",

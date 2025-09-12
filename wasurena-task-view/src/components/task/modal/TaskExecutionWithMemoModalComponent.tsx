@@ -4,11 +4,11 @@ import React, { FC } from "react";
 import { Button, Modal, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-import { TaskCheckDisplayResponse } from "@/graphql/gen/graphql";
-import { formAreaStyle, textInputStyle } from "@/style/formStyle";
+import { TaskCheckForListResponse } from "@/graphql/gen/graphql";
+import { formAreaStyle } from "@/style/formStyle";
 
 type Props = {
-  checkTask: TaskCheckDisplayResponse;
+  checkTask: TaskCheckForListResponse;
   isOpen: boolean;
   closeModal: () => void;
   execRegister: (memo?: string) => void;
@@ -43,6 +43,7 @@ export const TaskExecutionWithMemoModalComponent: FC<Props> = ({
       onClose={closeModal}
       title="タスク実施"
       className="max-w-[310px] min-w-[310px]"
+      closeOnClickOutside={false}
     >
       <form
         onSubmit={form.onSubmit((values) => submitTaskExecute(values))}
@@ -50,10 +51,11 @@ export const TaskExecutionWithMemoModalComponent: FC<Props> = ({
       >
         <div>「{checkTask.title}」の実施を登録します </div>
         <Textarea
+          data-autofocus
           label="メモ"
           key={form.key("memo")}
           {...form.getInputProps("memo")}
-          className={`${textInputStyle()} ml-9`}
+          className={`w-[90%] ml-6`}
           autosize
           minRows={3}
           maxRows={7}

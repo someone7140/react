@@ -1,4 +1,4 @@
-import { tv } from "tailwind-variants";
+import { tv } from "tailwind-variants/lite";
 
 export const pageTitleStyle = tv({
   base: "mb-3 font-bold text-xl",

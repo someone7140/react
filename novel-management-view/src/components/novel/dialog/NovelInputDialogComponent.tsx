@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { NovelResponse } from "@/graphql/gen/graphql";
 import { formLabelStyle, submitButtonStyle } from "@/style/FormStyle";
 
 export const novelInputFormSchema = z.object({
@@ -39,7 +40,7 @@ type Props = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onSubmit: (input: NovelInputFormType) => void;
-  registeredNovel?: NovelInputFormType;
+  registeredNovel?: NovelResponse;
   disabledFlag?: boolean;
 };
 
@@ -54,8 +55,8 @@ export const NovelInputDialogComponent: FC<Props> = ({
     reValidateMode: "onSubmit",
     resolver: zodResolver(novelInputFormSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: registeredNovel?.title ?? "",
+      description: registeredNovel?.description ?? "",
     },
   });
 

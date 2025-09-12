@@ -15,7 +15,7 @@ export const taskDefinitionResponseFragment = gql`
 `;
 
 export const taskCheckDisplayResponseFragment = gql`
-  fragment TaskCheckDisplayObj on TaskCheckDisplayResponse {
+  fragment TaskCheckDisplayObj on TaskCheckForListResponse {
     id
     title
     displayFlag
