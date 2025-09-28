@@ -1,7 +1,10 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
+import { useMutation, useQuery } from "@apollo/client/react";
 
 import { NovelDeleteDialogComponent } from "./dialog/NovelDeleteDialogComponent";
 import {
@@ -11,11 +14,11 @@ import {
 import { LoadingComponent } from "@/components/common/LoadingComponent";
 import { Button } from "@/components/ui/button";
 import {
+  AddNovelDocument,
+  DeleteNovelDocument,
+  EditNovelDocument,
+  GetMyNovelsDocument,
   NovelResponse,
-  useAddNovelMutation,
-  useDeleteNovelMutation,
-  useEditNovelMutation,
-  useGetMyNovelsQuery,
 } from "@/graphql/gen/graphql";
 import {
   deleteButtonStyle,
@@ -24,6 +27,7 @@ import {
 } from "@/style/FormStyle";
 
 export const NovelListComponentComponent: FC = () => {
+  const router = useRouter();
   const [isOpenAddNovelDialog, setIsOpenAddNovelDialog] =
     useState<boolean>(false);
   const [editNovelTarget, setEditNovelTarget] = useState<
@@ -32,54 +36,49 @@ export const NovelListComponentComponent: FC = () => {
   const [deleteNovelTarget, setDeleteNovelTarget] = useState<
     NovelResponse | undefined
   >(undefined);
-  const { data, error, loading, refetch } = useGetMyNovelsQuery({
+  const { data, error, loading, refetch } = useQuery(GetMyNovelsDocument, {
     fetchPolicy: "network-only",
   });
-  const [addNovel, { loading: addNovelLoading }] = useAddNovelMutation();
-  const [editNovel, { loading: editNovelLoading }] = useEditNovelMutation();
+  const [addNovel, { loading: addNovelLoading }] =
+    useMutation(AddNovelDocument);
+  const [editNovel, { loading: editNovelLoading }] =
+    useMutation(EditNovelDocument);
   const [deleteNovel, { loading: deleteNovelLoading }] =
-    useDeleteNovelMutation();
+    useMutation(DeleteNovelDocument);
 
   const execAddNovel = async (input: NovelInputFormType) => {
-    try {
-      const result = await addNovel({
-        variables: {
-          title: input.title,
-          description: input.description,
-        },
-      });
+    const result = await addNovel({
+      variables: {
+        title: input.title,
+        description: input.description,
+      },
+    });
 
-      if (result.errors) {
-        toast.error("登録エラーが発生しました");
-      } else {
-        refetch();
-        toast.info("登録しました");
-      }
-    } catch {
+    if (result.error) {
       toast.error("登録エラーが発生しました");
+    } else {
+      refetch();
+      toast.info("登録しました");
     }
+
     setIsOpenAddNovelDialog(false);
   };
 
   const execEditNovel = async (input: NovelInputFormType) => {
     if (editNovelTarget) {
-      try {
-        const result = await editNovel({
-          variables: {
-            id: editNovelTarget.id,
-            title: input.title,
-            description: input.description,
-          },
-        });
+      const result = await editNovel({
+        variables: {
+          id: editNovelTarget.id,
+          title: input.title,
+          description: input.description,
+        },
+      });
 
-        if (result.errors) {
-          toast.error("編集時にエラーが発生しました");
-        } else {
-          refetch();
-          toast.info("編集しました");
-        }
-      } catch {
+      if (result.error) {
         toast.error("編集時にエラーが発生しました");
+      } else {
+        refetch();
+        toast.info("編集しました");
       }
     }
     setEditNovelTarget(undefined);
@@ -87,24 +86,24 @@ export const NovelListComponentComponent: FC = () => {
 
   const execDeleteNovel = async () => {
     if (deleteNovelTarget) {
-      try {
-        const result = await deleteNovel({
-          variables: {
-            id: deleteNovelTarget.id,
-          },
-        });
+      const result = await deleteNovel({
+        variables: {
+          id: deleteNovelTarget.id,
+        },
+      });
 
-        if (result.errors) {
-          toast.error("削除時にエラーが発生しました");
-        } else {
-          refetch();
-          toast.info("削除しました");
-        }
-      } catch {
+      if (result.error) {
         toast.error("削除時にエラーが発生しました");
+      } else {
+        refetch();
+        toast.info("削除しました");
       }
     }
     setDeleteNovelTarget(undefined);
+  };
+
+  const onClickSetting = (novelId: string) => {
+    router.push(`/novelSetting/list?novelId=${novelId}`);
   };
 
   useEffect(() => {
@@ -137,15 +136,6 @@ export const NovelListComponentComponent: FC = () => {
                 </div>
               )}
               <div className="flex gap-4 ml-3">
-                <Button className="bg-green-500 cursor-pointer hover:bg-green-700">
-                  執筆
-                </Button>
-                <Button className="bg-purple-500 cursor-pointer hover:bg-purple-700">
-                  設定
-                </Button>
-                <Button className="bg-rose-500 cursor-pointer hover:bg-rose-700">
-                  エクスポート
-                </Button>
                 <Button
                   className={editButtonStyle()}
                   onClick={() => {
@@ -153,6 +143,20 @@ export const NovelListComponentComponent: FC = () => {
                   }}
                 >
                   タイトル・概要編集
+                </Button>
+                <Button className="bg-green-500 cursor-pointer hover:bg-green-700">
+                  執筆
+                </Button>
+                <Button
+                  className="bg-purple-500 cursor-pointer hover:bg-purple-700"
+                  onClick={() => {
+                    onClickSetting(novel.id);
+                  }}
+                >
+                  設定
+                </Button>
+                <Button className="bg-rose-500 cursor-pointer hover:bg-rose-700">
+                  エクスポート
                 </Button>
                 <Button
                   className={deleteButtonStyle()}

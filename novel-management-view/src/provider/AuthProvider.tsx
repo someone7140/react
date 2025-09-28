@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useQuery } from "@apollo/client/react";
 
 import { LoadingComponent } from "@/components/common/LoadingComponent";
-import { useGetUserAccountFromAuthHeaderQuery } from "@/graphql/gen/graphql";
+import { GetUserAccountFromAuthHeaderDocument } from "@/graphql/gen/graphql";
 import { useAppDispatch, useAppSelector } from "@/store/reduxStore";
 import {
   clearUserAccount,
@@ -16,10 +17,13 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
   const authStorage = useAppSelector((state) => state.authStorage);
   const dispatch = useAppDispatch();
 
-  const { data, error, loading } = useGetUserAccountFromAuthHeaderQuery({
-    fetchPolicy: "network-only",
-    skip: !!userAccount || !authStorage.authToken,
-  });
+  const { data, error, loading } = useQuery(
+    GetUserAccountFromAuthHeaderDocument,
+    {
+      fetchPolicy: "network-only",
+      skip: !!userAccount || !authStorage.authToken,
+    }
+  );
 
   useEffect(() => {
     if (error) {

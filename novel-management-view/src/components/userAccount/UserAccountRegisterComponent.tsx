@@ -2,8 +2,9 @@
 
 import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ApolloError } from "@apollo/client";
 import { toast } from "sonner";
+import { CombinedGraphQLErrors } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 
 import {
   UserAccountInputComponent,
@@ -12,8 +13,8 @@ import {
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
-  useAddUserAccountByGoogleAuthMutation,
-  useGetUserAccountRegisterTokenFromGoogleAuthCodeQuery,
+  AddUserAccountByGoogleAuthDocument,
+  GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
 } from "@/graphql/gen/graphql";
 import { useApiManagement } from "@/hooks/useApiManagement";
 import { useAppDispatch } from "@/store/reduxStore";
@@ -28,13 +29,16 @@ export const UserAccountRegisterComponent: FC = () => {
   const [googleAuthToken, setGoogleAuthToken] = useState<string | undefined>(
     undefined
   );
-  const { refetch: refetchRegisterToken } =
-    useGetUserAccountRegisterTokenFromGoogleAuthCodeQuery({
+  const { refetch: refetchRegisterToken } = useQuery(
+    GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
+    {
+      variables: { authCode: "" },
       fetchPolicy: "network-only",
       skip: true,
-    });
+    }
+  );
   const [addAccountUserByGoogle, { loading: addAccountUserByGoogleLoading }] =
-    useAddUserAccountByGoogleAuthMutation();
+    useMutation(AddUserAccountByGoogleAuthDocument);
 
   const onAuthGoogle = async (authCode: string) => {
     try {
@@ -46,59 +50,49 @@ export const UserAccountRegisterComponent: FC = () => {
         setGoogleAuthToken(token);
       }
     } catch (e) {
-      if (e instanceof ApolloError) {
-        const errorCode = getErrorCodeFromGraphQLError(e.graphQLErrors);
+      if (CombinedGraphQLErrors.is(e)) {
+        const errorCode = getErrorCodeFromGraphQLError(e.errors);
         if (errorCode === 403) {
           toast.error("既に登録済みのユーザーです");
-        } else {
-          toast.error("登録時にエラーが発生しました");
+          return;
         }
       }
+      toast.error("登録時にエラーが発生しました");
     }
   };
 
   const execRegister = async (input: UserAccountInputFormType) => {
-    try {
-      const result = await addAccountUserByGoogle({
-        variables: {
-          registerToken: googleAuthToken ?? "",
-          userSettingId: input.userSettingId,
-          name: input.name,
-        },
-      });
-      if (result.errors) {
-        const errorCode = getErrorCodeFromGraphQLError(result.errors);
-        if (errorCode === 403) {
-          toast.error(
-            "ユーザーIDが重複しているか既に登録済みのGoogleアカウントです"
-          );
-        } else {
-          toast.error("登録時にエラーが発生しました");
-        }
-      } else if (result.data?.addUserAccountByGoogleAuth) {
-        const userData = result.data.addUserAccountByGoogleAuth;
-        // ユーザー情報をグローバルstateに格納
-        dispatch(
-          updateUserAccount({
-            token: userData.token,
-            userSettingId: userData.userSettingId,
-            name: userData.name,
-            imageUrl: userData.imageUrl,
-          })
-        );
-        dispatch(updateAuthToken(userData.token));
-        toast.success("ユーザー登録しました");
-        router.push(TOP_PAGE_PATH);
-      }
-    } catch (e) {
-      if (e instanceof ApolloError) {
-        const errorCode = getErrorCodeFromGraphQLError(e.graphQLErrors);
+    const result = await addAccountUserByGoogle({
+      variables: {
+        registerToken: googleAuthToken ?? "",
+        userSettingId: input.userSettingId,
+        name: input.name,
+      },
+    });
+
+    if (result.error) {
+      if (CombinedGraphQLErrors.is(result.error)) {
+        const errorCode = getErrorCodeFromGraphQLError(result.error.errors);
         if (errorCode === 403) {
           toast.error("既に登録済みのユーザーです");
-        } else {
-          toast.error("システムエラーが発生しました");
+          return;
         }
       }
+      toast.error("システムエラーが発生しました");
+    } else if (result.data?.addUserAccountByGoogleAuth) {
+      const userData = result.data.addUserAccountByGoogleAuth;
+      // ユーザー情報をグローバルstateに格納
+      dispatch(
+        updateUserAccount({
+          token: userData.token,
+          userSettingId: userData.userSettingId,
+          name: userData.name,
+          imageUrl: userData.imageUrl,
+        })
+      );
+      dispatch(updateAuthToken(userData.token));
+      toast.success("ユーザー登録しました");
+      router.push(TOP_PAGE_PATH);
     }
   };
 

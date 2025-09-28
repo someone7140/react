@@ -9,7 +9,6 @@ export default function ApiProvider({ children }: React.PropsWithChildren) {
   const authStorage = useAppSelector((state) => state.authStorage);
   const { makeApolloClient } = useApiManagement();
 
-  console.log(authStorage?.authToken);
   return (
     <ApolloNextAppProvider
       makeClient={() => makeApolloClient(authStorage?.authToken)}

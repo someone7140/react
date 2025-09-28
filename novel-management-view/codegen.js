@@ -5,21 +5,13 @@ module.exports = {
   documents: ["src/graphql/query/**/*.ts"],
   overwrite: true,
   generates: {
-    "./src/graphql/gen/graphql.tsx": {
-      plugins: [
-        "typescript",
-        "typescript-operations",
-        "typescript-react-apollo",
-      ],
+    "./src/graphql/gen/": {
+      preset: "client",
       config: {
+        useTypeImports: true,
         skipTypename: false,
         withHooks: true,
-        withHOC: false,
-        withComponent: false,
-        noExport: false,
-        wrapFieldDefinitions: true,
-        skipTypename: false,
-        useTypeImports: true,
+        documentMode: "documentNode",
       },
     },
   },

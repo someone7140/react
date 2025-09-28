@@ -2,6 +2,7 @@
 
 import { FC } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { NovelResponse } from "@/graphql/gen/graphql";
 import { submitButtonStyle } from "@/style/FormStyle";
 

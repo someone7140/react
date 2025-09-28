@@ -3,6 +3,8 @@
 import { FC } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -24,41 +26,72 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { NovelResponse } from "@/graphql/gen/graphql";
+import { RegisterNovelSettingsDocument } from "@/graphql/gen/graphql";
 import { formLabelStyle, submitButtonStyle } from "@/style/FormStyle";
 
-export const novelInputFormSchema = z.object({
-  title: z.string().min(1, {
+export const parentSettingInputFormSchema = z.object({
+  name: z.string().min(1, {
     message: "タイトルは必須です",
   }),
+  displayOrder: z.string().refine((val) => {
+    if (val === "") return true;
+    const num = Number(val);
+    return !isNaN(num) && Number.isInteger(num);
+  }, "数値を入力してください"),
   description: z.string(),
 });
 
-export type NovelInputFormType = z.infer<typeof novelInputFormSchema>;
+export type ParentSettingInputFormType = z.infer<
+  typeof parentSettingInputFormSchema
+>;
 
 type Props = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  onSubmit: (input: NovelInputFormType) => void;
-  registeredNovel?: NovelResponse;
-  disabledFlag?: boolean;
+  novelId: string;
+  refetch: () => void;
 };
 
-export const NovelInputDialogComponent: FC<Props> = ({
+export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
   isOpen,
   setIsOpen,
-  onSubmit,
-  registeredNovel,
-  disabledFlag,
+  novelId,
+  refetch,
 }) => {
-  const form = useForm<z.infer<typeof novelInputFormSchema>>({
+  const [registerNovelSettings, { loading: registerNovelSettingsLoading }] =
+    useMutation(RegisterNovelSettingsDocument);
+  const form = useForm<z.infer<typeof parentSettingInputFormSchema>>({
     reValidateMode: "onSubmit",
-    resolver: zodResolver(novelInputFormSchema),
+    resolver: zodResolver(parentSettingInputFormSchema),
     defaultValues: {
-      title: registeredNovel?.title ?? "",
-      description: registeredNovel?.description ?? "",
+      name: "",
+      displayOrder: "",
+      description: "",
     },
   });
+
+  const onSubmit = async (input: ParentSettingInputFormType) => {
+    const result = await registerNovelSettings({
+      variables: {
+        inputs: {
+          name: input.name,
+          novelId: novelId,
+          displayOrder: input.displayOrder
+            ? parseInt(input.displayOrder)
+            : null,
+          description: input.description,
+          attributes: [],
+        },
+      },
+    });
+    if (result.error) {
+      toast.error("登録時にエラーが発生しました");
+    } else {
+      refetch();
+      setIsOpen(false);
+      toast.info("設定を登録しました");
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -69,20 +102,29 @@ export const NovelInputDialogComponent: FC<Props> = ({
             className="flex flex-col gap-3"
           >
             <DialogHeader>
-              <DialogTitle>
-                {registeredNovel
-                  ? `${registeredNovel.title}を編集`
-                  : `新規追加`}
-              </DialogTitle>
+              <DialogTitle>新規追加</DialogTitle>
             </DialogHeader>
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className={formLabelStyle({ type: "required" })}>
-                    タイトル
+                    設定名
                   </FormLabel>
+                  <FormControl>
+                    <Input {...field} className="w-[95%]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="displayOrder"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={formLabelStyle()}>表示順</FormLabel>
                   <FormControl>
                     <Input {...field} className="w-[95%]" />
                   </FormControl>
@@ -107,9 +149,9 @@ export const NovelInputDialogComponent: FC<Props> = ({
               <Button
                 type="submit"
                 className={submitButtonStyle()}
-                disabled={disabledFlag}
+                disabled={registerNovelSettingsLoading}
               >
-                {registeredNovel ? "更新する" : "登録する"}
+                登録する
               </Button>
               <DialogClose asChild>
                 <Button variant="outline">閉じる</Button>
