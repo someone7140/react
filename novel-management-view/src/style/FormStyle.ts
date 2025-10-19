@@ -12,6 +12,10 @@ export const deleteButtonStyle = tv({
   base: "bg-stone-400 cursor-pointer hover:bg-stone-600",
 });
 
+export const settingButtonStyle = tv({
+  base: "bg-purple-500 cursor-pointer hover:bg-purple-700",
+});
+
 export const formLabelStyle = tv({
   base: "text-stone-500 font-semibold text-base",
   variants: {

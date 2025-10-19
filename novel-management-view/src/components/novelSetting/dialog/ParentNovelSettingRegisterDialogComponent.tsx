@@ -2,11 +2,16 @@
 
 import { FC } from "react";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Icon } from "@iconify-icon/react";
 
+import {
+  novelSettingInputFormSchema,
+  NovelSettingInputFormType,
+} from "../form/novelSettingFormUtil";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,30 +31,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { RegisterNovelSettingsDocument } from "@/graphql/gen/graphql";
+import {
+  NovelSettingResponse,
+  RegisterNovelSettingsDocument,
+} from "@/graphql/gen/graphql";
 import { formLabelStyle, submitButtonStyle } from "@/style/FormStyle";
-
-export const parentSettingInputFormSchema = z.object({
-  name: z.string().min(1, {
-    message: "タイトルは必須です",
-  }),
-  displayOrder: z.string().refine((val) => {
-    if (val === "") return true;
-    const num = Number(val);
-    return !isNaN(num) && Number.isInteger(num);
-  }, "数値を入力してください"),
-  description: z.string(),
-});
-
-export type ParentSettingInputFormType = z.infer<
-  typeof parentSettingInputFormSchema
->;
 
 type Props = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   novelId: string;
   refetch: () => void;
+  registeredSetting?: NovelSettingResponse;
 };
 
 export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
@@ -57,30 +50,47 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
   setIsOpen,
   novelId,
   refetch,
+  registeredSetting,
 }) => {
   const [registerNovelSettings, { loading: registerNovelSettingsLoading }] =
     useMutation(RegisterNovelSettingsDocument);
-  const form = useForm<z.infer<typeof parentSettingInputFormSchema>>({
+
+  const form = useForm<z.infer<typeof novelSettingInputFormSchema>>({
     reValidateMode: "onSubmit",
-    resolver: zodResolver(parentSettingInputFormSchema),
+    resolver: zodResolver(novelSettingInputFormSchema),
     defaultValues: {
-      name: "",
-      displayOrder: "",
-      description: "",
+      name: registeredSetting?.name ?? "",
+      displayOrder:
+        registeredSetting?.displayOrder != null
+          ? String(registeredSetting.displayOrder)
+          : "",
+      description: registeredSetting?.description ?? "",
+      attributes: registeredSetting?.attributes.map((a) => {
+        return { value: a };
+      }),
     },
   });
+  const {
+    fields: attributeFields,
+    append: attributeAppend,
+    remove: attributeRemove,
+  } = useFieldArray({
+    control: form.control,
+    name: "attributes",
+  });
 
-  const onSubmit = async (input: ParentSettingInputFormType) => {
+  const onSubmit = async (input: NovelSettingInputFormType) => {
     const result = await registerNovelSettings({
       variables: {
         inputs: {
+          id: registeredSetting?.id ?? null,
           name: input.name,
           novelId: novelId,
           displayOrder: input.displayOrder
             ? parseInt(input.displayOrder)
             : null,
           description: input.description,
-          attributes: [],
+          attributes: input.attributes.filter((a) => !!a).map((a) => a.value),
         },
       },
     });
@@ -102,7 +112,9 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
             className="flex flex-col gap-3"
           >
             <DialogHeader>
-              <DialogTitle>新規追加</DialogTitle>
+              <DialogTitle>
+                {registeredSetting ? "編集" : "新規追加"}
+              </DialogTitle>
             </DialogHeader>
             <FormField
               control={form.control}
@@ -132,12 +144,56 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
                 </FormItem>
               )}
             />
+            <FormItem>
+              <div className="flex gap-3">
+                <FormLabel className={formLabelStyle()}>属性</FormLabel>
+                <div
+                  className="cursor-pointer flex items-center"
+                  onClick={() => {
+                    attributeAppend({ value: "" });
+                  }}
+                >
+                  <Icon
+                    icon="tabler:circle-plus"
+                    width="24"
+                    height="24"
+                    style={{ color: "#2fdcdb" }}
+                  />
+                </div>
+              </div>
+              {attributeFields.map((_, index) => (
+                <div key={index} className="flex gap-3 mb-1">
+                  <FormField
+                    control={form.control}
+                    name={`attributes.${index}.value`}
+                    render={({ field }) => (
+                      <FormControl>
+                        <Input {...field} className="w-[95%]" />
+                      </FormControl>
+                    )}
+                  />
+                  <div
+                    className="cursor-pointer flex items-center"
+                    onClick={() => {
+                      attributeRemove(index);
+                    }}
+                  >
+                    <Icon
+                      icon="ri:close-circle-line"
+                      width="24"
+                      height="24"
+                      style={{ color: "#3970ab" }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </FormItem>
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={formLabelStyle()}>概要</FormLabel>
+                  <FormLabel className={formLabelStyle()}>詳細</FormLabel>
                   <FormControl>
                     <Textarea {...field} className="w-[95%]" />
                   </FormControl>

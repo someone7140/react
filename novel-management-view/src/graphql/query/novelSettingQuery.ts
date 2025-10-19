@@ -24,3 +24,9 @@ export const registerNovelSettingsMutation = gql`
     registerNovelSettings(inputs: $inputs)
   }
 `;
+
+export const deleteNovelSettingMutation = gql`
+  mutation DeleteNovelSettingById($id: String!) {
+    deleteNovelSettingById(settingId: $id)
+  }
+`;

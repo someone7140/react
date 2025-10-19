@@ -23,8 +23,10 @@ import {
 import {
   deleteButtonStyle,
   editButtonStyle,
+  settingButtonStyle,
   submitButtonStyle,
 } from "@/style/FormStyle";
+import { novelDescriptionStyle, novelTitleStyle } from "@/style/NovelStyle";
 
 export const NovelListComponentComponent: FC = () => {
   const router = useRouter();
@@ -127,11 +129,9 @@ export const NovelListComponentComponent: FC = () => {
         <div className="flex flex-col gap-3">
           {novels.map((novel) => (
             <div key={novel.id}>
-              <div className="mb-2 text-xl whitespace-pre-wrap text-wrap break-all w-[95%]">
-                {novel.title}
-              </div>
+              <div className={`${novelTitleStyle()} mb-2`}>{novel.title}</div>
               {novel.description && (
-                <div className="mb-2 ml-3 whitespace-pre-wrap text-wrap text-gray-600 break-all w-[80%] text-sm">
+                <div className={`${novelDescriptionStyle()} mb-2 ml-3`}>
                   {novel.description}
                 </div>
               )}
@@ -148,7 +148,7 @@ export const NovelListComponentComponent: FC = () => {
                   執筆
                 </Button>
                 <Button
-                  className="bg-purple-500 cursor-pointer hover:bg-purple-700"
+                  className={settingButtonStyle()}
                   onClick={() => {
                     onClickSetting(novel.id);
                   }}

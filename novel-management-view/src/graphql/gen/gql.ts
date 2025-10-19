@@ -24,6 +24,7 @@ type Documents = {
     "\n  mutation DeleteNovel($id: String!) {\n    deleteNovel(id: $id)\n  }\n": typeof types.DeleteNovelDocument,
     "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getMyNovelSettings(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": typeof types.GetNovelSettingsDocument,
     "\n  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {\n    registerNovelSettings(inputs: $inputs)\n  }\n": typeof types.RegisterNovelSettingsDocument,
+    "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n": typeof types.DeleteNovelSettingByIdDocument,
 };
 const documents: Documents = {
     "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode) {\n      registerToken\n    }\n  }\n": types.GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
@@ -36,6 +37,7 @@ const documents: Documents = {
     "\n  mutation DeleteNovel($id: String!) {\n    deleteNovel(id: $id)\n  }\n": types.DeleteNovelDocument,
     "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getMyNovelSettings(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": types.GetNovelSettingsDocument,
     "\n  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {\n    registerNovelSettings(inputs: $inputs)\n  }\n": types.RegisterNovelSettingsDocument,
+    "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n": types.DeleteNovelSettingByIdDocument,
 };
 
 /**
@@ -92,6 +94,10 @@ export function graphql(source: "\n  query GetNovelSettings($novelId: String!) {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {\n    registerNovelSettings(inputs: $inputs)\n  }\n"): (typeof documents)["\n  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {\n    registerNovelSettings(inputs: $inputs)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
