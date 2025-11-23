@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import { FC } from "react";
 import { Control, useFieldArray } from "react-hook-form";
 import { Icon } from "@iconify-icon/react";
 

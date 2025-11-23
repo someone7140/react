@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@apollo/client/react";
 
@@ -96,6 +96,7 @@ export const NovelSettingParentComponent: FC<Props> = ({
             childrenRef.current?.addChild();
             setIsHasChildren(true);
           }}
+          disabled={!!childrenRef.current?.isChildrenRegisterDisabled()}
         >
           子設定を追加
         </Button>
@@ -105,6 +106,7 @@ export const NovelSettingParentComponent: FC<Props> = ({
             onClick={() => {
               childrenRef.current?.onSubmit();
             }}
+            disabled={!!childrenRef.current?.isChildrenRegisterDisabled()}
           >
             子設定を更新
           </Button>

@@ -1,7 +1,8 @@
 "use client";
 
-import { NovelSettingResponse } from "@/graphql/gen/graphql";
 import z from "zod";
+
+import { NovelSettingResponse } from "@/graphql/gen/graphql";
 
 export const novelSettingInputFormSchema = z.object({
   id: z.string().optional(),

@@ -43,9 +43,7 @@ export const UserAccountRegisterComponent: FC = () => {
   const onAuthGoogle = async (authCode: string) => {
     try {
       const result = await refetchRegisterToken({ authCode: authCode });
-      const token =
-        result?.data?.getUserAccountRegisterTokenFromGoogleAuthCode
-          .registerToken;
+      const token = result?.data?.getUserAccountRegisterTokenFromGoogleAuthCode;
       if (token) {
         setGoogleAuthToken(token);
       }

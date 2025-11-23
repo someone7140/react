@@ -14,7 +14,7 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode) {\n      registerToken\n    }\n  }\n": typeof types.GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
+    "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode)\n  }\n": typeof types.GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
     "\n  mutation AddUserAccountByGoogleAuth(\n    $registerToken: String!\n    $userSettingId: String!\n    $name: String!\n  ) {\n    addUserAccountByGoogleAuth(\n      registerToken: $registerToken\n      userSettingId: $userSettingId\n      name: $name\n    ) {\n      token\n      userSettingId\n      name\n      imageUrl\n    }\n  }\n": typeof types.AddUserAccountByGoogleAuthDocument,
     "\n  query GetUserAccountFromAuthHeader {\n    getUserAccountFromAuthHeader {\n      token\n      userSettingId\n      name\n      imageUrl\n    }\n  }\n": typeof types.GetUserAccountFromAuthHeaderDocument,
     "\n  mutation LoginByGoogleAuth($authCode: String!) {\n    loginByGoogleAuth(authCode: $authCode) {\n      token\n      userSettingId\n      name\n      imageUrl\n    }\n  }\n": typeof types.LoginByGoogleAuthDocument,
@@ -22,12 +22,14 @@ type Documents = {
     "\n  mutation AddNovel($title: String!, $description: String) {\n    addNovel(title: $title, description: $description)\n  }\n": typeof types.AddNovelDocument,
     "\n  mutation EditNovel($id: String!, $title: String!, $description: String) {\n    editNovel(id: $id, title: $title, description: $description)\n  }\n": typeof types.EditNovelDocument,
     "\n  mutation DeleteNovel($id: String!) {\n    deleteNovel(id: $id)\n  }\n": typeof types.DeleteNovelDocument,
-    "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getMyNovelSettings(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": typeof types.GetNovelSettingsDocument,
+    "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getNovelSettingsByNovelId(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": typeof types.GetNovelSettingsDocument,
     "\n  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {\n    registerNovelSettings(inputs: $inputs)\n  }\n": typeof types.RegisterNovelSettingsDocument,
-    "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n": typeof types.DeleteNovelSettingByIdDocument,
+    "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(id: $id)\n  }\n": typeof types.DeleteNovelSettingByIdDocument,
+    "\n  mutation DeleteNovelSettingsByIds($ids: [String!]!) {\n    deleteNovelSettingByIds(ids: $ids)\n  }\n": typeof types.DeleteNovelSettingsByIdsDocument,
+    "\n  query GetNovelSettingsByParentSettingId($parentSettingId: String!) {\n    getNovelSettingsByParentSettingId(parentId: $parentSettingId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": typeof types.GetNovelSettingsByParentSettingIdDocument,
 };
 const documents: Documents = {
-    "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode) {\n      registerToken\n    }\n  }\n": types.GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
+    "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode)\n  }\n": types.GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
     "\n  mutation AddUserAccountByGoogleAuth(\n    $registerToken: String!\n    $userSettingId: String!\n    $name: String!\n  ) {\n    addUserAccountByGoogleAuth(\n      registerToken: $registerToken\n      userSettingId: $userSettingId\n      name: $name\n    ) {\n      token\n      userSettingId\n      name\n      imageUrl\n    }\n  }\n": types.AddUserAccountByGoogleAuthDocument,
     "\n  query GetUserAccountFromAuthHeader {\n    getUserAccountFromAuthHeader {\n      token\n      userSettingId\n      name\n      imageUrl\n    }\n  }\n": types.GetUserAccountFromAuthHeaderDocument,
     "\n  mutation LoginByGoogleAuth($authCode: String!) {\n    loginByGoogleAuth(authCode: $authCode) {\n      token\n      userSettingId\n      name\n      imageUrl\n    }\n  }\n": types.LoginByGoogleAuthDocument,
@@ -35,9 +37,11 @@ const documents: Documents = {
     "\n  mutation AddNovel($title: String!, $description: String) {\n    addNovel(title: $title, description: $description)\n  }\n": types.AddNovelDocument,
     "\n  mutation EditNovel($id: String!, $title: String!, $description: String) {\n    editNovel(id: $id, title: $title, description: $description)\n  }\n": types.EditNovelDocument,
     "\n  mutation DeleteNovel($id: String!) {\n    deleteNovel(id: $id)\n  }\n": types.DeleteNovelDocument,
-    "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getMyNovelSettings(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": types.GetNovelSettingsDocument,
+    "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getNovelSettingsByNovelId(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": types.GetNovelSettingsDocument,
     "\n  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {\n    registerNovelSettings(inputs: $inputs)\n  }\n": types.RegisterNovelSettingsDocument,
-    "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n": types.DeleteNovelSettingByIdDocument,
+    "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(id: $id)\n  }\n": types.DeleteNovelSettingByIdDocument,
+    "\n  mutation DeleteNovelSettingsByIds($ids: [String!]!) {\n    deleteNovelSettingByIds(ids: $ids)\n  }\n": types.DeleteNovelSettingsByIdsDocument,
+    "\n  query GetNovelSettingsByParentSettingId($parentSettingId: String!) {\n    getNovelSettingsByParentSettingId(parentId: $parentSettingId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n": types.GetNovelSettingsByParentSettingIdDocument,
 };
 
 /**
@@ -57,7 +61,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode) {\n      registerToken\n    }\n  }\n"): (typeof documents)["\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode) {\n      registerToken\n    }\n  }\n"];
+export function graphql(source: "\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode)\n  }\n"): (typeof documents)["\n  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {\n    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -89,7 +93,7 @@ export function graphql(source: "\n  mutation DeleteNovel($id: String!) {\n    d
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getMyNovelSettings(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n"): (typeof documents)["\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getMyNovelSettings(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n"];
+export function graphql(source: "\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getNovelSettingsByNovelId(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n"): (typeof documents)["\n  query GetNovelSettings($novelId: String!) {\n    getMyNovelById(novelId: $novelId) {\n      id\n      title\n      description\n    }\n    getNovelSettingsByNovelId(novelId: $novelId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -97,7 +101,15 @@ export function graphql(source: "\n  mutation RegisterNovelSettings($inputs: [No
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(settingId: $id)\n  }\n"];
+export function graphql(source: "\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(id: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteNovelSettingById($id: String!) {\n    deleteNovelSettingById(id: $id)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteNovelSettingsByIds($ids: [String!]!) {\n    deleteNovelSettingByIds(ids: $ids)\n  }\n"): (typeof documents)["\n  mutation DeleteNovelSettingsByIds($ids: [String!]!) {\n    deleteNovelSettingByIds(ids: $ids)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetNovelSettingsByParentSettingId($parentSettingId: String!) {\n    getNovelSettingsByParentSettingId(parentId: $parentSettingId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n"): (typeof documents)["\n  query GetNovelSettingsByParentSettingId($parentSettingId: String!) {\n    getNovelSettingsByParentSettingId(parentId: $parentSettingId) {\n      id\n      name\n      novelId\n      parentSettingId\n      displayOrder\n      attributes\n      description\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

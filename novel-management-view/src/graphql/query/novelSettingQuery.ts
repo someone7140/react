@@ -7,7 +7,7 @@ export const getNovelSettingsQuery = gql`
       title
       description
     }
-    getMyNovelSettings(novelId: $novelId) {
+    getNovelSettingsByNovelId(novelId: $novelId) {
       id
       name
       novelId
@@ -27,6 +27,26 @@ export const registerNovelSettingsMutation = gql`
 
 export const deleteNovelSettingMutation = gql`
   mutation DeleteNovelSettingById($id: String!) {
-    deleteNovelSettingById(settingId: $id)
+    deleteNovelSettingById(id: $id)
+  }
+`;
+
+export const deleteNovelSettingsMutation = gql`
+  mutation DeleteNovelSettingsByIds($ids: [String!]!) {
+    deleteNovelSettingByIds(ids: $ids)
+  }
+`;
+
+export const getNovelSettingsByParentSettingIdQuery = gql`
+  query GetNovelSettingsByParentSettingId($parentSettingId: String!) {
+    getNovelSettingsByParentSettingId(parentId: $parentSettingId) {
+      id
+      name
+      novelId
+      parentSettingId
+      displayOrder
+      attributes
+      description
+    }
   }
 `;

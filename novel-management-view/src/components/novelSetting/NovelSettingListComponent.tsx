@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useQuery } from "@apollo/client/react";
@@ -39,7 +39,7 @@ export const NovelSettingListComponent: FC<Props> = ({ novelId }) => {
   }
 
   const novel = data?.getMyNovelById;
-  const novelSettings = data?.getMyNovelSettings ?? [];
+  const novelSettings = data?.getNovelSettingsByNovelId ?? [];
 
   return (
     <div className="min-w-[500px]">

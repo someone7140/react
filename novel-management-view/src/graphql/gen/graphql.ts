@@ -16,67 +16,67 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type MutationRoot = {
-  __typename?: 'MutationRoot';
-  addNovel: Scalars['Boolean']['output'];
-  addUserAccountByGoogleAuth: UserAccountResponse;
-  deleteNovel: Scalars['Boolean']['output'];
-  deleteNovelSettingById: Scalars['Boolean']['output'];
-  deleteNovelSettingByIds: Scalars['Boolean']['output'];
-  editNovel: Scalars['Boolean']['output'];
-  editUserAccount: UserAccountResponse;
-  loginByGoogleAuth: UserAccountResponse;
-  registerNovelSettings: Scalars['Boolean']['output'];
+export type Mutation = {
+  __typename?: 'Mutation';
+  addNovel?: Maybe<Scalars['Boolean']['output']>;
+  addUserAccountByGoogleAuth?: Maybe<UserAccountResponse>;
+  deleteNovel?: Maybe<Scalars['Boolean']['output']>;
+  deleteNovelSettingById?: Maybe<Scalars['Boolean']['output']>;
+  deleteNovelSettingByIds?: Maybe<Scalars['Boolean']['output']>;
+  editNovel?: Maybe<Scalars['Boolean']['output']>;
+  editUserAccount?: Maybe<UserAccountResponse>;
+  loginByGoogleAuth?: Maybe<UserAccountResponse>;
+  registerNovelSettings?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
-export type MutationRootAddNovelArgs = {
+export type MutationAddNovelArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
 };
 
 
-export type MutationRootAddUserAccountByGoogleAuthArgs = {
+export type MutationAddUserAccountByGoogleAuthArgs = {
   name: Scalars['String']['input'];
   registerToken: Scalars['String']['input'];
   userSettingId: Scalars['String']['input'];
 };
 
 
-export type MutationRootDeleteNovelArgs = {
+export type MutationDeleteNovelArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type MutationRootDeleteNovelSettingByIdArgs = {
-  settingId: Scalars['String']['input'];
+export type MutationDeleteNovelSettingByIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 
-export type MutationRootDeleteNovelSettingByIdsArgs = {
-  settingIds: Array<Scalars['String']['input']>;
+export type MutationDeleteNovelSettingByIdsArgs = {
+  ids: Array<Scalars['String']['input']>;
 };
 
 
-export type MutationRootEditNovelArgs = {
+export type MutationEditNovelArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
 
 
-export type MutationRootEditUserAccountArgs = {
+export type MutationEditUserAccountArgs = {
   name: Scalars['String']['input'];
   userSettingId: Scalars['String']['input'];
 };
 
 
-export type MutationRootLoginByGoogleAuthArgs = {
+export type MutationLoginByGoogleAuthArgs = {
   authCode: Scalars['String']['input'];
 };
 
 
-export type MutationRootRegisterNovelSettingsArgs = {
+export type MutationRegisterNovelSettingsArgs = {
   inputs: Array<NovelSettingRegisterInput>;
 };
 
@@ -108,44 +108,39 @@ export type NovelSettingResponse = {
   parentSettingId?: Maybe<Scalars['String']['output']>;
 };
 
-export type QueryRoot = {
-  __typename?: 'QueryRoot';
-  getMyNovelById: NovelResponse;
-  getMyNovelSettings: Array<NovelSettingResponse>;
+export type Query = {
+  __typename?: 'Query';
+  getMyNovelById?: Maybe<NovelResponse>;
   getMyNovels: Array<NovelResponse>;
+  getNovelSettingsByNovelId: Array<NovelSettingResponse>;
   getNovelSettingsByParentSettingId: Array<NovelSettingResponse>;
-  getUserAccountFromAuthHeader: UserAccountResponse;
-  getUserAccountRegisterTokenFromGoogleAuthCode: RegisterTokenFromGoogleAuthCodeResponse;
+  getUserAccountFromAuthHeader?: Maybe<UserAccountResponse>;
+  getUserAccountRegisterTokenFromGoogleAuthCode?: Maybe<Scalars['String']['output']>;
 };
 
 
-export type QueryRootGetMyNovelByIdArgs = {
+export type QueryGetMyNovelByIdArgs = {
   novelId: Scalars['String']['input'];
 };
 
 
-export type QueryRootGetMyNovelSettingsArgs = {
+export type QueryGetNovelSettingsByNovelIdArgs = {
   novelId: Scalars['String']['input'];
 };
 
 
-export type QueryRootGetNovelSettingsByParentSettingIdArgs = {
-  parentSettingId: Scalars['String']['input'];
+export type QueryGetNovelSettingsByParentSettingIdArgs = {
+  parentId: Scalars['String']['input'];
 };
 
 
-export type QueryRootGetUserAccountRegisterTokenFromGoogleAuthCodeArgs = {
+export type QueryGetUserAccountRegisterTokenFromGoogleAuthCodeArgs = {
   authCode: Scalars['String']['input'];
-};
-
-export type RegisterTokenFromGoogleAuthCodeResponse = {
-  __typename?: 'RegisterTokenFromGoogleAuthCodeResponse';
-  registerToken: Scalars['String']['output'];
 };
 
 export type UserAccountResponse = {
   __typename?: 'UserAccountResponse';
-  imageUrl?: Maybe<Scalars['String']['output']>;
+  imageUrl: Scalars['String']['output'];
   name: Scalars['String']['output'];
   token: Scalars['String']['output'];
   userSettingId: Scalars['String']['output'];
@@ -156,7 +151,7 @@ export type GetUserAccountRegisterTokenFromGoogleAuthCodeQueryVariables = Exact<
 }>;
 
 
-export type GetUserAccountRegisterTokenFromGoogleAuthCodeQuery = { __typename?: 'QueryRoot', getUserAccountRegisterTokenFromGoogleAuthCode: { __typename?: 'RegisterTokenFromGoogleAuthCodeResponse', registerToken: string } };
+export type GetUserAccountRegisterTokenFromGoogleAuthCodeQuery = { __typename?: 'Query', getUserAccountRegisterTokenFromGoogleAuthCode?: string | null };
 
 export type AddUserAccountByGoogleAuthMutationVariables = Exact<{
   registerToken: Scalars['String']['input'];
@@ -165,24 +160,24 @@ export type AddUserAccountByGoogleAuthMutationVariables = Exact<{
 }>;
 
 
-export type AddUserAccountByGoogleAuthMutation = { __typename?: 'MutationRoot', addUserAccountByGoogleAuth: { __typename?: 'UserAccountResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type AddUserAccountByGoogleAuthMutation = { __typename?: 'Mutation', addUserAccountByGoogleAuth?: { __typename?: 'UserAccountResponse', token: string, userSettingId: string, name: string, imageUrl: string } | null };
 
 export type GetUserAccountFromAuthHeaderQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserAccountFromAuthHeaderQuery = { __typename?: 'QueryRoot', getUserAccountFromAuthHeader: { __typename?: 'UserAccountResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type GetUserAccountFromAuthHeaderQuery = { __typename?: 'Query', getUserAccountFromAuthHeader?: { __typename?: 'UserAccountResponse', token: string, userSettingId: string, name: string, imageUrl: string } | null };
 
 export type LoginByGoogleAuthMutationVariables = Exact<{
   authCode: Scalars['String']['input'];
 }>;
 
 
-export type LoginByGoogleAuthMutation = { __typename?: 'MutationRoot', loginByGoogleAuth: { __typename?: 'UserAccountResponse', token: string, userSettingId: string, name: string, imageUrl?: string | null } };
+export type LoginByGoogleAuthMutation = { __typename?: 'Mutation', loginByGoogleAuth?: { __typename?: 'UserAccountResponse', token: string, userSettingId: string, name: string, imageUrl: string } | null };
 
 export type GetMyNovelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyNovelsQuery = { __typename?: 'QueryRoot', getMyNovels: Array<{ __typename?: 'NovelResponse', id: string, title: string, description?: string | null }> };
+export type GetMyNovelsQuery = { __typename?: 'Query', getMyNovels: Array<{ __typename?: 'NovelResponse', id: string, title: string, description?: string | null }> };
 
 export type AddNovelMutationVariables = Exact<{
   title: Scalars['String']['input'];
@@ -190,7 +185,7 @@ export type AddNovelMutationVariables = Exact<{
 }>;
 
 
-export type AddNovelMutation = { __typename?: 'MutationRoot', addNovel: boolean };
+export type AddNovelMutation = { __typename?: 'Mutation', addNovel?: boolean | null };
 
 export type EditNovelMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -199,38 +194,52 @@ export type EditNovelMutationVariables = Exact<{
 }>;
 
 
-export type EditNovelMutation = { __typename?: 'MutationRoot', editNovel: boolean };
+export type EditNovelMutation = { __typename?: 'Mutation', editNovel?: boolean | null };
 
 export type DeleteNovelMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type DeleteNovelMutation = { __typename?: 'MutationRoot', deleteNovel: boolean };
+export type DeleteNovelMutation = { __typename?: 'Mutation', deleteNovel?: boolean | null };
 
 export type GetNovelSettingsQueryVariables = Exact<{
   novelId: Scalars['String']['input'];
 }>;
 
 
-export type GetNovelSettingsQuery = { __typename?: 'QueryRoot', getMyNovelById: { __typename?: 'NovelResponse', id: string, title: string, description?: string | null }, getMyNovelSettings: Array<{ __typename?: 'NovelSettingResponse', id: string, name: string, novelId: string, parentSettingId?: string | null, displayOrder?: number | null, attributes: Array<string>, description?: string | null }> };
+export type GetNovelSettingsQuery = { __typename?: 'Query', getMyNovelById?: { __typename?: 'NovelResponse', id: string, title: string, description?: string | null } | null, getNovelSettingsByNovelId: Array<{ __typename?: 'NovelSettingResponse', id: string, name: string, novelId: string, parentSettingId?: string | null, displayOrder?: number | null, attributes: Array<string>, description?: string | null }> };
 
 export type RegisterNovelSettingsMutationVariables = Exact<{
   inputs: Array<NovelSettingRegisterInput> | NovelSettingRegisterInput;
 }>;
 
 
-export type RegisterNovelSettingsMutation = { __typename?: 'MutationRoot', registerNovelSettings: boolean };
+export type RegisterNovelSettingsMutation = { __typename?: 'Mutation', registerNovelSettings?: boolean | null };
 
 export type DeleteNovelSettingByIdMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type DeleteNovelSettingByIdMutation = { __typename?: 'MutationRoot', deleteNovelSettingById: boolean };
+export type DeleteNovelSettingByIdMutation = { __typename?: 'Mutation', deleteNovelSettingById?: boolean | null };
+
+export type DeleteNovelSettingsByIdsMutationVariables = Exact<{
+  ids: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
 
 
-export const GetUserAccountRegisterTokenFromGoogleAuthCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserAccountRegisterTokenFromGoogleAuthCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserAccountRegisterTokenFromGoogleAuthCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"authCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerToken"}}]}}]}}]} as unknown as DocumentNode<GetUserAccountRegisterTokenFromGoogleAuthCodeQuery, GetUserAccountRegisterTokenFromGoogleAuthCodeQueryVariables>;
+export type DeleteNovelSettingsByIdsMutation = { __typename?: 'Mutation', deleteNovelSettingByIds?: boolean | null };
+
+export type GetNovelSettingsByParentSettingIdQueryVariables = Exact<{
+  parentSettingId: Scalars['String']['input'];
+}>;
+
+
+export type GetNovelSettingsByParentSettingIdQuery = { __typename?: 'Query', getNovelSettingsByParentSettingId: Array<{ __typename?: 'NovelSettingResponse', id: string, name: string, novelId: string, parentSettingId?: string | null, displayOrder?: number | null, attributes: Array<string>, description?: string | null }> };
+
+
+export const GetUserAccountRegisterTokenFromGoogleAuthCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserAccountRegisterTokenFromGoogleAuthCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserAccountRegisterTokenFromGoogleAuthCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"authCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}}}]}]}}]} as unknown as DocumentNode<GetUserAccountRegisterTokenFromGoogleAuthCodeQuery, GetUserAccountRegisterTokenFromGoogleAuthCodeQueryVariables>;
 export const AddUserAccountByGoogleAuthDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddUserAccountByGoogleAuth"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"registerToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userSettingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addUserAccountByGoogleAuth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"registerToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"registerToken"}}},{"kind":"Argument","name":{"kind":"Name","value":"userSettingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userSettingId"}}},{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}}]}}]}}]} as unknown as DocumentNode<AddUserAccountByGoogleAuthMutation, AddUserAccountByGoogleAuthMutationVariables>;
 export const GetUserAccountFromAuthHeaderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserAccountFromAuthHeader"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserAccountFromAuthHeader"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}}]}}]}}]} as unknown as DocumentNode<GetUserAccountFromAuthHeaderQuery, GetUserAccountFromAuthHeaderQueryVariables>;
 export const LoginByGoogleAuthDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginByGoogleAuth"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginByGoogleAuth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"authCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}}]}}]}}]} as unknown as DocumentNode<LoginByGoogleAuthMutation, LoginByGoogleAuthMutationVariables>;
@@ -238,6 +247,8 @@ export const GetMyNovelsDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const AddNovelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddNovel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addNovel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}}]}]}}]} as unknown as DocumentNode<AddNovelMutation, AddNovelMutationVariables>;
 export const EditNovelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EditNovel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editNovel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}}]}]}}]} as unknown as DocumentNode<EditNovelMutation, EditNovelMutationVariables>;
 export const DeleteNovelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteNovel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteNovel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteNovelMutation, DeleteNovelMutationVariables>;
-export const GetNovelSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetNovelSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"novelId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMyNovelById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"novelId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"novelId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"getMyNovelSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"novelId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"novelId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"novelId"}},{"kind":"Field","name":{"kind":"Name","value":"parentSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<GetNovelSettingsQuery, GetNovelSettingsQueryVariables>;
+export const GetNovelSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetNovelSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"novelId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMyNovelById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"novelId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"novelId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"getNovelSettingsByNovelId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"novelId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"novelId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"novelId"}},{"kind":"Field","name":{"kind":"Name","value":"parentSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<GetNovelSettingsQuery, GetNovelSettingsQueryVariables>;
 export const RegisterNovelSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RegisterNovelSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"inputs"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"NovelSettingRegisterInput"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerNovelSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"inputs"},"value":{"kind":"Variable","name":{"kind":"Name","value":"inputs"}}}]}]}}]} as unknown as DocumentNode<RegisterNovelSettingsMutation, RegisterNovelSettingsMutationVariables>;
-export const DeleteNovelSettingByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteNovelSettingById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteNovelSettingById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"settingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteNovelSettingByIdMutation, DeleteNovelSettingByIdMutationVariables>;
+export const DeleteNovelSettingByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteNovelSettingById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteNovelSettingById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteNovelSettingByIdMutation, DeleteNovelSettingByIdMutationVariables>;
+export const DeleteNovelSettingsByIdsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteNovelSettingsByIds"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ids"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteNovelSettingByIds"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ids"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ids"}}}]}]}}]} as unknown as DocumentNode<DeleteNovelSettingsByIdsMutation, DeleteNovelSettingsByIdsMutationVariables>;
+export const GetNovelSettingsByParentSettingIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetNovelSettingsByParentSettingId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"parentSettingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getNovelSettingsByParentSettingId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"parentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"parentSettingId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"novelId"}},{"kind":"Field","name":{"kind":"Name","value":"parentSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOrder"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<GetNovelSettingsByParentSettingIdQuery, GetNovelSettingsByParentSettingIdQueryVariables>;

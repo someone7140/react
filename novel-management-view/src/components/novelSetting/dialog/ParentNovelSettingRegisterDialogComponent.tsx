@@ -1,9 +1,9 @@
 "use client";
 
 import { FC } from "react";
-import z from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify-icon/react";
@@ -202,6 +202,9 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
               )}
             />
             <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">閉じる</Button>
+              </DialogClose>
               <Button
                 type="submit"
                 className={submitButtonStyle()}
@@ -209,9 +212,6 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
               >
                 登録する
               </Button>
-              <DialogClose asChild>
-                <Button variant="outline">閉じる</Button>
-              </DialogClose>
             </DialogFooter>
           </form>
         </Form>

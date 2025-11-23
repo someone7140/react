@@ -2,7 +2,9 @@
 
 import React, { FC, useEffect, useImperativeHandle, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
+import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { NovelSettingChildComponent } from "./NovelSettingChildComponent";
@@ -18,7 +20,12 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { NovelSettingResponse } from "@/graphql/gen/graphql";
+import {
+  DeleteNovelSettingsByIdsDocument,
+  NovelSettingRegisterInput,
+  NovelSettingResponse,
+  RegisterNovelSettingsDocument,
+} from "@/graphql/gen/graphql";
 import { deleteButtonStyle } from "@/style/FormStyle";
 
 export const novelSettingChildrenInputFormSchema = z.object({
@@ -33,6 +40,7 @@ export type NovelSettingChildrenInputFormType = z.infer<
 export interface ChildrenHandle {
   addChild: () => void;
   onSubmit: () => void;
+  isChildrenRegisterDisabled: () => void;
 }
 
 type Props = {
@@ -50,6 +58,12 @@ export const NovelSettingChildrenComponent: FC<Props> = ({
 }) => {
   const [deleteSettingIds, setDeleteSettingIds] = useState<string[]>([]);
   const [accordionValue, setAccordionValue] = useState<string>("");
+  const [registerNovelSettings, { loading: registerNovelSettingsLoading }] =
+    useMutation(RegisterNovelSettingsDocument);
+  const [
+    deleteNovelSettingsByIds,
+    { loading: deleteNovelSettingsByIdsLoading },
+  ] = useMutation(DeleteNovelSettingsByIdsDocument);
 
   const form = useForm<z.infer<typeof novelSettingChildrenInputFormSchema>>({
     reValidateMode: "onSubmit",
@@ -86,10 +100,37 @@ export const NovelSettingChildrenComponent: FC<Props> = ({
   };
 
   const onSubmit = async (formData: NovelSettingChildrenInputFormType) => {
-    formData.settings.forEach((s) => {
-      console.log(s);
+    const inputs = formData.settings.map((s) => {
+      return {
+        id: s.id,
+        name: s.name,
+        novelId: parentNovelSetting.novelId,
+        parentSettingId: parentNovelSetting.id,
+        displayOrder: s.displayOrder ? parseInt(s.displayOrder) : null,
+        attributes: s.attributes.map((a) => a.value),
+        description: s.description,
+      } as NovelSettingRegisterInput;
     });
-    console.log(deleteSettingIds);
+    const registerResult = await registerNovelSettings({
+      variables: {
+        inputs: inputs,
+      },
+    });
+    let isSuccess = !registerResult.error;
+
+    if (deleteSettingIds.length > 0) {
+      const deleteResult = await deleteNovelSettingsByIds({
+        variables: { ids: deleteSettingIds },
+      });
+      isSuccess = !deleteResult.error;
+    }
+
+    if (isSuccess) {
+      toast.info("更新しました");
+    } else {
+      toast.error("登録時にエラーが発生しました");
+      return;
+    }
   };
 
   const onRemove = (index: number) => {
@@ -107,6 +148,9 @@ export const NovelSettingChildrenComponent: FC<Props> = ({
     },
     onSubmit: async () => {
       await form.handleSubmit(onSubmit)();
+    },
+    isChildrenRegisterDisabled: () => {
+      return registerNovelSettingsLoading || deleteNovelSettingsByIdsLoading;
     },
   }));
 

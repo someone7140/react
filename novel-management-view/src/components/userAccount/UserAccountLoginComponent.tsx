@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CombinedGraphQLErrors } from "@apollo/client";
