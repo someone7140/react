@@ -3,6 +3,7 @@
 import { FC } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
+import TextareaAutosize from "react-textarea-autosize";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { NovelResponse } from "@/graphql/gen/graphql";
 import { formLabelStyle, submitButtonStyle } from "@/style/FormStyle";
+import { dialogStyle, novelTextareaStyle } from "@/style/NovelStyle";
 
 export const novelInputFormSchema = z.object({
   title: z.string().min(1, {
@@ -62,7 +63,7 @@ export const NovelInputDialogComponent: FC<Props> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
+      <DialogContent className={dialogStyle()}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -97,7 +98,11 @@ export const NovelInputDialogComponent: FC<Props> = ({
                 <FormItem>
                   <FormLabel className={formLabelStyle()}>概要</FormLabel>
                   <FormControl>
-                    <Textarea {...field} className="w-[95%]" />
+                    <TextareaAutosize
+                      {...field}
+                      className={novelTextareaStyle()}
+                      minRows={3}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

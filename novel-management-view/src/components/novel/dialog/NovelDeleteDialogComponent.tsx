@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { NovelResponse } from "@/graphql/gen/graphql";
 import { submitButtonStyle } from "@/style/FormStyle";
+import { dialogStyle } from "@/style/NovelStyle";
 
 type Props = {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export const NovelDeleteDialogComponent: FC<Props> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
+      <DialogContent className={dialogStyle()}>
         <div className="flex flex-col gap-3">
           <DialogHeader>
             <DialogTitle>{`${registeredNovel.title}の削除`}</DialogTitle>

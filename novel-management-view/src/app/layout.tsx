@@ -38,9 +38,9 @@ export default function RootLayout({
             <AuthProvider>
               <HeaderComponent />
               <ToastComponent />
-              <div className="flex justify-center mt-3">
+              <div className="flex justify-start mt-3 ml-8">
                 <div className="max-w-[98%] min-w-[300px]">
-                  <div className="flex justify-start w-[100%] ml-3 mb-4">
+                  <div className="flex w-[100%] ml-7 mb-4">
                     <div>{children}</div>
                   </div>
                 </div>

@@ -108,6 +108,10 @@ export const NovelListComponentComponent: FC = () => {
     router.push(`/novelSetting/list?novelId=${novelId}`);
   };
 
+  const onClickContents = (novelId: string) => {
+    router.push(`/novelContents/list?novelId=${novelId}`);
+  };
+
   useEffect(() => {
     if (error) {
       toast.error("取得時にエラーが発生しました");
@@ -144,7 +148,12 @@ export const NovelListComponentComponent: FC = () => {
                 >
                   タイトル・概要編集
                 </Button>
-                <Button className="bg-green-500 cursor-pointer hover:bg-green-700">
+                <Button
+                  className="bg-green-500 cursor-pointer hover:bg-green-700"
+                  onClick={() => {
+                    onClickContents(novel.id);
+                  }}
+                >
                   執筆
                 </Button>
                 <Button
@@ -156,7 +165,7 @@ export const NovelListComponentComponent: FC = () => {
                   設定
                 </Button>
                 <Button className="bg-rose-500 cursor-pointer hover:bg-rose-700">
-                  エクスポート
+                  AIプロンプト
                 </Button>
                 <Button
                   className={deleteButtonStyle()}

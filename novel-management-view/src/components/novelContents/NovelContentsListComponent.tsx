@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useQuery } from "@apollo/client/react";
 
-import { ParentNovelSettingRegisterDialogComponent } from "./dialog/ParentNovelSettingRegisterDialogComponent";
-import { NovelSettingParentComponent } from "./settingItem/NovelSettingParentComponent";
+import { NovelContentsParentComponent } from "./contentsItem/NovelContentsParentComponent";
+import { ParentNovelContentsRegisterDialogComponent } from "./dialog/ParentNovelContentsRegisterDialogComponent";
 import { LoadingComponent } from "@/components/common/LoadingComponent";
 import { Button } from "@/components/ui/button";
-import { GetNovelSettingsDocument } from "@/graphql/gen/graphql";
+import { GetNovelContentsDocument } from "@/graphql/gen/graphql";
 import { pageTitleStyle } from "@/style/CommonStyle";
 import { submitButtonStyle } from "@/style/FormStyle";
 
@@ -17,19 +17,19 @@ type Props = {
   novelId: string;
 };
 
-export const NovelSettingListComponent: FC<Props> = ({ novelId }) => {
+export const NovelContentsListComponent: FC<Props> = ({ novelId }) => {
   const router = useRouter();
   const [
-    isOpenParentNovelSettingRegisterDialog,
-    setIsOpenParentNovelSettingRegisterDialog,
+    isOpenParentNovelContentsRegisterDialog,
+    setIsOpenParentNovelContentsRegisterDialog,
   ] = useState<boolean>(false);
-  const { data, error, loading, refetch } = useQuery(GetNovelSettingsDocument, {
+  const { data, error, loading, refetch } = useQuery(GetNovelContentsDocument, {
     variables: { novelId: novelId },
     fetchPolicy: "network-only",
   });
 
-  const onClickContents = () => {
-    router.push(`/novelContents/list?novelId=${novelId}`);
+  const onClickSetting = () => {
+    router.push(`/novelSetting/list?novelId=${novelId}`);
   };
 
   useEffect(() => {
@@ -43,28 +43,28 @@ export const NovelSettingListComponent: FC<Props> = ({ novelId }) => {
   }
 
   const novel = data?.getMyNovelById;
-  const novelSettings = data?.getNovelSettingsByNovelId ?? [];
+  const novelContents = data?.getNovelContentsByNovelId ?? [];
 
   return (
     <div className="min-w-[500px]">
-      {novel && <div className={pageTitleStyle()}>{novel.title}の設定一覧</div>}
-      {novelSettings.length === 0 && (
-        <>設定が未登録です。新規設定登録ボタンより登録ください。</>
+      {novel && <div className={pageTitleStyle()}>{novel.title}の執筆一覧</div>}
+      {novelContents.length === 0 && (
+        <>執筆が未登録です。新規執筆登録ボタンより登録ください。</>
       )}
       <div className="flex gap-3 mt-2 mb-3">
         <Button
           className={submitButtonStyle()}
           onClick={() => {
-            setIsOpenParentNovelSettingRegisterDialog(true);
+            setIsOpenParentNovelContentsRegisterDialog(true);
           }}
         >
-          新規設定登録
+          新規執筆登録
         </Button>
         <Button
           className="bg-green-500 cursor-pointer hover:bg-green-700"
-          onClick={onClickContents}
+          onClick={onClickSetting}
         >
-          執筆へ
+          設定へ
         </Button>
         <Button className="bg-rose-500 cursor-pointer hover:bg-rose-700">
           AIプロンプト
@@ -77,24 +77,24 @@ export const NovelSettingListComponent: FC<Props> = ({ novelId }) => {
           小説一覧へ
         </Button>
       </div>
-      {novelSettings.length > 0 && (
+      {novelContents.length > 0 && (
         <div className="flex flex-col gap-3">
-          {novelSettings
-            .filter((s) => !s.parentSettingId)
-            .map((s) => (
-              <NovelSettingParentComponent
-                key={s.id}
-                parentNovelSetting={s}
-                novelSettings={novelSettings}
+          {novelContents
+            .filter((c) => !c.parentContentsId)
+            .map((c) => (
+              <NovelContentsParentComponent
+                key={c.id}
+                parentNovelContents={c}
+                novelContents={novelContents}
                 refetch={refetch}
               />
             ))}
         </div>
       )}
-      {isOpenParentNovelSettingRegisterDialog && (
-        <ParentNovelSettingRegisterDialogComponent
-          isOpen={isOpenParentNovelSettingRegisterDialog}
-          setIsOpen={setIsOpenParentNovelSettingRegisterDialog}
+      {isOpenParentNovelContentsRegisterDialog && (
+        <ParentNovelContentsRegisterDialogComponent
+          isOpen={isOpenParentNovelContentsRegisterDialog}
+          setIsOpen={setIsOpenParentNovelContentsRegisterDialog}
           novelId={novelId}
           refetch={refetch}
         />

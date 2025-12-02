@@ -2,6 +2,7 @@
 
 import { FC } from "react";
 import { Control, useFieldArray } from "react-hook-form";
+import TextareaAutosize from "react-textarea-autosize";
 import { Icon } from "@iconify-icon/react";
 
 import { NovelSettingChildrenInputFormType } from "./NovelSettingChildrenComponent";
@@ -13,8 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { formLabelStyle } from "@/style/FormStyle";
+import { novelTextareaStyle } from "@/style/NovelStyle";
 
 type Props = {
   control: Control<NovelSettingChildrenInputFormType>;
@@ -112,7 +113,11 @@ export const NovelSettingChildComponent: FC<Props> = ({ control, index }) => {
           <FormItem className="w-[95%]">
             <FormLabel className={formLabelStyle()}>詳細</FormLabel>
             <FormControl>
-              <Textarea {...field} className="w-[95%]" />
+              <TextareaAutosize
+                {...field}
+                className={novelTextareaStyle()}
+                minRows={3}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

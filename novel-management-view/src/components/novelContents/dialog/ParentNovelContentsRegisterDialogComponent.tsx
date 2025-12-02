@@ -9,10 +9,11 @@ import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
-  novelSettingInputFormSchema,
-  NovelSettingInputFormType,
-} from "../form/novelSettingFormUtil";
-import { NovelSettingAttributeComponent } from "../form/NovelSettingAttributeComponent";
+  NovelContentsInputFormType,
+  novellContentsInputFormSchema,
+} from "../form/novelContentsFormUtil";
+import { NovelContentsTextareaComponent } from "../form/NovelContentsTextareaComponent";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,8 +33,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  NovelSettingResponse,
-  RegisterNovelSettingsDocument,
+  NovelContentsResponse,
+  RegisterNovelContentsDocument,
 } from "@/graphql/gen/graphql";
 import { formLabelStyle, submitButtonStyle } from "@/style/FormStyle";
 import { dialogStyle, novelTextareaStyle } from "@/style/NovelStyle";
@@ -43,47 +44,45 @@ type Props = {
   setIsOpen: (isOpen: boolean) => void;
   novelId: string;
   refetch: () => void;
-  registeredSetting?: NovelSettingResponse;
+  registeredContents?: NovelContentsResponse;
 };
 
-export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
+export const ParentNovelContentsRegisterDialogComponent: FC<Props> = ({
   isOpen,
   setIsOpen,
   novelId,
   refetch,
-  registeredSetting,
+  registeredContents,
 }) => {
-  const [registerNovelSettings, { loading: registerNovelSettingsLoading }] =
-    useMutation(RegisterNovelSettingsDocument);
+  const [registerNovelContents, { loading: registerNovelContentsLoading }] =
+    useMutation(RegisterNovelContentsDocument);
 
-  const form = useForm<z.infer<typeof novelSettingInputFormSchema>>({
+  const form = useForm<z.infer<typeof novellContentsInputFormSchema>>({
     reValidateMode: "onSubmit",
-    resolver: zodResolver(novelSettingInputFormSchema),
+    resolver: zodResolver(novellContentsInputFormSchema),
     defaultValues: {
-      name: registeredSetting?.name ?? "",
+      chapterName: registeredContents?.chapterName ?? "",
       displayOrder:
-        registeredSetting?.displayOrder != null
-          ? String(registeredSetting.displayOrder)
+        registeredContents?.displayOrder != null
+          ? String(registeredContents.displayOrder)
           : "",
-      description: registeredSetting?.description ?? "",
-      attributes: registeredSetting?.attributes.map((a) => {
-        return { value: a };
-      }),
+      description: registeredContents?.description ?? "",
+      contents: registeredContents?.contents ?? "",
     },
   });
 
-  const onSubmit = async (input: NovelSettingInputFormType) => {
-    const result = await registerNovelSettings({
+  const onSubmit = async (input: NovelContentsInputFormType) => {
+    const result = await registerNovelContents({
       variables: {
         inputs: {
-          id: registeredSetting?.id ?? null,
-          name: input.name,
+          id: registeredContents?.id ?? null,
+          chapterName: input.chapterName,
           novelId: novelId,
           displayOrder: input.displayOrder
             ? parseInt(input.displayOrder)
             : null,
           description: input.description,
-          attributes: input.attributes.filter((a) => !!a).map((a) => a.value),
+          contents: input.contents,
         },
       },
     });
@@ -92,7 +91,7 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
     } else {
       refetch();
       setIsOpen(false);
-      toast.info("設定を登録しました");
+      toast.info("執筆内容を登録しました");
     }
   };
 
@@ -106,16 +105,16 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
           >
             <DialogHeader>
               <DialogTitle>
-                {registeredSetting ? "編集" : "新規追加"}
+                {registeredContents ? "編集" : "新規追加"}
               </DialogTitle>
             </DialogHeader>
             <FormField
               control={form.control}
-              name="name"
+              name="chapterName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className={formLabelStyle({ type: "required" })}>
-                    設定名
+                    見出し名
                   </FormLabel>
                   <FormControl>
                     <Input {...field} className="w-[95%]" />
@@ -137,13 +136,12 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
                 </FormItem>
               )}
             />
-            <NovelSettingAttributeComponent control={form.control} />
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={formLabelStyle()}>詳細</FormLabel>
+                  <FormLabel className={formLabelStyle()}>概要</FormLabel>
                   <FormControl>
                     <TextareaAutosize
                       {...field}
@@ -155,6 +153,7 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
                 </FormItem>
               )}
             />
+            <NovelContentsTextareaComponent control={form.control} />
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline">閉じる</Button>
@@ -162,7 +161,7 @@ export const ParentNovelSettingRegisterDialogComponent: FC<Props> = ({
               <Button
                 type="submit"
                 className={submitButtonStyle()}
-                disabled={registerNovelSettingsLoading}
+                disabled={registerNovelContentsLoading}
               >
                 登録する
               </Button>
