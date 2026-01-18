@@ -8,7 +8,7 @@ import { useMutation } from "@apollo/client/react";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
-import { LoginByGoogleAuthDocument } from "@/graphql/gen/graphql";
+import { ErrorCode, LoginByGoogleAuthDocument } from "@/graphql/gen/graphql";
 import { useApiManagement } from "@/hooks/useApiManagement";
 import { useAppDispatch } from "@/store/reduxStore";
 import { updateAuthToken } from "@/store/slice/authStorageSlice";
@@ -28,7 +28,7 @@ export const UserAccountLoginComponent: FC = () => {
       variables: { authCode: authCode },
     });
     const res = result?.data?.loginByGoogleAuth;
-    if (res) {
+    if (res?.token) {
       // ユーザー情報をグローバルstateに格納
       dispatch(
         updateUserAccount({
@@ -39,12 +39,11 @@ export const UserAccountLoginComponent: FC = () => {
         })
       );
       dispatch(updateAuthToken(res.token));
-      toast.success("ログインしました");
-      router.push(TOP_PAGE_PATH);
+      window.location.href = TOP_PAGE_PATH;
     } else if (result.error) {
       if (CombinedGraphQLErrors.is(result.error)) {
         const errorCode = getErrorCodeFromGraphQLError(result.error.errors);
-        if (errorCode === 404) {
+        if (errorCode === ErrorCode.NotFound) {
           toast.error("未登録のGoogleアカウントです");
           return;
         }

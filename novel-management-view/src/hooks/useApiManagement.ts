@@ -2,6 +2,8 @@ import { HttpLink } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client-integration-nextjs";
 import { GraphQLFormattedError } from "graphql";
 
+import { ErrorCode } from "@/graphql/gen/graphql";
+
 export const useApiManagement = () => {
   const makeApolloClient = (authToken?: string) => {
     let headers: Record<string, string> = {};
@@ -36,7 +38,8 @@ export const useApiManagement = () => {
     errors: ReadonlyArray<GraphQLFormattedError>
   ) => {
     // エラーの配列の一つ目にエラーコードが入る前提
-    const errorCode = (errors?.[0]?.extensions?.code as number) ?? 500;
+    const errorCode =
+      (errors?.[0]?.extensions?.code as ErrorCode) ?? ErrorCode.InternalError;
     return errorCode;
   };
 

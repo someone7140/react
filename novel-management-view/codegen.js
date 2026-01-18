@@ -1,5 +1,7 @@
 module.exports = {
-  schema: "schema.graphqls",
+  schema: `${
+    process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}` : ""
+  }`,
   documents: ["src/graphql/query/**/*.ts"],
   overwrite: true,
   generates: {

@@ -29,8 +29,8 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
     if (error) {
       dispatch(clearUserAccount());
       dispatch(clearAuthToken());
-    } else if (data?.getUserAccountFromAuthHeader) {
-      const userData = data?.getUserAccountFromAuthHeader;
+    } else if (data?.userAccountFromAuthHeader) {
+      const userData = data.userAccountFromAuthHeader;
       dispatch(
         updateUserAccount({
           token: userData.token,

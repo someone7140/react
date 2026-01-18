@@ -2,12 +2,12 @@ import { gql } from "@apollo/client/core";
 
 export const getNovelSettingsQuery = gql`
   query GetNovelSettings($novelId: String!) {
-    getMyNovelById(novelId: $novelId) {
+    myNovelById(novelId: $novelId) {
       id
       title
       description
     }
-    getNovelSettingsByNovelId(novelId: $novelId) {
+    novelSettingsByNovelId(novelId: $novelId) {
       id
       name
       novelId
@@ -20,7 +20,9 @@ export const getNovelSettingsQuery = gql`
 `;
 
 export const registerNovelSettingsMutation = gql`
-  mutation RegisterNovelSettings($inputs: [NovelSettingRegisterInput!]!) {
+  mutation RegisterNovelSettings(
+    $inputs: [NovelSettingRegisterRequestInput!]!
+  ) {
     registerNovelSettings(inputs: $inputs)
   }
 `;
@@ -39,7 +41,7 @@ export const deleteNovelSettingsMutation = gql`
 
 export const getNovelSettingsByParentSettingIdQuery = gql`
   query GetNovelSettingsByParentSettingId($parentSettingId: String!) {
-    getNovelSettingsByParentSettingId(parentId: $parentSettingId) {
+    novelSettingsByParentSettingId(parentSettingId: $parentSettingId) {
       id
       name
       novelId

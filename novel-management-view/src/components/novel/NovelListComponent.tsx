@@ -122,7 +122,7 @@ export const NovelListComponentComponent: FC = () => {
     return <LoadingComponent />;
   }
 
-  const novels = data?.getMyNovels ?? [];
+  const novels = data?.myNovels ?? [];
 
   return (
     <>

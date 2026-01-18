@@ -2,12 +2,12 @@ import { gql } from "@apollo/client/core";
 
 export const getNovelContentsQuery = gql`
   query GetNovelContents($novelId: String!) {
-    getMyNovelById(novelId: $novelId) {
+    myNovelById(novelId: $novelId) {
       id
       title
       description
     }
-    getNovelContentsByNovelId(novelId: $novelId) {
+    novelContentsByNovelId(novelId: $novelId) {
       id
       chapterName
       novelId
@@ -20,7 +20,9 @@ export const getNovelContentsQuery = gql`
 `;
 
 export const registerNovelContentsMutation = gql`
-  mutation RegisterNovelContents($inputs: [NovelContentsRegisterInput!]!) {
+  mutation RegisterNovelContents(
+    $inputs: [NovelContentsRegisterRequestInput!]!
+  ) {
     registerNovelContents(inputs: $inputs)
   }
 `;

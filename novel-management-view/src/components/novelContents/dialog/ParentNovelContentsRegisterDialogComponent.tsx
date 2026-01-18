@@ -10,9 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   NovelContentsInputFormType,
-  novellContentsInputFormSchema,
+  novelContentsInputFormSchema,
 } from "../form/novelContentsFormUtil";
-import { NovelContentsTextareaComponent } from "../form/NovelContentsTextareaComponent";
+import { NovelContentsAccordionComponent } from "../form/NovelContentsAccordionComponent";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,9 +57,9 @@ export const ParentNovelContentsRegisterDialogComponent: FC<Props> = ({
   const [registerNovelContents, { loading: registerNovelContentsLoading }] =
     useMutation(RegisterNovelContentsDocument);
 
-  const form = useForm<z.infer<typeof novellContentsInputFormSchema>>({
+  const form = useForm<z.infer<typeof novelContentsInputFormSchema>>({
     reValidateMode: "onSubmit",
-    resolver: zodResolver(novellContentsInputFormSchema),
+    resolver: zodResolver(novelContentsInputFormSchema),
     defaultValues: {
       chapterName: registeredContents?.chapterName ?? "",
       displayOrder:
@@ -153,7 +153,27 @@ export const ParentNovelContentsRegisterDialogComponent: FC<Props> = ({
                 </FormItem>
               )}
             />
-            <NovelContentsTextareaComponent control={form.control} />
+            <NovelContentsAccordionComponent
+              contentNode={
+                <FormField
+                  control={form.control}
+                  name="contents"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <TextareaAutosize
+                          {...field}
+                          className={`${novelTextareaStyle()} w-[90%] ml-1 mt-2`}
+                          minRows={3}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              }
+              style={formLabelStyle()}
+            />
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline">閉じる</Button>

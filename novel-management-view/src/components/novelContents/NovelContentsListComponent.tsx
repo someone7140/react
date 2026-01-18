@@ -42,8 +42,8 @@ export const NovelContentsListComponent: FC<Props> = ({ novelId }) => {
     return <LoadingComponent />;
   }
 
-  const novel = data?.getMyNovelById;
-  const novelContents = data?.getNovelContentsByNovelId ?? [];
+  const novel = data?.myNovelById;
+  const novelContents = data?.novelContentsByNovelId ?? [];
 
   return (
     <div className="min-w-[500px]">

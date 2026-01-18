@@ -2,7 +2,7 @@ import { gql } from "@apollo/client/core";
 
 export const getUserAccountRegisterTokenFromGoogleAuthCodeQuery = gql`
   query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {
-    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode)
+    userAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode)
   }
 `;
 
@@ -27,7 +27,7 @@ export const addUserAccountByGoogleAuthMutation = gql`
 
 export const getUserAccountFromAuthHeaderQuery = gql`
   query GetUserAccountFromAuthHeader {
-    getUserAccountFromAuthHeader {
+    userAccountFromAuthHeader {
       token
       userSettingId
       name

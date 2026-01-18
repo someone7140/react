@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import { FC } from "react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 
 import { Button } from "@/components/ui/button";

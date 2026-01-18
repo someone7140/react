@@ -2,7 +2,7 @@ import { gql } from "@apollo/client/core";
 
 export const getMyNovelsQuery = gql`
   query GetMyNovels {
-    getMyNovels {
+    myNovels {
       id
       title
       description

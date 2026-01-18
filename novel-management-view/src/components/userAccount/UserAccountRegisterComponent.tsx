@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CombinedGraphQLErrors } from "@apollo/client";
@@ -14,6 +14,7 @@ import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   AddUserAccountByGoogleAuthDocument,
+  ErrorCode,
   GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
 } from "@/graphql/gen/graphql";
 import { useApiManagement } from "@/hooks/useApiManagement";
@@ -43,14 +44,14 @@ export const UserAccountRegisterComponent: FC = () => {
   const onAuthGoogle = async (authCode: string) => {
     try {
       const result = await refetchRegisterToken({ authCode: authCode });
-      const token = result?.data?.getUserAccountRegisterTokenFromGoogleAuthCode;
+      const token = result?.data?.userAccountRegisterTokenFromGoogleAuthCode;
       if (token) {
         setGoogleAuthToken(token);
       }
     } catch (e) {
       if (CombinedGraphQLErrors.is(e)) {
         const errorCode = getErrorCodeFromGraphQLError(e.errors);
-        if (errorCode === 403) {
+        if (errorCode === ErrorCode.Forbidden) {
           toast.error("既に登録済みのユーザーです");
           return;
         }
@@ -71,7 +72,7 @@ export const UserAccountRegisterComponent: FC = () => {
     if (result.error) {
       if (CombinedGraphQLErrors.is(result.error)) {
         const errorCode = getErrorCodeFromGraphQLError(result.error.errors);
-        if (errorCode === 403) {
+        if (errorCode === ErrorCode.Forbidden) {
           toast.error("既に登録済みのユーザーです");
           return;
         }
@@ -79,18 +80,19 @@ export const UserAccountRegisterComponent: FC = () => {
       toast.error("システムエラーが発生しました");
     } else if (result.data?.addUserAccountByGoogleAuth) {
       const userData = result.data.addUserAccountByGoogleAuth;
-      // ユーザー情報をグローバルstateに格納
-      dispatch(
-        updateUserAccount({
-          token: userData.token,
-          userSettingId: userData.userSettingId,
-          name: userData.name,
-          imageUrl: userData.imageUrl,
-        })
-      );
-      dispatch(updateAuthToken(userData.token));
-      toast.success("ユーザー登録しました");
-      router.push(TOP_PAGE_PATH);
+      if (userData.token) {
+        // ユーザー情報をグローバルstateに格納
+        dispatch(
+          updateUserAccount({
+            token: userData.token,
+            userSettingId: userData.userSettingId,
+            name: userData.name,
+            imageUrl: userData.imageUrl,
+          })
+        );
+        dispatch(updateAuthToken(userData.token));
+        window.location.href = TOP_PAGE_PATH;
+      }
     }
   };
 

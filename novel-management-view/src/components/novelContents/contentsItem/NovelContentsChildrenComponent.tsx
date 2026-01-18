@@ -7,11 +7,10 @@ import z from "zod";
 import { useMutation } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { NovelSettingChildComponent } from "./NovelSettingChildComponent";
 import {
-  convertSettingInputFromResponse,
-  novelSettingInputFormSchema,
-} from "../form/novelSettingFormUtil";
+  convertContentsInputFromResponse,
+  novelContentsInputFormSchema,
+} from "../form/novelContentsFormUtil";
 import {
   Accordion,
   AccordionContent,
@@ -21,19 +20,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import {
-  DeleteNovelSettingsByIdsDocument,
-  NovelSettingRegisterRequestInput,
-  NovelSettingResponse,
-  RegisterNovelSettingsDocument,
+  DeleteNovelContentsByIdsDocument,
+  NovelContentsResponse,
+  RegisterNovelContentsDocument,
 } from "@/graphql/gen/graphql";
 import { deleteButtonStyle } from "@/style/FormStyle";
+import { NovelContentsChildComponent } from "./NovelContentsChildComponent";
 
-export const novelSettingChildrenInputFormSchema = z.object({
-  settings: z.array(novelSettingInputFormSchema),
+export const novelContentsChildrenInputFormSchema = z.object({
+  contentsList: z.array(novelContentsInputFormSchema),
 });
 
-export type NovelSettingChildrenInputFormType = z.infer<
-  typeof novelSettingChildrenInputFormSchema
+export type NovelContentsChildrenInputFormType = z.infer<
+  typeof novelContentsChildrenInputFormSchema
 >;
 
 // 公開したい機能の型定義
@@ -44,83 +43,83 @@ export interface ChildrenHandle {
 }
 
 type Props = {
-  parentNovelSetting: NovelSettingResponse;
-  novelSettings: NovelSettingResponse[];
+  parentNovelContents: NovelContentsResponse;
+  novelContents: NovelContentsResponse[];
   setIsHasChildren: (isHasChildren: boolean) => void;
   handleRef?: React.Ref<ChildrenHandle>;
 };
 
-export const NovelSettingChildrenComponent: FC<Props> = ({
-  parentNovelSetting,
-  novelSettings,
+export const NovelContentsChildrenComponent: FC<Props> = ({
+  parentNovelContents,
+  novelContents,
   setIsHasChildren,
   handleRef,
 }) => {
-  const [deleteSettingIds, setDeleteSettingIds] = useState<string[]>([]);
+  const [deleteContents, setDeleteSettingIds] = useState<string[]>([]);
   const [accordionValue, setAccordionValue] = useState<string>("");
-  const [registerNovelSettings, { loading: registerNovelSettingsLoading }] =
-    useMutation(RegisterNovelSettingsDocument);
+  const [registerNovelContents, { loading: registerNovelContentsLoading }] =
+    useMutation(RegisterNovelContentsDocument);
   const [
-    deleteNovelSettingsByIds,
-    { loading: deleteNovelSettingsByIdsLoading },
-  ] = useMutation(DeleteNovelSettingsByIdsDocument);
+    deleteNovelContentsByIds,
+    { loading: deleteNovelContentsByIdsLoading },
+  ] = useMutation(DeleteNovelContentsByIdsDocument);
 
-  const form = useForm<z.infer<typeof novelSettingChildrenInputFormSchema>>({
+  const form = useForm<z.infer<typeof novelContentsChildrenInputFormSchema>>({
     reValidateMode: "onSubmit",
-    resolver: zodResolver(novelSettingChildrenInputFormSchema),
-    defaultValues: { settings: [] },
+    resolver: zodResolver(novelContentsChildrenInputFormSchema),
+    defaultValues: { contentsList: [] },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "settings",
+    name: "contentsList",
   });
 
   useEffect(() => {
-    const childrenSettings = novelSettings
-      .filter((s) => s.parentSettingId === parentNovelSetting.id)
-      .map(convertSettingInputFromResponse);
-    form.setValue("settings", childrenSettings);
+    const childrenContentsList = novelContents
+      .filter((c) => c.parentContentsId === parentNovelContents.id)
+      .map(convertContentsInputFromResponse);
+    form.setValue("contentsList", childrenContentsList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [novelSettings, parentNovelSetting.id]);
+  }, [novelContents, parentNovelContents.id]);
 
   useEffect(() => {
-    setIsHasChildren(form.watch("settings").length > 0);
+    setIsHasChildren(form.watch("contentsList").length > 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.watch("settings").length]);
+  }, [form.watch("contentsList").length]);
 
   const addChild = () => {
     append({
-      name: "",
+      chapterName: "",
       description: "",
+      contents: "",
       displayOrder: "",
-      attributes: [],
     });
-    setAccordionValue("settingChildren");
+    setAccordionValue("contentsChildren");
   };
 
-  const onSubmit = async (formData: NovelSettingChildrenInputFormType) => {
-    const inputs = formData.settings.map((s) => {
+  const onSubmit = async (formData: NovelContentsChildrenInputFormType) => {
+    const inputs = formData.contentsList.map((c) => {
       return {
-        id: s.id,
-        name: s.name,
-        novelId: parentNovelSetting.novelId,
-        parentSettingId: parentNovelSetting.id,
-        displayOrder: s.displayOrder ? parseInt(s.displayOrder) : null,
-        attributes: s.attributes.map((a) => a.value),
-        description: s.description,
-      } as NovelSettingRegisterRequestInput;
+        id: c.id,
+        chapterName: c.chapterName,
+        novelId: parentNovelContents.novelId,
+        parentContentsId: parentNovelContents.id,
+        displayOrder: c.displayOrder ? parseInt(c.displayOrder) : null,
+        contents: c.contents,
+        description: c.description,
+      } as NovelContentsResponse;
     });
-    const registerResult = await registerNovelSettings({
+    const registerResult = await registerNovelContents({
       variables: {
         inputs: inputs,
       },
     });
     let isSuccess = !registerResult.error;
 
-    if (deleteSettingIds.length > 0) {
-      const deleteResult = await deleteNovelSettingsByIds({
-        variables: { ids: deleteSettingIds },
+    if (deleteContents.length > 0) {
+      const deleteResult = await deleteNovelContentsByIds({
+        variables: { ids: deleteContents },
       });
       isSuccess = !deleteResult.error;
     }
@@ -134,9 +133,9 @@ export const NovelSettingChildrenComponent: FC<Props> = ({
   };
 
   const onRemove = (index: number) => {
-    const deleteTarget = form.getValues("settings")[index];
+    const deleteTarget = form.getValues("contentsList")[index];
     if (deleteTarget.id) {
-      setDeleteSettingIds([...deleteSettingIds, deleteTarget.id]);
+      setDeleteSettingIds([...deleteContents, deleteTarget.id]);
     }
 
     remove(index);
@@ -150,7 +149,7 @@ export const NovelSettingChildrenComponent: FC<Props> = ({
       await form.handleSubmit(onSubmit)();
     },
     isChildrenRegisterDisabled: () => {
-      return registerNovelSettingsLoading || deleteNovelSettingsByIdsLoading;
+      return registerNovelContentsLoading || deleteNovelContentsByIdsLoading;
     },
   }));
 
@@ -161,17 +160,17 @@ export const NovelSettingChildrenComponent: FC<Props> = ({
       value={accordionValue}
       onValueChange={setAccordionValue}
     >
-      {form.watch("settings").length > 0 && (
-        <AccordionItem value="settingChildren">
+      {form.watch("contentsList").length > 0 && (
+        <AccordionItem value="contentsChildren">
           <AccordionTrigger className="cursor-pointer">
-            子設定の一覧
+            子見出しの一覧
           </AccordionTrigger>
           <AccordionContent>
             <Form {...form}>
               <div className="space-y-4">
                 {fields.map((_, index) => (
                   <div key={index}>
-                    <NovelSettingChildComponent
+                    <NovelContentsChildComponent
                       control={form.control}
                       index={index}
                     />

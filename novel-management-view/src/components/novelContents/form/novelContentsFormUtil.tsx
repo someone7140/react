@@ -4,7 +4,7 @@ import z from "zod";
 
 import { NovelContentsResponse } from "@/graphql/gen/graphql";
 
-export const novellContentsInputFormSchema = z.object({
+export const novelContentsInputFormSchema = z.object({
   id: z.string().optional(),
   chapterName: z.string().min(1, {
     message: "見出しは必須です",
@@ -19,12 +19,12 @@ export const novellContentsInputFormSchema = z.object({
 });
 
 export type NovelContentsInputFormType = z.infer<
-  typeof novellContentsInputFormSchema
+  typeof novelContentsInputFormSchema
 >;
 
 // 執筆のレスポンスからインプット用の型に変換する関数
 export const convertContentsInputFromResponse = (
-  res: NovelContentsResponse
+  res: NovelContentsResponse,
 ): NovelContentsInputFormType => {
   return {
     id: res.id,
