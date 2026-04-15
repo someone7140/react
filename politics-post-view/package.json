@@ -1,0 +1,46 @@
+{
+  "name": "politics-post-view",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "codegen": "env-cmd -f ./.env.development graphql-codegen --config codegen.js"
+  },
+  "dependencies": {
+    "@apollo/client": "^4.1.7",
+    "@apollo/client-integration-nextjs": "^0.14.5",
+    "@heroui/react": "^3.0.2",
+    "@heroui/styles": "^3.0.2",
+    "@react-oauth/google": "^0.13.5",
+    "ahooks": "^3.9.7",
+    "apollo-upload-client": "^19.0.0",
+    "env-cmd": "^11.0.0",
+    "framer-motion": "^12.38.0",
+    "graphql": "^16.13.2",
+    "next": "16.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "rxjs": "^7.8.2",
+    "tailwind-variants": "^3.2.2",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^6.2.1",
+    "@graphql-codegen/client-preset": "^5.2.4",
+    "@graphql-codegen/typescript": "^5.0.9",
+    "@graphql-codegen/typescript-operations": "^5.0.9",
+    "@iconify/react": "^6.0.2",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^25",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^10",
+    "eslint-config-next": "16.2.3",
+    "tailwindcss": "^4",
+    "typescript": "^6"
+  }
+}
