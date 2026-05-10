@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-import { UserAccountAuthResponse } from "@/graphql/gen/graphql";
+import { UserAccountAuthResponseFragment } from "@/graphql/gen/graphql";
 
 type StoreAccount = {
-  userAccount: UserAccountAuthResponse | undefined;
-  setUserAccount: (user: UserAccountAuthResponse) => void;
+  userAccount: UserAccountAuthResponseFragment | undefined;
+  setUserAccount: (user: UserAccountAuthResponseFragment) => void;
   removeUserAccount: () => void;
 };
 

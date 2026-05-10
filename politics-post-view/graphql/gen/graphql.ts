@@ -1,81 +1,43 @@
 /* eslint-disable */
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = T | null | undefined;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  loginByGoogle?: Maybe<UserAccountAuthResponse>;
-  registerPost?: Maybe<Scalars['Boolean']['output']>;
-  registerUserAccountFromGoogle?: Maybe<UserAccountAuthResponse>;
-};
-
-
-export type MutationLoginByGoogleArgs = {
-  authCode: Scalars['String']['input'];
-};
-
-
-export type MutationRegisterPostArgs = {
-  contents: Scalars['String']['input'];
-  openFlag: Scalars['Boolean']['input'];
-  title: Scalars['String']['input'];
-};
-
-
-export type MutationRegisterUserAccountFromGoogleArgs = {
-  detail?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  token: Scalars['String']['input'];
-  urlList: Array<Scalars['String']['input']>;
-  userSettingId: Scalars['String']['input'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  getUserAccountRegisterTokenFromGoogleAuthCode?: Maybe<UserAccountRegisterTokenFromGoogleResponse>;
-  getUserInfoFromAuthHeader?: Maybe<UserAccountAuthResponse>;
-};
-
-
-export type QueryGetUserAccountRegisterTokenFromGoogleAuthCodeArgs = {
-  authCode: Scalars['String']['input'];
-};
-
-export type UserAccountAuthResponse = {
-  __typename?: 'UserAccountAuthResponse';
-  authToken: Scalars['String']['output'];
-  imageUrl?: Maybe<Scalars['String']['output']>;
-  name: Scalars['String']['output'];
-  userSettingId: Scalars['String']['output'];
-};
-
-export type UserAccountRegisterTokenFromGoogleResponse = {
-  __typename?: 'UserAccountRegisterTokenFromGoogleResponse';
-  imageUrl?: Maybe<Scalars['String']['output']>;
-  name: Scalars['String']['output'];
-  token: Scalars['String']['output'];
-};
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type UserAccountAuthResponseFragment = { authToken: string, name: string, userSettingId: string, imageUrl: string | null, urlList: Array<string>, detail: string | null };
 
 export type GetUserAccountRegisterTokenFromGoogleAuthCodeQueryVariables = Exact<{
-  authCode: Scalars['String']['input'];
+  authCode: string;
 }>;
 
 
-export type GetUserAccountRegisterTokenFromGoogleAuthCodeQuery = { __typename?: 'Query', getUserAccountRegisterTokenFromGoogleAuthCode?: { __typename?: 'UserAccountRegisterTokenFromGoogleResponse', token: string, name: string, imageUrl?: string | null } | null };
+export type GetUserAccountRegisterTokenFromGoogleAuthCodeQuery = { getUserAccountRegisterTokenFromGoogleAuthCode: { token: string, name: string, imageUrl: string | null } | null };
+
+export type GetUserInfoFromAuthHeaderQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+export type GetUserInfoFromAuthHeaderQuery = { getUserInfoFromAuthHeader: { authToken: string, name: string, userSettingId: string, imageUrl: string | null, urlList: Array<string>, detail: string | null } | null };
+
+export type RegisterUserAccountFromGoogleMutationVariables = Exact<{
+  token: string;
+  name: string;
+  userSettingId: string;
+  urlList: Array<string> | string;
+  detail?: string | null | undefined;
+}>;
+
+
+export type RegisterUserAccountFromGoogleMutation = { registerUserAccountFromGoogle: { authToken: string, name: string, userSettingId: string, imageUrl: string | null, urlList: Array<string>, detail: string | null } | null };
+
+export type LoginByGoogleMutationVariables = Exact<{
+  authCode: string;
+}>;
+
+
+export type LoginByGoogleMutation = { loginByGoogle: { authToken: string, name: string, userSettingId: string, imageUrl: string | null, urlList: Array<string>, detail: string | null } | null };
+
+export const UserAccountAuthResponseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccountAuthResponse"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccountAuthResponse"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authToken"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"urlList"}},{"kind":"Field","name":{"kind":"Name","value":"detail"}}]}}]} as unknown as DocumentNode<UserAccountAuthResponseFragment, unknown>;
 export const GetUserAccountRegisterTokenFromGoogleAuthCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserAccountRegisterTokenFromGoogleAuthCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserAccountRegisterTokenFromGoogleAuthCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"authCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}}]}}]}}]} as unknown as DocumentNode<GetUserAccountRegisterTokenFromGoogleAuthCodeQuery, GetUserAccountRegisterTokenFromGoogleAuthCodeQueryVariables>;
+export const GetUserInfoFromAuthHeaderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserInfoFromAuthHeader"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserInfoFromAuthHeader"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccountAuthResponse"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccountAuthResponse"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccountAuthResponse"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authToken"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"urlList"}},{"kind":"Field","name":{"kind":"Name","value":"detail"}}]}}]} as unknown as DocumentNode<GetUserInfoFromAuthHeaderQuery, GetUserInfoFromAuthHeaderQueryVariables>;
+export const RegisterUserAccountFromGoogleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RegisterUserAccountFromGoogle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userSettingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"urlList"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"detail"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerUserAccountFromGoogle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}},{"kind":"Argument","name":{"kind":"Name","value":"userSettingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userSettingId"}}},{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"urlList"},"value":{"kind":"Variable","name":{"kind":"Name","value":"urlList"}}},{"kind":"Argument","name":{"kind":"Name","value":"detail"},"value":{"kind":"Variable","name":{"kind":"Name","value":"detail"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccountAuthResponse"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccountAuthResponse"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccountAuthResponse"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authToken"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"urlList"}},{"kind":"Field","name":{"kind":"Name","value":"detail"}}]}}]} as unknown as DocumentNode<RegisterUserAccountFromGoogleMutation, RegisterUserAccountFromGoogleMutationVariables>;
+export const LoginByGoogleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginByGoogle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginByGoogle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"authCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"authCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccountAuthResponse"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccountAuthResponse"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccountAuthResponse"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authToken"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"userSettingId"}},{"kind":"Field","name":{"kind":"Name","value":"imageUrl"}},{"kind":"Field","name":{"kind":"Name","value":"urlList"}},{"kind":"Field","name":{"kind":"Name","value":"detail"}}]}}]} as unknown as DocumentNode<LoginByGoogleMutation, LoginByGoogleMutationVariables>;

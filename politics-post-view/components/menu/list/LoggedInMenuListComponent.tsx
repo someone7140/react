@@ -4,6 +4,7 @@ import { FC } from "react";
 import { Icon } from "@iconify/react";
 
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { menuStyle } from "@/style/MenuStyle";
 
 type Props = {
@@ -11,6 +12,8 @@ type Props = {
 };
 
 export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
+  const { userAccount, removeAuthInfo } = useAuthManagement();
+
   return (
     <>
       <div
@@ -26,6 +29,21 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
           style={{ color: "#000000" }}
         />
         <div className="text-xl ml-3">Top</div>
+      </div>
+      <div
+        className={menuStyle({ type: "marginLeft" })}
+        onClick={() => {
+          removeAuthInfo();
+          onCLickMenu(TOP_PAGE_PATH, true);
+        }}
+      >
+        <Icon
+          icon="material-symbols:logout"
+          width="16"
+          height="16"
+          style={{ color: "#000000" }}
+        />
+        <div className="text-xl ml-3">ログアウト</div>
       </div>
     </>
   );

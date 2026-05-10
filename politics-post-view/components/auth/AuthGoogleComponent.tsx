@@ -6,15 +6,13 @@ import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 
 type Props = {
   onAuthGoogle: (authCode: string) => Promise<void>;
+  disabledFlag?: boolean;
 };
 
-const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle }) => {
-  const [disabledFlag, setDisabledFlag] = useState<boolean>(false);
+const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle, disabledFlag }) => {
   const login = useGoogleLogin({
     onSuccess: async (codeResponse) => {
-      setDisabledFlag(true);
-      await onAuthGoogle(codeResponse.code);
-      setDisabledFlag(false);
+      onAuthGoogle(codeResponse.code);
     },
     flow: "auth-code",
     scope: "email profile openid",
@@ -27,12 +25,18 @@ const GoogleLoginComponent: FC<Props> = ({ onAuthGoogle }) => {
   );
 };
 
-export const AuthGoogleComponent: FC<Props> = ({ onAuthGoogle }) => {
+export const AuthGoogleComponent: FC<Props> = ({
+  onAuthGoogle,
+  disabledFlag,
+}) => {
   return (
     <GoogleOAuthProvider
       clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""}
     >
-      <GoogleLoginComponent onAuthGoogle={onAuthGoogle} />
+      <GoogleLoginComponent
+        onAuthGoogle={onAuthGoogle}
+        disabledFlag={disabledFlag}
+      />
     </GoogleOAuthProvider>
   );
 };

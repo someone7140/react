@@ -1,12 +1,20 @@
 "use client";
 
-import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
+import { UserAccountRegisterComponent } from "@/components/userAccount/UserAccountRegisterComponent";
+import { useAuthManagement } from "@/hooks/useAuthManagement";
+import { pageTitleStyle } from "@/style/CommonStyle";
 
 export default function Home() {
-  const onAuthGoogle = async (authCode: string) => {
-    console.log(authCode);
-  };
+  const { userAccount } = useAuthManagement();
+
   return (
-    <AuthGoogleComponent onAuthGoogle={onAuthGoogle} disabledFlag={false} />
+    <>
+      {!userAccount && (
+        <>
+          <div className={pageTitleStyle()}>会員登録</div>
+          <UserAccountRegisterComponent />
+        </>
+      )}
+    </>
   );
 }
