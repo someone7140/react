@@ -19,6 +19,8 @@ type Documents = {
     "\n  query GetUserInfoFromAuthHeader {\n    getUserInfoFromAuthHeader {\n      ...UserAccountAuthResponse\n    }\n  }\n": typeof types.GetUserInfoFromAuthHeaderDocument,
     "\n  mutation RegisterUserAccountFromGoogle(\n    $token: String!\n    $name: String!\n    $userSettingId: String!\n    $urlList: [String!]!\n    $detail: String\n  ) {\n    registerUserAccountFromGoogle(\n      token: $token\n      userSettingId: $userSettingId\n      name: $name\n      urlList: $urlList\n      detail: $detail\n    ) {\n      ...UserAccountAuthResponse\n    }\n  }\n": typeof types.RegisterUserAccountFromGoogleDocument,
     "\n  mutation LoginByGoogle($authCode: String!) {\n    loginByGoogle(authCode: $authCode) {\n      ...UserAccountAuthResponse\n    }\n  }\n": typeof types.LoginByGoogleDocument,
+    "\n  query ErrorTypeDummy {\n    errorTypeDummy\n  }\n": typeof types.ErrorTypeDummyDocument,
+    "\n  mutation RegisterPost(\n    $title: String!\n    $contents: String!\n    $status: PostStatus!\n  ) {\n    registerPost(title: $title, contents: $contents, status: $status)\n  }\n": typeof types.RegisterPostDocument,
 };
 const documents: Documents = {
     "\n  fragment UserAccountAuthResponse on UserAccountAuthResponse {\n    authToken\n    name\n    userSettingId\n    imageUrl\n    urlList\n    detail\n  }\n": types.UserAccountAuthResponseFragmentDoc,
@@ -26,6 +28,8 @@ const documents: Documents = {
     "\n  query GetUserInfoFromAuthHeader {\n    getUserInfoFromAuthHeader {\n      ...UserAccountAuthResponse\n    }\n  }\n": types.GetUserInfoFromAuthHeaderDocument,
     "\n  mutation RegisterUserAccountFromGoogle(\n    $token: String!\n    $name: String!\n    $userSettingId: String!\n    $urlList: [String!]!\n    $detail: String\n  ) {\n    registerUserAccountFromGoogle(\n      token: $token\n      userSettingId: $userSettingId\n      name: $name\n      urlList: $urlList\n      detail: $detail\n    ) {\n      ...UserAccountAuthResponse\n    }\n  }\n": types.RegisterUserAccountFromGoogleDocument,
     "\n  mutation LoginByGoogle($authCode: String!) {\n    loginByGoogle(authCode: $authCode) {\n      ...UserAccountAuthResponse\n    }\n  }\n": types.LoginByGoogleDocument,
+    "\n  query ErrorTypeDummy {\n    errorTypeDummy\n  }\n": types.ErrorTypeDummyDocument,
+    "\n  mutation RegisterPost(\n    $title: String!\n    $contents: String!\n    $status: PostStatus!\n  ) {\n    registerPost(title: $title, contents: $contents, status: $status)\n  }\n": types.RegisterPostDocument,
 };
 
 /**
@@ -62,6 +66,14 @@ export function graphql(source: "\n  mutation RegisterUserAccountFromGoogle(\n  
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation LoginByGoogle($authCode: String!) {\n    loginByGoogle(authCode: $authCode) {\n      ...UserAccountAuthResponse\n    }\n  }\n"): (typeof documents)["\n  mutation LoginByGoogle($authCode: String!) {\n    loginByGoogle(authCode: $authCode) {\n      ...UserAccountAuthResponse\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ErrorTypeDummy {\n    errorTypeDummy\n  }\n"): (typeof documents)["\n  query ErrorTypeDummy {\n    errorTypeDummy\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RegisterPost(\n    $title: String!\n    $contents: String!\n    $status: PostStatus!\n  ) {\n    registerPost(title: $title, contents: $contents, status: $status)\n  }\n"): (typeof documents)["\n  mutation RegisterPost(\n    $title: String!\n    $contents: String!\n    $status: PostStatus!\n  ) {\n    registerPost(title: $title, contents: $contents, status: $status)\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

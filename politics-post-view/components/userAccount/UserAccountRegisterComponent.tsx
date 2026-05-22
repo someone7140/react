@@ -1,6 +1,7 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { useLazyQuery, useMutation } from "@apollo/client/react";
 import { toast } from "@heroui/react";
@@ -13,14 +14,13 @@ import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   GetUserAccountRegisterTokenFromGoogleAuthCodeDocument,
-  GetUserAccountRegisterTokenFromGoogleAuthCodeQuery,
   RegisterUserAccountFromGoogleDocument,
 } from "@/graphql/gen/graphql";
-import { ErrorType } from "@/graphql/gen/enums";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { getErrorCodeFromGraphQLError } from "@/util/apiUtil";
 
 export const UserAccountRegisterComponent: FC = () => {
+  const router = useRouter();
   const { updateAuthInfo } = useAuthManagement();
   const [
     fetchDataRegisterToken,
@@ -35,11 +35,6 @@ export const UserAccountRegisterComponent: FC = () => {
   const [addAccountUserByGoogle, { loading: addAccountUserByGoogleLoading }] =
     useMutation(RegisterUserAccountFromGoogleDocument);
 
-  const [googleAuthToken, setGoogleAuthToken] = useState<
-    | GetUserAccountRegisterTokenFromGoogleAuthCodeQuery["getUserAccountRegisterTokenFromGoogleAuthCode"]
-    | undefined
-  >(undefined);
-
   const onAuthGoogle = async (authCode: string) => {
     fetchDataRegisterToken({
       variables: { authCode },
@@ -50,7 +45,9 @@ export const UserAccountRegisterComponent: FC = () => {
     try {
       const authResult = await addAccountUserByGoogle({
         variables: {
-          token: googleAuthToken?.token ?? "",
+          token:
+            registerTokenData?.getUserAccountRegisterTokenFromGoogleAuthCode
+              ?.token ?? "",
           name: form.name,
           userSettingId: form.userSettingId,
           urlList: form.urlList,
@@ -60,7 +57,7 @@ export const UserAccountRegisterComponent: FC = () => {
       const accountData = authResult?.data?.registerUserAccountFromGoogle;
       if (CombinedGraphQLErrors.is(authResult.error)) {
         const errorCode = getErrorCodeFromGraphQLError(authResult.error.errors);
-        if (errorCode === ErrorType.ForbiddenError) {
+        if (errorCode === "FORBIDDEN_ERROR") {
           toast.danger(
             "エラーが発生しました。IDがすでに登録済みである可能性があります。",
           );
@@ -68,7 +65,10 @@ export const UserAccountRegisterComponent: FC = () => {
       } else if (accountData) {
         // ユーザー情報をグローバルstateに格納
         updateAuthInfo(accountData);
-        window.location.href = TOP_PAGE_PATH;
+        router.push(TOP_PAGE_PATH);
+        toast.success("ユーザー登録しました。");
+      } else {
+        toast.danger("登録時にエラーが発生しました。");
       }
     } catch (e) {
       toast.danger("登録時にエラーが発生しました。");
@@ -78,7 +78,7 @@ export const UserAccountRegisterComponent: FC = () => {
   useEffect(() => {
     if (CombinedGraphQLErrors.is(registerTokenError)) {
       const errorCode = getErrorCodeFromGraphQLError(registerTokenError.errors);
-      if (errorCode === ErrorType.ForbiddenError) {
+      if (errorCode === "FORBIDDEN_ERROR") {
         toast.danger("アカウントがすでに登録済みである可能性があります。");
       } else {
         toast.danger("認証時にエラーが発生しました。");
@@ -88,18 +88,25 @@ export const UserAccountRegisterComponent: FC = () => {
     }
   }, [registerTokenError]);
 
+  const tokenData =
+    registerTokenData?.getUserAccountRegisterTokenFromGoogleAuthCode;
   return (
     <>
-      {!registerTokenData && (
+      {!tokenData && (
         <AuthGoogleComponent
           onAuthGoogle={onAuthGoogle}
           disabledFlag={registerTokenLoading}
         />
       )}
-      {registerTokenData && (
+      {tokenData && (
         <UserAccountInputComponent
           execSubmit={onSubmitRegister}
           disabledFlag={addAccountUserByGoogleLoading}
+          defaultValue={{
+            userSettingId: "",
+            name: tokenData.name ?? "",
+            urlList: [],
+          }}
         />
       )}
     </>

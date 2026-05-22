@@ -12,6 +12,7 @@ import {
   TextArea,
   TextField,
 } from "@heroui/react";
+import { Icon } from "@iconify/react";
 import z from "zod";
 
 import {
@@ -35,11 +36,13 @@ export type UserAccountInputFormType = z.infer<
 type Props = {
   execSubmit: (form: UserAccountInputFormType) => void;
   disabledFlag?: boolean;
+  defaultValue?: UserAccountInputFormType;
 };
 
 export const UserAccountInputComponent: FC<Props> = ({
   execSubmit,
   disabledFlag,
+  defaultValue,
 }) => {
   const [form, fields] = useForm<UserAccountInputFormType>({
     onValidate({ formData }) {
@@ -48,12 +51,15 @@ export const UserAccountInputComponent: FC<Props> = ({
     shouldValidate: "onSubmit",
     shouldRevalidate: "onBlur",
     defaultValue: {
-      urlList: [],
+      userSettingId: defaultValue?.userSettingId ?? "",
+      name: defaultValue?.name ?? "",
+      urlList: defaultValue?.urlList ?? [],
+      detail: defaultValue?.detail ?? "",
     },
     async onSubmit(event, { submission }) {
       event.preventDefault();
       if (submission?.status !== "success") return;
-      console.log(submission.value);
+      execSubmit(submission.value);
     },
   });
 
@@ -68,6 +74,7 @@ export const UserAccountInputComponent: FC<Props> = ({
       <TextField
         isRequired
         name={fields.userSettingId.name}
+        defaultValue={fields.userSettingId.initialValue}
         className={formItemAreaStyle()}
       >
         <Label>ユーザーID</Label>
@@ -77,18 +84,23 @@ export const UserAccountInputComponent: FC<Props> = ({
       <TextField
         isRequired
         name={fields.name.name}
+        defaultValue={fields.name.initialValue}
         className={formItemAreaStyle()}
       >
         <Label>ユーザー名</Label>
         <Input className={inputTextStyle()} />
         <FieldError />
       </TextField>
-      <TextField name={fields.detail.name} className={formItemAreaStyle()}>
+      <TextField
+        name={fields.detail.name}
+        className={formItemAreaStyle()}
+        defaultValue={fields.detail.initialValue}
+      >
         <Label>詳細</Label>
         <TextArea className={inputTextStyle()} rows={3} />
         <FieldError />
       </TextField>
-      <div className="flex gap-3 mb-1 items-center">
+      <div className="flex gap-3 mb-2 items-center">
         <Label>URL</Label>
         <Button
           className={"bg-emerald-400"}
@@ -100,15 +112,27 @@ export const UserAccountInputComponent: FC<Props> = ({
           追加
         </Button>
       </div>
-      {urlList.map((url) => (
-        <TextField
-          key={url.key}
-          name={url.name}
-          className={formItemAreaStyle()}
-        >
-          <Input className={inputTextStyle()} />
-          <FieldError />
-        </TextField>
+      {urlList.map((url, i) => (
+        <div className="flex gap-2" key={url.key}>
+          <TextField
+            name={url.name}
+            defaultValue={url.initialValue}
+            className={formItemAreaStyle()}
+          >
+            <Input className={`${inputTextStyle()} !min-w-[280px]`} />
+            <FieldError />
+          </TextField>
+          <Icon
+            className="cursor-pointer"
+            icon="material-symbols:close-small"
+            width="32"
+            height="32"
+            style={{ color: "#2A2A32" }}
+            onClick={() => {
+              form.remove({ name: fields.urlList.name, index: i });
+            }}
+          />
+        </div>
       ))}
       <div className={formSubmitAreaStyle()}>
         <Button type="submit" isDisabled={disabledFlag}>

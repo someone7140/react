@@ -1,18 +1,19 @@
 "use client";
 
 import { FC } from "react";
+import { useRouter } from "next/navigation";
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
 import { toast } from "@heroui/react";
 
 import { AuthGoogleComponent } from "@/components/auth/AuthGoogleComponent";
 import { TOP_PAGE_PATH } from "@/constants/MenuPathConstants";
-import { ErrorType } from "@/graphql/gen/enums";
 import { LoginByGoogleDocument } from "@/graphql/gen/graphql";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
 import { getErrorCodeFromGraphQLError } from "@/util/apiUtil";
 
 export const UserAccountLoginComponent: FC = () => {
+  const router = useRouter();
   const [loginByGoogle, { loading: loginByGoogleLoading }] = useMutation(
     LoginByGoogleDocument,
   );
@@ -28,7 +29,7 @@ export const UserAccountLoginComponent: FC = () => {
 
       if (CombinedGraphQLErrors.is(accountError)) {
         const errorCode = getErrorCodeFromGraphQLError(accountError.errors);
-        if (errorCode === ErrorType.NotFound) {
+        if (errorCode === "NOT_FOUND") {
           toast.danger("アカウントが未登録です。");
         } else {
           toast.danger("認証時にエラーが発生しました。");
@@ -37,10 +38,11 @@ export const UserAccountLoginComponent: FC = () => {
         toast.danger("認証時にエラーが発生しました。");
       } else if (accountData) {
         updateAuthInfo(accountData);
-        window.location.href = TOP_PAGE_PATH;
+        toast.success("ログインしました。");
+        router.push(TOP_PAGE_PATH);
       }
     } catch (e) {
-      toast.danger("登録時にエラーが発生しました。");
+      toast.danger("認証時にエラーが発生しました。");
     }
   };
 

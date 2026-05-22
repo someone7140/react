@@ -17,12 +17,5 @@ module.exports = {
         documentMode: "documentNode",
       },
     },
-    // enumは別ファイルに出力
-    "./graphql/gen/enums.ts": {
-      plugins: ["typescript"],
-      config: {
-        onlyEnums: true,
-      },
-    },
   },
 };

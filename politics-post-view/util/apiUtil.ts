@@ -3,7 +3,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client-integration-nextjs";
 import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 import { GraphQLFormattedError } from "graphql";
 
-import { ErrorType } from "@/graphql/gen/enums";
+import { ErrorType } from "@/graphql/gen/graphql";
 
 export const makeApiClient = (authToken?: string) => {
   let headers: Record<string, string> = {};
