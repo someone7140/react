@@ -1,11 +1,12 @@
 "use client";
 
 import { FC } from "react";
-import { Accordion, AccordionItem, toast } from "@heroui/react";
+import { Accordion, toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
 import {
   POST_ADD_PAGE_PATH,
+  POST_MY_LIST_PAGE_PATH,
   TOP_PAGE_PATH,
 } from "@/constants/MenuPathConstants";
 import { useAuthManagement } from "@/hooks/useAuthManagement";
@@ -68,6 +69,20 @@ export const LoggedInMenuListComponent: FC<Props> = ({ onCLickMenu }) => {
                     style={{ color: "#000000" }}
                   />
                   <div className="text-lg ml-3">投稿追加</div>
+                </div>
+                <div
+                  className={menuStyle({ type: "marginLeft" })}
+                  onClick={() => {
+                    onCLickMenu(POST_MY_LIST_PAGE_PATH);
+                  }}
+                >
+                  <Icon
+                    icon="clarity:list-line"
+                    width="18"
+                    height="18"
+                    style={{ color: "#000000" }}
+                  />
+                  <div className="text-lg ml-3">自投稿一覧</div>
                 </div>
               </div>
             </Accordion.Body>

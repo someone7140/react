@@ -29,3 +29,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.tagify__tag {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  line-height: 1;
+}
+.tagify__tag > div {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+.tagify__tag__removeBtn {
+  display: flex;
+  align-items: center;
+}

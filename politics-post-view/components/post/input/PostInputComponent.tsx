@@ -1,7 +1,8 @@
 "use client";
 
 import { FC } from "react";
-import { useForm, getFormProps } from "@conform-to/react";
+import { useLazyQuery } from "@apollo/client/react";
+import { useForm, getFormProps, useInputControl } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod/v4";
 import {
   Button,
@@ -11,28 +12,29 @@ import {
   Label,
   ListBox,
   Select,
+  TextArea,
   TextField,
 } from "@heroui/react";
+import { useRequest } from "ahooks";
 import z from "zod";
 
+import { MarkDownInputComponent } from "@/components/common/MarkDownInputComponent";
+import { TagInputComponent } from "@/components/common/TagInputComponent";
+import { POST_STATUS_KEYS, POST_STATUSES } from "@/constants/PostConstants";
 import {
   formItemAreaStyle,
   formSubmitAreaStyle,
   inputTextStyle,
 } from "@/style/FormStyle";
 import {} from "@/util/formUtil";
-import { MarkDownInputComponent } from "@/components/common/MarkDownInputComponent";
-
-export const POST_STATUSES = [
-  { key: "DRAFT", label: "下書き" },
-  { key: "OPEN", label: "公開" },
-  { key: "PRIVATE", label: "非公開" },
-];
+import { GetPostTagsDocument } from "@/graphql/gen/graphql";
 
 export const postInputFormSchema = z.object({
   title: z.string(),
-  status: z.enum(POST_STATUSES.map((p) => p.key)),
+  status: z.enum(POST_STATUS_KEYS),
   contents: z.string(),
+  tagNames: z.string().array(),
+  description: z.string().optional(),
 });
 
 export type PostInputFormType = z.infer<typeof postInputFormSchema>;
@@ -48,6 +50,18 @@ export const PostInputComponent: FC<Props> = ({
   disabledFlag,
   defaultValue,
 }) => {
+  const [fetchTagsByKeyWord, { data: postTags }] = useLazyQuery(
+    GetPostTagsDocument,
+    {
+      fetchPolicy: "network-only",
+    },
+  );
+
+  const { run: searchTags } = useRequest(fetchTagsByKeyWord, {
+    debounceWait: 500,
+    manual: true,
+  });
+
   const [form, fields] = useForm<PostInputFormType>({
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: postInputFormSchema });
@@ -58,6 +72,8 @@ export const PostInputComponent: FC<Props> = ({
       title: defaultValue?.title ?? "",
       status: defaultValue?.status ?? "DRAFT",
       contents: defaultValue?.contents ?? "",
+      tagNames: defaultValue?.tagNames ?? [],
+      description: defaultValue?.description,
     },
     async onSubmit(event, { submission }) {
       event.preventDefault();
@@ -65,6 +81,9 @@ export const PostInputComponent: FC<Props> = ({
       execSubmit(submission.value);
     },
   });
+  // tagNames 用の control を作る
+  const tagNamesControl = useInputControl(fields.tagNames);
+  const currentTags = (tagNamesControl.value as string[] | undefined) ?? [];
 
   return (
     <Form
@@ -82,6 +101,40 @@ export const PostInputComponent: FC<Props> = ({
         <Input className={inputTextStyle()} />
         <FieldError />
       </TextField>
+      <TextField
+        name={fields.description.name}
+        className={formItemAreaStyle()}
+        defaultValue={fields.description.initialValue}
+      >
+        <Label>説明</Label>
+        <TextArea className={inputTextStyle()} rows={3} />
+        <FieldError />
+      </TextField>
+      <div className={formItemAreaStyle()}>
+        <Label>タグ</Label>
+        {/* タグの数だけ同名の hidden input を並べる */}
+        {currentTags.map((tag, i) => (
+          <input
+            key={i}
+            type="hidden"
+            name={fields.tagNames.name}
+            value={tag}
+          />
+        ))}
+        <TagInputComponent
+          defaultValues={[]}
+          selectList={postTags?.getPostTags?.map((t) => t.tagName) ?? []}
+          fetchSelectList={(keyword: string) => {
+            searchTags({ variables: { keyword: keyword, isOpenOnly: false } });
+          }}
+          onChangeTags={(tags: string[]) => {
+            form.update({
+              name: fields.tagNames.name,
+              value: tags,
+            });
+          }}
+        />
+      </div>
       <TextField
         isRequired
         name={fields.contents.name}
@@ -109,18 +162,16 @@ export const PostInputComponent: FC<Props> = ({
         </Select.Trigger>
         <Select.Popover>
           <ListBox>
-            <ListBox.Item id="DRAFT" textValue="DRAFT">
-              {POST_STATUSES.find((p) => p.key === "DRAFT")?.label}
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-            <ListBox.Item id="OPEN" textValue="OPEN">
-              {POST_STATUSES.find((p) => p.key === "OPEN")?.label}
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-            <ListBox.Item id="PRIVATE" textValue="PRIVATE">
-              {POST_STATUSES.find((p) => p.key === "PRIVATE")?.label}
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
+            {POST_STATUSES.map((postStatus) => (
+              <ListBox.Item
+                key={postStatus.key}
+                id={postStatus.key}
+                textValue={postStatus.key}
+              >
+                {postStatus.label}
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            ))}
           </ListBox>
         </Select.Popover>
       </Select>

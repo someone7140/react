@@ -1,51 +1,22 @@
 import { gql } from "@apollo/client/core";
 
-export const accountUserResponseFragment = gql`
-  fragment UserAccountAuthResponse on UserAccountAuthResponse {
-    authToken
-    name
-    userSettingId
-    imageUrl
-    urlList
-    detail
-  }
-`;
-
-export const getUserAccountRegisterTokenFromGoogleAuthCodeQuery = gql`
-  query GetUserAccountRegisterTokenFromGoogleAuthCode($authCode: String!) {
-    getUserAccountRegisterTokenFromGoogleAuthCode(authCode: $authCode) {
-      token
+export const postResponseFragment = gql`
+  fragment PostResponse on PostResponse {
+    id
+    title
+    contents
+    status
+    updateAt
+    tags {
+      id
+      tagName
+    }
+    userAccount {
+      userSettingId
       name
       imageUrl
     }
-  }
-`;
-
-export const getUserInfoFromAuthHeaderQuery = gql`
-  query GetUserInfoFromAuthHeader {
-    getUserInfoFromAuthHeader {
-      ...UserAccountAuthResponse
-    }
-  }
-`;
-
-export const registerUserAccountFromGoogleMutation = gql`
-  mutation RegisterUserAccountFromGoogle(
-    $token: String!
-    $name: String!
-    $userSettingId: String!
-    $urlList: [String!]!
-    $detail: String
-  ) {
-    registerUserAccountFromGoogle(
-      token: $token
-      userSettingId: $userSettingId
-      name: $name
-      urlList: $urlList
-      detail: $detail
-    ) {
-      ...UserAccountAuthResponse
-    }
+    commitAt
   }
 `;
 
@@ -54,7 +25,32 @@ export const registerPostMutation = gql`
     $title: String!
     $contents: String!
     $status: PostStatus!
+    $tagNames: [String!]!
+    $description: String
   ) {
-    registerPost(title: $title, contents: $contents, status: $status)
+    registerPost(
+      title: $title
+      contents: $contents
+      status: $status
+      tagNames: $tagNames
+      description: $description
+    )
+  }
+`;
+
+export const getMyPostsQuery = gql`
+  query GetMyPosts($status: PostStatus) {
+    getMyPosts(status: $status) {
+      ...PostResponse
+    }
+  }
+`;
+
+export const getPostTags = gql`
+  query GetPostTags($keyword: String!, $isOpenOnly: Boolean!) {
+    getPostTags(keyword: $keyword, isOpenOnly: $isOpenOnly) {
+      id
+      tagName
+    }
   }
 `;

@@ -247,7 +247,7 @@ export const MarkDownInputComponent: FC<Props> = ({
             <Select
               value={headingSelectValue}
               onChange={handleHeadingChange}
-              className="w-30"
+              className="w-35"
               placeholder="なし"
             >
               <Select.Trigger className="border border-gray-200 rounded-md">

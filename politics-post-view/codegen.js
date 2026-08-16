@@ -15,6 +15,9 @@ module.exports = {
         skipTypename: false,
         withHooks: true,
         documentMode: "documentNode",
+        scalars: {
+          DateTime: "Date",
+        },
       },
     },
   },
