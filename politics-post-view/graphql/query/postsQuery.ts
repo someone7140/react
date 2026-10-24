@@ -6,6 +6,7 @@ export const postResponseFragment = gql`
     title
     contents
     status
+    description
     updateAt
     tags {
       id
@@ -39,8 +40,8 @@ export const registerPostMutation = gql`
 `;
 
 export const getMyPostsQuery = gql`
-  query GetMyPosts($status: PostStatus) {
-    getMyPosts(status: $status) {
+  query GetMyPosts($status: PostStatus, $id: String) {
+    getMyPosts(status: $status, id: $id) {
       ...PostResponse
     }
   }

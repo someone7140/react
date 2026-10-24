@@ -1,9 +1,10 @@
 "use client";
 
 import { FC } from "react";
+import { Button } from "@heroui/react";
 
-import { GetMyPostsQuery } from "@/graphql/gen/graphql";
 import { POST_STATUSES } from "@/constants/PostConstants";
+import { GetMyPostsQuery } from "@/graphql/gen/graphql";
 
 type Props = {
   post: NonNullable<GetMyPostsQuery["getMyPosts"]>[number];
@@ -16,6 +17,11 @@ export const PostRefComponent: FC<Props> = ({ post, isMyPostScreen }) => {
       <div className={"text-wrap break-all text-black text-2xl"}>
         {post.title}
       </div>
+      {post.description && (
+        <div className={"ml-2 text-wrap break-all text-gray-700 text-sm"}>
+          {post.description}
+        </div>
+      )}
       {isMyPostScreen && (
         <>
           <div className={"flex gap-2"}>
@@ -32,6 +38,16 @@ export const PostRefComponent: FC<Props> = ({ post, isMyPostScreen }) => {
               })}
             </div>
           </div>
+          {post.status === "DRAFT" && (
+            <div className={"flex gap-2 justify-center mt-2"}>
+              <Button size="sm" className="text-xs bg-orange-600">
+                編集
+              </Button>
+              <Button size="sm" className="text-xs bg-gray-700">
+                削除
+              </Button>
+            </div>
+          )}
         </>
       )}
     </div>

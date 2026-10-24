@@ -20,9 +20,9 @@ type Documents = {
     "\n  mutation RegisterUserAccountFromGoogle(\n    $token: String!\n    $name: String!\n    $userSettingId: String!\n    $urlList: [String!]!\n    $detail: String\n  ) {\n    registerUserAccountFromGoogle(\n      token: $token\n      userSettingId: $userSettingId\n      name: $name\n      urlList: $urlList\n      detail: $detail\n    ) {\n      ...UserAccountAuthResponse\n    }\n  }\n": typeof types.RegisterUserAccountFromGoogleDocument,
     "\n  mutation LoginByGoogle($authCode: String!) {\n    loginByGoogle(authCode: $authCode) {\n      ...UserAccountAuthResponse\n    }\n  }\n": typeof types.LoginByGoogleDocument,
     "\n  query ErrorTypeDummy {\n    errorTypeDummy\n  }\n": typeof types.ErrorTypeDummyDocument,
-    "\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n": typeof types.PostResponseFragmentDoc,
+    "\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    description\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n": typeof types.PostResponseFragmentDoc,
     "\n  mutation RegisterPost(\n    $title: String!\n    $contents: String!\n    $status: PostStatus!\n    $tagNames: [String!]!\n    $description: String\n  ) {\n    registerPost(\n      title: $title\n      contents: $contents\n      status: $status\n      tagNames: $tagNames\n      description: $description\n    )\n  }\n": typeof types.RegisterPostDocument,
-    "\n  query GetMyPosts($status: PostStatus) {\n    getMyPosts(status: $status) {\n      ...PostResponse\n    }\n  }\n": typeof types.GetMyPostsDocument,
+    "\n  query GetMyPosts($status: PostStatus, $id: String) {\n    getMyPosts(status: $status, id: $id) {\n      ...PostResponse\n    }\n  }\n": typeof types.GetMyPostsDocument,
     "\n  query GetPostTags($keyword: String!, $isOpenOnly: Boolean!) {\n    getPostTags(keyword: $keyword, isOpenOnly: $isOpenOnly) {\n      id\n      tagName\n    }\n  }\n": typeof types.GetPostTagsDocument,
 };
 const documents: Documents = {
@@ -32,9 +32,9 @@ const documents: Documents = {
     "\n  mutation RegisterUserAccountFromGoogle(\n    $token: String!\n    $name: String!\n    $userSettingId: String!\n    $urlList: [String!]!\n    $detail: String\n  ) {\n    registerUserAccountFromGoogle(\n      token: $token\n      userSettingId: $userSettingId\n      name: $name\n      urlList: $urlList\n      detail: $detail\n    ) {\n      ...UserAccountAuthResponse\n    }\n  }\n": types.RegisterUserAccountFromGoogleDocument,
     "\n  mutation LoginByGoogle($authCode: String!) {\n    loginByGoogle(authCode: $authCode) {\n      ...UserAccountAuthResponse\n    }\n  }\n": types.LoginByGoogleDocument,
     "\n  query ErrorTypeDummy {\n    errorTypeDummy\n  }\n": types.ErrorTypeDummyDocument,
-    "\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n": types.PostResponseFragmentDoc,
+    "\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    description\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n": types.PostResponseFragmentDoc,
     "\n  mutation RegisterPost(\n    $title: String!\n    $contents: String!\n    $status: PostStatus!\n    $tagNames: [String!]!\n    $description: String\n  ) {\n    registerPost(\n      title: $title\n      contents: $contents\n      status: $status\n      tagNames: $tagNames\n      description: $description\n    )\n  }\n": types.RegisterPostDocument,
-    "\n  query GetMyPosts($status: PostStatus) {\n    getMyPosts(status: $status) {\n      ...PostResponse\n    }\n  }\n": types.GetMyPostsDocument,
+    "\n  query GetMyPosts($status: PostStatus, $id: String) {\n    getMyPosts(status: $status, id: $id) {\n      ...PostResponse\n    }\n  }\n": types.GetMyPostsDocument,
     "\n  query GetPostTags($keyword: String!, $isOpenOnly: Boolean!) {\n    getPostTags(keyword: $keyword, isOpenOnly: $isOpenOnly) {\n      id\n      tagName\n    }\n  }\n": types.GetPostTagsDocument,
 };
 
@@ -79,7 +79,7 @@ export function graphql(source: "\n  query ErrorTypeDummy {\n    errorTypeDummy\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n"): (typeof documents)["\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n"];
+export function graphql(source: "\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    description\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n"): (typeof documents)["\n  fragment PostResponse on PostResponse {\n    id\n    title\n    contents\n    status\n    description\n    updateAt\n    tags {\n      id\n      tagName\n    }\n    userAccount {\n      userSettingId\n      name\n      imageUrl\n    }\n    commitAt\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -87,7 +87,7 @@ export function graphql(source: "\n  mutation RegisterPost(\n    $title: String!
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetMyPosts($status: PostStatus) {\n    getMyPosts(status: $status) {\n      ...PostResponse\n    }\n  }\n"): (typeof documents)["\n  query GetMyPosts($status: PostStatus) {\n    getMyPosts(status: $status) {\n      ...PostResponse\n    }\n  }\n"];
+export function graphql(source: "\n  query GetMyPosts($status: PostStatus, $id: String) {\n    getMyPosts(status: $status, id: $id) {\n      ...PostResponse\n    }\n  }\n"): (typeof documents)["\n  query GetMyPosts($status: PostStatus, $id: String) {\n    getMyPosts(status: $status, id: $id) {\n      ...PostResponse\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
