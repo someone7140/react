@@ -5,6 +5,22 @@ import { GraphQLFormattedError } from "graphql";
 
 import { ErrorType } from "@/graphql/gen/graphql";
 
+declare module "@apollo/client" {
+  namespace ApolloClient {
+    namespace DeclareDefaultOptions {
+      interface WatchQuery {
+        errorPolicy: "all";
+      }
+      interface Query {
+        errorPolicy: "all";
+      }
+      interface Mutate {
+        errorPolicy: "all";
+      }
+    }
+  }
+}
+
 export const makeApiClient = (authToken?: string) => {
   let headers: Record<string, string> = {};
   if (authToken) {
@@ -24,6 +40,7 @@ export const makeApiClient = (authToken?: string) => {
     cache: new InMemoryCache(),
     link: apolloLink,
     defaultOptions: {
+      watchQuery: { errorPolicy: "all" },
       query: {
         errorPolicy: "all",
       },

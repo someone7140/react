@@ -1,8 +1,9 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLazyQuery } from "@apollo/client/react";
-import { useForm, getFormProps, useInputControl } from "@conform-to/react";
+import { useForm, getFormProps } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod/v4";
 import {
   Button,
@@ -12,7 +13,6 @@ import {
   Label,
   ListBox,
   Select,
-  TextArea,
   TextField,
 } from "@heroui/react";
 import { useRequest } from "ahooks";
@@ -21,6 +21,7 @@ import z from "zod";
 import { MarkDownInputComponent } from "@/components/common/MarkDownInputComponent";
 import { TagInputComponent } from "@/components/common/TagInputComponent";
 import { POST_STATUS_KEYS, POST_STATUSES } from "@/constants/PostConstants";
+import { POST_MY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
 import {
   formItemAreaStyle,
   formSubmitAreaStyle,
@@ -34,7 +35,6 @@ export const postInputFormSchema = z.object({
   status: z.enum(POST_STATUS_KEYS),
   contents: z.string(),
   tagNames: z.string().array(),
-  description: z.string().optional(),
 });
 
 export type PostInputFormType = z.infer<typeof postInputFormSchema>;
@@ -50,6 +50,7 @@ export const PostInputComponent: FC<Props> = ({
   disabledFlag,
   defaultValue,
 }) => {
+  const router = useRouter();
   const [fetchTagsByKeyWord, { data: postTags }] = useLazyQuery(
     GetPostTagsDocument,
     {
@@ -73,7 +74,6 @@ export const PostInputComponent: FC<Props> = ({
       status: defaultValue?.status ?? "DRAFT",
       contents: defaultValue?.contents ?? "",
       tagNames: defaultValue?.tagNames ?? [],
-      description: defaultValue?.description,
     },
     async onSubmit(event, { submission }) {
       event.preventDefault();
@@ -81,9 +81,9 @@ export const PostInputComponent: FC<Props> = ({
       execSubmit(submission.value);
     },
   });
-  // tagNames 用の control を作る
-  const tagNamesControl = useInputControl(fields.tagNames);
-  const currentTags = (tagNamesControl.value as string[] | undefined) ?? [];
+  const [currentTags, setCurrentTags] = useState(
+    () => defaultValue?.tagNames ?? [],
+  );
 
   return (
     <Form
@@ -101,15 +101,6 @@ export const PostInputComponent: FC<Props> = ({
         <Input className={inputTextStyle()} />
         <FieldError />
       </TextField>
-      <TextField
-        name={fields.description.name}
-        className={formItemAreaStyle()}
-        defaultValue={fields.description.initialValue}
-      >
-        <Label>説明</Label>
-        <TextArea className={inputTextStyle()} rows={3} />
-        <FieldError />
-      </TextField>
       <div className={formItemAreaStyle()}>
         <Label>タグ</Label>
         {/* タグの数だけ同名の hidden input を並べる */}
@@ -122,16 +113,13 @@ export const PostInputComponent: FC<Props> = ({
           />
         ))}
         <TagInputComponent
-          defaultValues={[]}
+          defaultValues={defaultValue?.tagNames ?? []}
           selectList={postTags?.getPostTags?.map((t) => t.tagName) ?? []}
           fetchSelectList={(keyword: string) => {
             searchTags({ variables: { keyword: keyword, isOpenOnly: false } });
           }}
           onChangeTags={(tags: string[]) => {
-            form.update({
-              name: fields.tagNames.name,
-              value: tags,
-            });
+            setCurrentTags(tags);
           }}
         />
       </div>
@@ -177,8 +165,17 @@ export const PostInputComponent: FC<Props> = ({
       </Select>
       <div className={formSubmitAreaStyle()}>
         <Button type="submit" isDisabled={disabledFlag}>
-          登録
+          {defaultValue ? "編集する" : "登録"}
         </Button>
+        {defaultValue && (
+          <Button
+            type="button"
+            variant="outline"
+            onPress={() => router.push(POST_MY_LIST_PAGE_PATH)}
+          >
+            一覧へ戻る
+          </Button>
+        )}
       </div>
     </Form>
   );

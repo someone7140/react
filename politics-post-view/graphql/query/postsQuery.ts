@@ -6,7 +6,6 @@ export const postResponseFragment = gql`
     title
     contents
     status
-    description
     updateAt
     tags {
       id
@@ -27,15 +26,37 @@ export const registerPostMutation = gql`
     $contents: String!
     $status: PostStatus!
     $tagNames: [String!]!
-    $description: String
   ) {
     registerPost(
       title: $title
       contents: $contents
       status: $status
       tagNames: $tagNames
-      description: $description
     )
+  }
+`;
+
+export const updatePostMutation = gql`
+  mutation UpdatePost(
+    $id: String!
+    $title: String!
+    $contents: String!
+    $status: PostStatus!
+    $tagNames: [String!]!
+  ) {
+    updatePost(
+      id: $id
+      title: $title
+      contents: $contents
+      status: $status
+      tagNames: $tagNames
+    )
+  }
+`;
+
+export const deletePostMutation = gql`
+  mutation DeletePost($id: String!) {
+    deletePost(id: $id)
   }
 `;
 

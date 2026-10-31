@@ -21,11 +21,11 @@ type Props = {
 };
 
 export const PostEditComponent: FC<Props> = ({ postId }) => {
+  const router = useRouter();
   const { data, loading } = useQuery(GetMyPostsDocument, {
     fetchPolicy: "network-only",
     variables: { id: postId },
   });
-  const router = useRouter();
   const [addPost, { loading: addPostLoading }] =
     useMutation(RegisterPostDocument);
   const [formData, setFormData] = useState<PostInputFormType | undefined>(
@@ -48,7 +48,6 @@ export const PostEditComponent: FC<Props> = ({ postId }) => {
         contents: form.contents,
         status: form.status,
         tagNames: form.tagNames,
-        description: form.description,
       },
     });
 
@@ -75,12 +74,23 @@ export const PostEditComponent: FC<Props> = ({ postId }) => {
     );
   }
 
+  const beforePost = data?.getMyPosts?.[0];
+  if (!beforePost) {
+    toast.danger("投稿が取得できませんでした。");
+    return <></>;
+  }
+
   return (
     <>
       <PostInputComponent
         execSubmit={onSubmitRegister}
         disabledFlag={addPostLoading}
-        defaultValue={defaultFormValue}
+        defaultValue={{
+          title: beforePost.title,
+          contents: beforePost.contents,
+          status: beforePost.status,
+          tagNames: beforePost.tags.map((tag) => tag.tagName),
+        }}
       />
       <PostCommitConfirmModalComponent
         isOpen={formData !== undefined}

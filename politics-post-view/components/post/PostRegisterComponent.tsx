@@ -41,7 +41,6 @@ export const PostRegisterComponent: FC<Props> = ({ defaultFormValue }) => {
         contents: form.contents,
         status: form.status,
         tagNames: form.tagNames,
-        description: form.description,
       },
     });
 
