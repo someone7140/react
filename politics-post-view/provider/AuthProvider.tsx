@@ -16,13 +16,13 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
     fetchPolicy: "network-only",
     skip: true,
   });
-  const { userAccount, authTokenLocalStorage, updateAuthInfo, removeAuthInfo } =
+  const { userAccount, authToken, updateAuthInfo, removeAuthInfo } =
     useAuthManagement();
   const [isAuthProcessEnd, setIsAuthProcessEnd] = useState<boolean>(false);
 
   useAsyncEffect(async () => {
     if (!isAuthProcessEnd) {
-      if (authTokenLocalStorage) {
+      if (authToken) {
         if (!userAccount) {
           try {
             const response = await refetch();
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
       }
       setIsAuthProcessEnd(true);
     }
-  }, [authTokenLocalStorage]);
+  }, [authToken]);
 
   if (!isAuthProcessEnd) {
     return (

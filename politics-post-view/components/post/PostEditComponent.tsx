@@ -11,10 +11,7 @@ import {
 } from "./input/PostInputComponent";
 import { PostCommitConfirmModalComponent } from "./modal/PostCommitConfirmModalComponent";
 import { POST_MY_LIST_PAGE_PATH } from "@/constants/MenuPathConstants";
-import {
-  GetMyPostsDocument,
-  RegisterPostDocument,
-} from "@/graphql/gen/graphql";
+import { GetMyPostsDocument, UpdatePostDocument } from "@/graphql/gen/graphql";
 
 type Props = {
   postId: string;
@@ -26,8 +23,8 @@ export const PostEditComponent: FC<Props> = ({ postId }) => {
     fetchPolicy: "network-only",
     variables: { id: postId },
   });
-  const [addPost, { loading: addPostLoading }] =
-    useMutation(RegisterPostDocument);
+  const [editPost, { loading: editPostLoading }] =
+    useMutation(UpdatePostDocument);
   const [formData, setFormData] = useState<PostInputFormType | undefined>(
     undefined,
   );
@@ -42,8 +39,9 @@ export const PostEditComponent: FC<Props> = ({ postId }) => {
   };
 
   const registerExec = async (form: PostInputFormType) => {
-    const result = await addPost({
+    const result = await editPost({
       variables: {
+        id: postId,
         title: form.title,
         contents: form.contents,
         status: form.status,
@@ -84,7 +82,7 @@ export const PostEditComponent: FC<Props> = ({ postId }) => {
     <>
       <PostInputComponent
         execSubmit={onSubmitRegister}
-        disabledFlag={addPostLoading}
+        disabledFlag={editPostLoading}
         defaultValue={{
           title: beforePost.title,
           contents: beforePost.contents,

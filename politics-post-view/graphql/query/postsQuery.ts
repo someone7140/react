@@ -54,6 +54,18 @@ export const updatePostMutation = gql`
   }
 `;
 
+export const addAdditionalInfoToPostMutation = gql`
+  mutation addAdditionalInfoToPost(
+    $id: String!
+    $additionalInfo: String!
+  ) {
+    addAdditionalInfoToPost(
+      id: $id
+      additionalInfo: $additionalInfo
+    )
+  }
+`;
+
 export const deletePostMutation = gql`
   mutation DeletePost($id: String!) {
     deletePost(id: $id)

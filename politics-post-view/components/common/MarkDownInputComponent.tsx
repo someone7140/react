@@ -29,6 +29,8 @@ type Props = {
   fieldName: string;
   defaultValue?: string;
   isInvalid?: boolean;
+  onContentChange?: (content: string) => void;
+  width?: number;
 };
 
 type HeadingLevel = 1 | 2 | 3 | 4;
@@ -45,6 +47,8 @@ export const MarkDownInputComponent: FC<Props> = ({
   fieldName,
   defaultValue,
   isInvalid,
+  onContentChange,
+  width = 330,
 }) => {
   const [markdownText, setMarkdownText] = useState(defaultValue ?? "");
   const lastSyncedMarkdown = useRef(defaultValue ?? "");
@@ -56,7 +60,7 @@ export const MarkDownInputComponent: FC<Props> = ({
     isInvalid
       ? "!border-[var(--danger)] focus-within:!border-[var(--danger)]"
       : "focus-within:bg-[var(--color-field-focus)] focus-within:!border-[var(--color-field-border-focus)]"
-  } ${isInvalid ? baseInputStyle.replace("!border-gray-300", "") : baseInputStyle} w-[330px] mb-2 p-2 outline-none`;
+  } ${isInvalid ? baseInputStyle.replace("!border-gray-300", "") : baseInputStyle} mb-2 p-1 outline-none`;
 
   const onEnter = (editor: Editor) => {
     if (editor.isActive("bulletList")) {
@@ -108,7 +112,9 @@ export const MarkDownInputComponent: FC<Props> = ({
     ],
     content: defaultValue ?? "",
     onUpdate({ editor }) {
-      setMarkdownText(editor.getMarkdown());
+      const markdown = editor.getMarkdown();
+      setMarkdownText(markdown);
+      onContentChange?.(markdown);
     },
     editorProps: {
       attributes: {
@@ -231,12 +237,12 @@ export const MarkDownInputComponent: FC<Props> = ({
         }}
       >
         <Tabs.ListContainer>
-          <Tabs.List aria-label="Options" className="!p-1 !w-90">
-            <Tabs.Tab id="wysiwyg" className="!p-0">
+          <Tabs.List aria-label="Options" className="!p-1 !w-fit rounded-md">
+            <Tabs.Tab id="wysiwyg" className="!px-2">
               見たまま編集
               <Tabs.Indicator />
             </Tabs.Tab>
-            <Tabs.Tab id="markdown" className="!p-0">
+            <Tabs.Tab id="markdown" className="!px-2">
               マークダウン直接編集
               <Tabs.Indicator />
             </Tabs.Tab>
@@ -353,6 +359,7 @@ export const MarkDownInputComponent: FC<Props> = ({
 
           <EditorContent
             editor={editor}
+            style={{ width, minWidth: width }}
             data-invalid={isInvalid}
             className={editorClassName}
             onClick={(e) => {
@@ -370,8 +377,12 @@ export const MarkDownInputComponent: FC<Props> = ({
         <Tabs.Panel className="pt-2" id="markdown">
           <textarea
             className={editorClassName}
+            style={{ width, minWidth: width }}
             value={markdownText}
-            onChange={(e) => setMarkdownText(e.target.value)}
+            onChange={(e) => {
+              setMarkdownText(e.target.value);
+              onContentChange?.(e.target.value);
+            }}
             rows={3}
           />
         </Tabs.Panel>

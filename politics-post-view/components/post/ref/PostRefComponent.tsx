@@ -8,6 +8,7 @@ import { POST_STATUSES } from "@/constants/PostConstants";
 import { POST_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { DeletePostDocument, GetMyPostsQuery } from "@/graphql/gen/graphql";
 import { useMutation } from "@apollo/client/react";
+import { PostAddAdditionalInfoModalComponent } from "../modal/PostAddAdditionalInfoModalComponent";
 import { PostDeleteConfirmModalComponent } from "../modal/PostDeleteConfirmModalComponent";
 
 type Props = {
@@ -23,6 +24,8 @@ export const PostRefComponent: FC<Props> = ({
 }) => {
   const router = useRouter();
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] =
+    useState(false);
+  const [isAddAdditionalInfoModalOpen, setIsAddAdditionalInfoModalOpen] =
     useState(false);
   const [deletePost, { loading: deletePostLoading }] =
     useMutation(DeletePostDocument);
@@ -95,11 +98,32 @@ export const PostRefComponent: FC<Props> = ({
               </Button>
             </div>
           )}
+          {post.status !== "DRAFT" && (
+            <div className={"flex gap-2 justify-center mt-2"}>
+              <Button
+                size="sm"
+                className="text-xs"
+                onClick={() => {
+                  setIsAddAdditionalInfoModalOpen(true);
+                }}
+              >
+                補足情報の追加
+              </Button>
+            </div>
+          )}
           {post.status === "DRAFT" && (
             <PostDeleteConfirmModalComponent
               isOpen={isDeleteConfirmModalOpen}
               setIsOpen={setIsDeleteConfirmModalOpen}
               submitExec={onClickDelete}
+            />
+          )}
+          {post.status !== "DRAFT" && (
+            <PostAddAdditionalInfoModalComponent
+              isOpen={isAddAdditionalInfoModalOpen}
+              setIsOpen={setIsAddAdditionalInfoModalOpen}
+              postId={post.id}
+              refetch={refetch}
             />
           )}
         </>

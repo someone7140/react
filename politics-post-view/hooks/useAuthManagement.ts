@@ -1,46 +1,30 @@
 "use client";
 
-import { useLocalStorageState } from "ahooks";
-
 import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 import { UserAccountAuthResponseFragment } from "@/graphql/gen/graphql";
 
+const AUTH_TOKEN_KEY = "authToken";
+
 export const useAuthManagement = () => {
-  const { userAccount, setUserAccount, removeUserAccount } = useAuthStore();
-  const {
-    authTokenLocalStorage,
-    updateAuthToken,
-    removeAuthTokenLocalStorage,
-  } = useAuthTokenLocalStorage();
+  const { userAccount, authToken, setUserAccount, setAuthToken, removeUserAccount } =
+    useAuthStore();
 
   const updateAuthInfo = (user: UserAccountAuthResponseFragment) => {
     setUserAccount(user);
-    updateAuthToken(user.authToken);
+    setAuthToken(user.authToken);
+    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(user.authToken));
   };
 
   const removeAuthInfo = () => {
     removeUserAccount();
-    removeAuthTokenLocalStorage();
-  };
-
-  return { userAccount, authTokenLocalStorage, updateAuthInfo, removeAuthInfo };
-};
-
-const useAuthTokenLocalStorage = () => {
-  const [authTokenLocalStorage, setAuthTokenLocalStorage] =
-    useLocalStorageState<string | undefined>("authToken", {
-      defaultValue: undefined,
-    });
-  const updateAuthToken = (token: string) => {
-    setAuthTokenLocalStorage(token);
-  };
-  const removeAuthTokenLocalStorage = () => {
-    setAuthTokenLocalStorage(undefined);
+    setAuthToken(undefined);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
   };
 
   return {
-    authTokenLocalStorage,
-    updateAuthToken,
-    removeAuthTokenLocalStorage,
+    userAccount,
+    authToken,
+    updateAuthInfo,
+    removeAuthInfo,
   };
 };

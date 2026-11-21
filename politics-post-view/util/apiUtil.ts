@@ -1,9 +1,11 @@
+import { ApolloLink } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client-integration-nextjs";
 // @ts-ignore
 import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 import { GraphQLFormattedError } from "graphql";
 
 import { ErrorType } from "@/graphql/gen/graphql";
+import { useAuthStore } from "@/hooks/globalStore/useAuthStore";
 
 declare module "@apollo/client" {
   namespace ApolloClient {
@@ -21,24 +23,30 @@ declare module "@apollo/client" {
   }
 }
 
-export const makeApiClient = (authToken?: string) => {
-  let headers: Record<string, string> = {};
-  if (authToken) {
-    headers = {
-      Authorization: `Bearer ${authToken}`,
-      "Apollo-Require-Preflight": "true",
-    };
-  }
-
-  const apolloLink = new UploadHttpLink({
+export const makeApiClient = () => {
+  const httpLink = new UploadHttpLink({
     uri: `${process.env.NEXT_PUBLIC_API_URL}`,
-    headers,
     useGETForQueries: false,
+  });
+  const authLink = new ApolloLink((operation, forward) => {
+    const token = useAuthStore.getState().authToken;
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        ...(token
+          ? {
+              Authorization: `Bearer ${token}`,
+              "Apollo-Require-Preflight": "true",
+            }
+          : {}),
+      },
+    }));
+    return forward(operation);
   });
 
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: apolloLink,
+    link: ApolloLink.from([authLink, httpLink]),
     defaultOptions: {
       watchQuery: { errorPolicy: "all" },
       query: {

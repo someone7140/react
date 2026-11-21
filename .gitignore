@@ -3,3 +3,4 @@ build
 .next
 coda-frontend/certificates/localhost.crt
 coda-frontend/certificates/localhost.key
+package-lock.json
