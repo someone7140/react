@@ -5,6 +5,10 @@ export const postResponseFragment = gql`
     id
     title
     contents
+    additionalInfo {
+      info
+      addedAt
+    }
     status
     updateAt
     tags {
@@ -55,14 +59,8 @@ export const updatePostMutation = gql`
 `;
 
 export const addAdditionalInfoToPostMutation = gql`
-  mutation addAdditionalInfoToPost(
-    $id: String!
-    $additionalInfo: String!
-  ) {
-    addAdditionalInfoToPost(
-      id: $id
-      additionalInfo: $additionalInfo
-    )
+  mutation addAdditionalInfoToPost($id: String!, $additionalInfo: String!) {
+    addAdditionalInfoToPost(id: $id, additionalInfo: $additionalInfo)
   }
 `;
 

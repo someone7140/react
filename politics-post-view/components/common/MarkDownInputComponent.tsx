@@ -111,6 +111,7 @@ export const MarkDownInputComponent: FC<Props> = ({
       }),
     ],
     content: defaultValue ?? "",
+    contentType: "markdown",
     onUpdate({ editor }) {
       const markdown = editor.getMarkdown();
       setMarkdownText(markdown);

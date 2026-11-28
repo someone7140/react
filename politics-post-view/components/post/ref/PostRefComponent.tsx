@@ -1,15 +1,16 @@
 "use client";
 
 import { FC, useState } from "react";
-import { Button, toast } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@apollo/client/react";
+import { Button, toast } from "@heroui/react";
 
+import { PostContentsExpandable } from "./PostMarkdownView";
+import { PostAddAdditionalInfoModalComponent } from "../modal/PostAddAdditionalInfoModalComponent";
+import { PostDeleteConfirmModalComponent } from "../modal/PostDeleteConfirmModalComponent";
 import { POST_STATUSES } from "@/constants/PostConstants";
 import { POST_EDIT_PAGE_PATH } from "@/constants/MenuPathConstants";
 import { DeletePostDocument, GetMyPostsQuery } from "@/graphql/gen/graphql";
-import { useMutation } from "@apollo/client/react";
-import { PostAddAdditionalInfoModalComponent } from "../modal/PostAddAdditionalInfoModalComponent";
-import { PostDeleteConfirmModalComponent } from "../modal/PostDeleteConfirmModalComponent";
 
 type Props = {
   post: NonNullable<GetMyPostsQuery["getMyPosts"]>[number];
@@ -51,10 +52,15 @@ export const PostRefComponent: FC<Props> = ({
   };
 
   return (
-    <div className="min-w-[300px] border border-gray-300 p-3">
+    <div className="relative min-w-[300px] max-w-[360px] border border-gray-300 p-3">
       <div className={"text-wrap break-all text-black text-2xl"}>
         {post.title}
       </div>
+      <PostContentsExpandable
+        title={post.title}
+        markdown={post.contents}
+        additionalInfo={post.additionalInfo}
+      />
       {post.tags.length > 0 && (
         <div className="flex gap-2">
           <div>タグ:</div>
